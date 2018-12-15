@@ -26,7 +26,6 @@ export default class SideBar extends Component {
         })
       })
       .catch(err => {
-        console.log('err', err)
         alert(JSON.stringify(err))
       })
   }
