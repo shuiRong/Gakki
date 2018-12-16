@@ -1,21 +1,29 @@
-/**
- * 存储全局状态
- */
+// /**
+//  * 存储全局状态
+//  */
 
 import { observable, autorun } from 'mobx'
 
-const globe = observable({
-  screen: 0, // 首页...
-  count: 0
-})
+class Globe {
+  constructor() {}
 
-autorun(function() {
-  console.log('screen is: %d', globe.screen)
-  console.log('count is: %d', globe.count)
-})
+  @observable screen = 0
 
-setInterval(() => {
-  globe.count++
-}, 2000)
+  updateScreen(screen) {
+    this.screen = screen
+  }
+}
+
+const globe = new Globe()
+
+// autorun(() => {
+//   alert(globe.screen)
+//   console.log('screen is: %d', globe.screen)
+//   console.log('count is: %d', globe.count)
+// })
+
+// setInterval(() => {
+//   globe.updateScreen(globe.screen + 1)
+// }, 2000)
 
 export default globe

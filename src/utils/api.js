@@ -35,3 +35,11 @@ export const getCurrentUser = () => {
     headers
   })
 }
+
+export const getStatuses = id => {
+  return request({
+    url: `/api/v1/statuses/${id}`,
+    method: 'get',
+    headers
+  })
+}

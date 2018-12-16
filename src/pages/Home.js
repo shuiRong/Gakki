@@ -5,9 +5,8 @@ import { Drawer, Container, Text, Content } from 'native-base'
 import HeaderItem from './Header'
 import FooterTabs from './Footer'
 import SideBar from './SideBar'
-import { globe } from '../utils/store'
-
-alert(JSON.stringify(globe))
+import globe from '../utils/store'
+import HomeScreen from './screen/HomeScreen'
 
 /**
  * 主页
@@ -20,9 +19,7 @@ export default class Home extends Component {
   openDrawer = () => {
     this.drawer._root.open()
   }
-  componentDidMount() {
-    this.openDrawer()
-  }
+  componentDidMount() {}
 
   render() {
     return (
@@ -38,12 +35,8 @@ export default class Home extends Component {
           <Container>
             <HeaderItem openDrawer={this.openDrawer} />
             <Content>
-              <View style={{ flex: 1, height: 500, backgroundColor: 'pink' }}>
-                <Text>asdasd</Text>
-                <Text>{globe && globe.count}</Text>
-              </View>
+              <HomeScreen {...this.props} />
             </Content>
-            <FooterTabs />
           </Container>
         </Drawer>
       </View>

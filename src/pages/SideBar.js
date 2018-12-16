@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Icon } from 'native-base'
+import Icon from 'react-native-vector-icons/FontAwesome5'
 import { View, Text, Image, StyleSheet, ImageBackground } from 'react-native'
 
 import { getCurrentUser } from '../utils/api'
@@ -26,7 +26,7 @@ export default class SideBar extends Component {
         })
       })
       .catch(err => {
-        alert(JSON.stringify(err))
+        alert(JSON.stringify(Object.keys(err)))
       })
   }
   render() {
@@ -34,10 +34,7 @@ export default class SideBar extends Component {
       <View style={styles.main}>
         <ImageBackground source={{ uri: this.state.header }} style={styles.bg}>
           <View style={styles.infoBox}>
-            <Image
-              source={{ uri: this.state.avatar }}
-              style={{ height: 50, width: 50, borderRadius: 50 }}
-            />
+            <Image source={{ uri: this.state.avatar }} style={styles.image} />
             <View style={styles.info}>
               <Text style={styles.name}>{this.state.username}</Text>
               <Text style={styles.domain}>
@@ -48,15 +45,15 @@ export default class SideBar extends Component {
         </ImageBackground>
         <View style={styles.body}>
           <View style={styles.list}>
-            <Icon name="md-person" style={styles.icon} />
+            <Icon name="user" style={styles.icon} />
             <Text style={styles.text}>编辑个人资料</Text>
           </View>
           <View style={styles.list}>
-            <Icon name="md-star" style={styles.icon} />
+            <Icon name="star" style={styles.icon} />
             <Text style={styles.text}>我的收藏</Text>
           </View>
           <View style={styles.list}>
-            <Icon name="md-list" style={styles.icon} />
+            <Icon name="list" style={styles.icon} />
             <Text style={styles.text}>列表</Text>
           </View>
           <View style={styles.list}>
@@ -64,19 +61,19 @@ export default class SideBar extends Component {
             <Text style={styles.text}>草稿</Text>
           </View>
           <View style={styles.list}>
-            <Icon name="settings-box" style={styles.icon} />
+            <Icon name="user-cog" style={styles.icon} />
             <Text style={styles.text}>账户设置</Text>
           </View>
           <View style={styles.list}>
-            <Icon name="md-settings" style={styles.icon} />
+            <Icon name="cogs" style={styles.icon} />
             <Text style={styles.text}>设置</Text>
           </View>
           <View style={styles.list}>
-            <Icon name="md-bookmarks" style={styles.icon} />
+            <Icon name="exclamation-circle" style={styles.icon} />
             <Text style={styles.text}>关于</Text>
           </View>
           <View style={styles.list}>
-            <Icon name="logout" style={styles.icon} />
+            <Icon name="sign-out-alt" style={styles.icon} />
             <Text style={styles.text}>退出登录</Text>
           </View>
         </View>
@@ -116,7 +113,7 @@ const styles = StyleSheet.create({
     marginRight: 30,
     marginLeft: 10,
     color: '#686868',
-    fontSize: 25
+    fontSize: 23
   },
   text: {
     color: '#3d3d3d',
@@ -129,5 +126,10 @@ const styles = StyleSheet.create({
   },
   domain: {
     color: '#fff'
+  },
+  image: {
+    height: 50,
+    width: 50,
+    borderRadius: 50
   }
 })

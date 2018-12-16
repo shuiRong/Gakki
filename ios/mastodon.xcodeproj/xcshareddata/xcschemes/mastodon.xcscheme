@@ -29,9 +29,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "mastodon3.app"
-               BlueprintName = "mastodon3"
-               ReferencedContainer = "container:mastodon3.xcodeproj">
+               BuildableName = "mastodon.app"
+               BlueprintName = "mastodon"
+               ReferencedContainer = "container:mastodon.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -43,9 +43,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "mastodon3Tests.xctest"
-               BlueprintName = "mastodon3Tests"
-               ReferencedContainer = "container:mastodon3.xcodeproj">
+               BuildableName = "mastodonTests.xctest"
+               BlueprintName = "mastodonTests"
+               ReferencedContainer = "container:mastodon.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -61,9 +61,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "mastodon3Tests.xctest"
-               BlueprintName = "mastodon3Tests"
-               ReferencedContainer = "container:mastodon3.xcodeproj">
+               BuildableName = "mastodonTests.xctest"
+               BlueprintName = "mastodonTests"
+               ReferencedContainer = "container:mastodon.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -71,9 +71,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "mastodon3.app"
-            BlueprintName = "mastodon3"
-            ReferencedContainer = "container:mastodon3.xcodeproj">
+            BuildableName = "mastodon.app"
+            BlueprintName = "mastodon"
+            ReferencedContainer = "container:mastodon.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -94,9 +94,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "mastodon3.app"
-            BlueprintName = "mastodon3"
-            ReferencedContainer = "container:mastodon3.xcodeproj">
+            BuildableName = "mastodon.app"
+            BlueprintName = "mastodon"
+            ReferencedContainer = "container:mastodon.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -109,13 +109,13 @@
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
       <BuildableProductRunnable
-         runnableDebuggingMode = "0">
+         runnableDebuggingMode = "1">
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "mastodon3.app"
-            BlueprintName = "mastodon3"
-            ReferencedContainer = "container:mastodon3.xcodeproj">
+            BuildableName = "mastodon.app"
+            BlueprintName = "mastodon"
+            ReferencedContainer = "container:mastodon.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

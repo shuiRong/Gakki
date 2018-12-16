@@ -1,4 +1,4 @@
-package com.mastodon3;
+package com.mastodon;
 
 import com.facebook.react.ReactActivity;
 
@@ -10,6 +10,6 @@ public class MainActivity extends ReactActivity {
      */
     @Override
     protected String getMainComponentName() {
-        return "mastodon3";
+        return "mastodon";
     }
 }
