@@ -20,11 +20,12 @@ export const getToken = data => {
   })
 }
 
-export const getHomeTimelines = () => {
+export const getHomeTimelines = (url, params) => {
   return request({
-    url: '/api/v1/timelines/home',
+    url: `/api/v1/timelines/${url}`,
     method: 'get',
-    headers
+    headers,
+    params
   })
 }
 
@@ -40,6 +41,22 @@ export const getStatuses = id => {
   return request({
     url: `/api/v1/statuses/${id}`,
     method: 'get',
+    headers
+  })
+}
+
+export const favourite = (id, favourite) => {
+  return request({
+    url: `/api/v1/statuses/${id}/${favourite ? 'unfavourite' : 'favourite'}`,
+    method: 'post',
+    headers
+  })
+}
+
+export const reblog = (id, reblog) => {
+  return request({
+    url: `/api/v1/statuses/${id}/${reblog ? 'unreblog' : 'reblog'}`,
+    method: 'post',
     headers
   })
 }

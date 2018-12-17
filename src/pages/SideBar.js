@@ -10,10 +10,10 @@ export default class SideBar extends Component {
     this.state = {
       username: 'shuiRong',
       avatar:
-        'https://cmx.im/system/accounts/avatars/000/081/232/original/6fde03bb798bd111.jpg?1544620479',
+        'https://img.pawoo.net/accounts/avatars/000/720/873/original/61d849cdb203a6f4.jpg',
       header:
-        'https://cmx.im/system/accounts/headers/000/081/232/original/f6d371ea63e221e1.jpeg?1544620479',
-      host: 'cmx.im'
+        'https://img.pawoo.net/accounts/headers/000/720/873/original/a4f049961e7f50e5.jpeg',
+      host: 'pawoo.net'
     }
   }
   componentDidMount() {
@@ -26,7 +26,7 @@ export default class SideBar extends Component {
         })
       })
       .catch(err => {
-        alert(JSON.stringify(Object.keys(err)))
+        alert(JSON.stringify(err.response))
       })
   }
   render() {

@@ -3,13 +3,22 @@
  */
 
 import React, { Component } from 'react'
-import { View, StyleSheet, Dimensions, YellowBox } from 'react-native'
-import { List, ListItem, Left, Body, Thumbnail, Text } from 'native-base'
+import { View, StyleSheet, Dimensions, YellowBox, Text } from 'react-native'
+import {
+  List,
+  ListItem,
+  Left,
+  Body,
+  Thumbnail,
+  Button,
+  Spinner
+} from 'native-base'
 import Icon from 'react-native-vector-icons/FontAwesome5'
-import { getHomeTimelines } from '../../utils/api'
+import { getHomeTimelines, favourite, reblog } from '../../utils/api'
 import moment from 'moment'
 import 'moment/locale/zh-cn'
 import HTML from 'react-native-render-html'
+// import RNPopoverMenu from 'react-native-popover-menu'
 
 YellowBox.ignoreWarnings(['Remote debugger'])
 
@@ -17,17 +26,104 @@ export default class HomeScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      list: []
+      list: [],
+      loading: false
     }
   }
   componentDidMount() {
-    getHomeTimelines().then(res => {
-      console.log('res', res)
-      this.setState({
-        list: res
-      })
+    this.fetchTimelines()
+    // let menus = [
+    //   {
+    //     label: 'Editing',
+    //     menus: [{ label: 'Copy', icon: copy }, { label: 'Paste', icon: paste }]
+    //   },
+    //   {
+    //     label: 'Other',
+    //     menus: [{ label: 'Share', icon: share }]
+    //   },
+    //   {
+    //     label: '',
+    //     menus: [{ label: 'Share me please' }]
+    //   }
+    // ]
+
+    // RNPopoverMenu.Show(this.ref, {
+    //   title: '123',
+    //   menus: menus,
+    //   onDone: selection => {},
+    //   onCancel: () => {}
+    // })
+  }
+
+  /**
+   * @description 获取时间线数据
+   * @param {cb}: 成功后的回调函数
+   */
+  fetchTimelines = cb => {
+    this.setState({
+      loading: true
     })
-    console.log('123', this.props)
+    getHomeTimelines(this.props.url, this.props.query).then(res => {
+      this.setState({
+        list: res,
+        loading: false
+      })
+      if (cb) cb()
+    })
+  }
+
+  /**
+   * @description props变化的钩子函数
+   */
+  componentWillReceiveProps({ refreshing, finishRefresh }) {
+    if (refreshing) {
+      this.fetchTimelines(finishRefresh)
+    }
+  }
+
+  /**
+   * @description 给toot点赞，如果已经点过赞就取消点赞
+   * @param {id}: id
+   * @param {favourited}: 点赞状态
+   */
+  favourite = (id, favourited) => {
+    favourite(id, favourited).then(() => {
+      this.update(id, 'favourited', favourited, 'favourites_count')
+    })
+  }
+
+  /**
+   * @description 转发toot
+   * @param {id}: id
+   * @param {reblogged}: 转发状态
+   */
+  reblog = (id, reblogged) => {
+    reblog(id, reblogged).then(() => {
+      this.update(id, 'reblogged', reblogged, 'reblogs_count')
+    })
+  }
+
+  /**
+   * @description 更改前端点赞和转发的状态值，并且增减数量
+   * @param {status}: 状态名 favourited/reblogged
+   * @param {value}: 状态值 true/false
+   * @param {statusCount}: 状态的数量key
+   */
+  update = (id, status, value, statusCount) => {
+    const newList = [...this.state.list]
+    newList.forEach(list => {
+      if (list.id === id) {
+        list[status] = !value
+        if (value) {
+          list[statusCount] -= 1
+        } else {
+          list[statusCount] += 1
+        }
+      }
+    })
+    this.setState({
+      list: newList
+    })
   }
 
   /**
@@ -40,8 +136,11 @@ export default class HomeScreen extends Component {
   }
 
   render() {
+    if (this.state.loading) {
+      return <Spinner style={{ marginTop: 250 }} color="#5067FF" />
+    }
     return (
-      <View style={styles.container} padder>
+      <View style={styles.container}>
         <List>
           {this.state.list.map(item => {
             return (
@@ -58,9 +157,11 @@ export default class HomeScreen extends Component {
                 <Body>
                   <View style={styles.row}>
                     <Text numberOfLines={1} style={styles.titleWidth}>
-                      {item.account.display_name || item.account.username}
+                      <Text style={styles.displayName}>
+                        {item.account.display_name || item.account.username}
+                      </Text>
                       <Text style={styles.smallGrey}>
-                        @{item.account.username}
+                        &nbsp;@{item.account.username}
                       </Text>
                     </Text>
                     <Text>
@@ -77,10 +178,48 @@ export default class HomeScreen extends Component {
                     />
                   </View>
                   <View style={styles.iconBox}>
-                    <Icon style={styles.icon} name="reply" />
-                    <Icon style={styles.icon} name="retweet" />
-                    <Icon style={styles.icon} name="star" />
-                    <Icon style={styles.icon} name="ellipsis-h" />
+                    <Button transparent>
+                      <Icon style={styles.icon} name="reply" />
+                      <Text style={styles.bottomText}>
+                        {item.replies_count}
+                      </Text>
+                    </Button>
+                    <Button
+                      transparent
+                      onPress={() => this.reblog(item.id, item.reblogged)}
+                    >
+                      {item.reblogged ? (
+                        <Icon
+                          style={{ ...styles.icon, color: '#ca8f04' }}
+                          name="retweet"
+                        />
+                      ) : (
+                        <Icon style={styles.icon} name="retweet" />
+                      )}
+                      <Text style={styles.bottomText}>
+                        {item.reblogs_count}
+                      </Text>
+                    </Button>
+                    <Button
+                      transparent
+                      onPress={() => this.favourite(item.id, item.favourited)}
+                    >
+                      {item.favourited ? (
+                        <Icon
+                          style={{ ...styles.icon, color: '#ca8f04' }}
+                          name="star"
+                          solid
+                        />
+                      ) : (
+                        <Icon style={styles.icon} name="star" />
+                      )}
+                      <Text style={styles.bottomText}>
+                        {item.favourites_count}
+                      </Text>
+                    </Button>
+                    <Button transparent>
+                      <Icon style={styles.icon} name="ellipsis-h" />
+                    </Button>
                   </View>
                 </Body>
               </ListItem>
@@ -105,6 +244,7 @@ const tagsStyles = {
 
 const styles = StyleSheet.create({
   container: {
+    paddingRight: 10,
     flex: 1,
     flexDirection: 'column'
   },
@@ -128,19 +268,24 @@ const styles = StyleSheet.create({
   },
   smallGrey: {
     color: 'grey',
-    fontSize: 15,
     fontWeight: 'normal'
   },
   titleWidth: {
+    width: 170,
+    flexDirection: 'row',
+    alignItems: 'flex-end',
+    justifyContent: 'flex-start'
+  },
+  displayName: {
     color: '#333',
     fontWeight: 'bold',
-    width: 170,
-    fontSize: 16
+    fontSize: 18
   },
   iconBox: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginRight: 20
+    marginRight: 20,
+    marginTop: 10
   },
   htmlBox: {
     flex: 1,
@@ -149,5 +294,8 @@ const styles = StyleSheet.create({
   },
   icon: {
     fontSize: 15
+  },
+  bottomText: {
+    marginLeft: 10
   }
 })

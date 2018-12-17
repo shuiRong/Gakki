@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, Dimensions, View, StyleSheet } from 'react-native'
+import { Text, Dimensions, StyleSheet } from 'react-native'
 import {
   Container,
   Header,
@@ -14,8 +14,8 @@ import {
   Thumbnail
 } from 'native-base'
 import Ripple from 'react-native-material-ripple'
-import Icon from 'react-native-vector-icons/FontAwesome5'
-import { getStatuses, favourite, reblog } from '../utils/api'
+import Icon from 'react-native-vector-icons/FontAwesome'
+import { getStatuses } from '../utils/api'
 import HTML from 'react-native-render-html'
 import moment from 'moment'
 
@@ -115,56 +115,6 @@ export default class TootDetail extends Component {
     }
   }
 
-  /**
-   * @description 给toot点赞，如果已经点过赞就取消点赞
-   */
-  favourite = () => {
-    favourite(this.state.toot.id, this.state.toot.favourited).then(() => {
-      this.update('favourited', 'favourites_count')
-    })
-  }
-
-  /**
-   * @description 转发toot
-   */
-  reblog = () => {
-    reblog(this.state.toot.id, this.state.toot.reblogged).then(() => {
-      this.update('reblogged', 'reblogs_count')
-    })
-  }
-
-  /**
-   * @description 更改前端点赞和转发的状态值，并且增减数量
-   * @param {status}: 状态名 favourited/reblogged
-   * @param {statusCount}: 状态的数量key
-   */
-  update = (status, statusCount) => {
-    const value = this.state.toot[status]
-    const newToot = { ...this.state.toot }
-    newToot[status] = !value
-    if (value) {
-      newToot[statusCount] -= 1
-    } else {
-      newToot[statusCount] += 1
-    }
-    this.setState({
-      toot: newToot
-    })
-  }
-
-  /**
-   * @description 回到主页，带着一些可能变化的数据
-   */
-  goBackWithParam = () => {
-    this.props.navigation.navigate('Home', {
-      reblogged: this.state.toot.reblogged,
-      reblogs_count: this.state.toot.reblogs_count,
-      favourited: this.state.toot.favourited,
-      favourites_count: this.state.toot.favourites_count,
-      muted: this.state.toot.muted
-    })
-  }
-
   componentDidMount() {
     getStatuses(this.props.navigation.getParam('id')).then(res => {
       this.setState({
@@ -182,7 +132,7 @@ export default class TootDetail extends Component {
               <Icon
                 style={[styles.icon, styles.navIcon]}
                 name="arrow-left"
-                onPress={this.goBackWithParam}
+                onPress={() => this.props.navigation.goBack()}
               />
             </Button>
           </Left>
@@ -221,42 +171,27 @@ export default class TootDetail extends Component {
                 </Text>
               </Ripple>
             </CardItem>
-            <CardItem style={{ marginTop: 10 }}>
-              <View style={styles.leftBody}>
+            <CardItem>
+              <Left style={styles.leftBody}>
                 <Button transparent>
                   <Icon style={styles.icon} name="reply" />
                   <Text style={styles.bottomText}>
                     {this.state.toot.replies_count}
                   </Text>
                 </Button>
-                <Button transparent onPress={this.reblog}>
-                  {this.state.toot.reblogged ? (
-                    <Icon
-                      style={{ ...styles.icon, color: '#ca8f04' }}
-                      name="retweet"
-                    />
-                  ) : (
-                    <Icon style={styles.icon} name="retweet" />
-                  )}
+                <Button transparent>
+                  <Icon style={styles.icon} name="retweet" />
                   <Text style={styles.bottomText}>
                     {this.state.toot.reblogs_count}
                   </Text>
                 </Button>
-                <Button transparent onPress={this.favourite}>
-                  {this.state.toot.favourited ? (
-                    <Icon
-                      style={{ ...styles.icon, color: '#ca8f04' }}
-                      name="star"
-                      solid
-                    />
-                  ) : (
-                    <Icon style={styles.icon} name="star" />
-                  )}
+                <Button transparent>
+                  <Icon style={styles.icon} name="star" />
                   <Text style={styles.bottomText}>
                     {this.state.toot.favourites_count}
                   </Text>
                 </Button>
-              </View>
+              </Left>
               <Right>
                 <Icon style={styles.icon} name="ellipsis-h" />
               </Right>
@@ -291,9 +226,7 @@ const styles = StyleSheet.create({
   },
   leftBody: {
     flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: 'lightgreen',
-    justifyContent: 'space-between'
+    alignItems: 'center'
   },
   icon: {
     fontSize: 17
