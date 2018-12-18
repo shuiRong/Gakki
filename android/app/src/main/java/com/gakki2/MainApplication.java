@@ -1,4 +1,4 @@
-package com.mastodon;
+package com.gakki2;
 
 import android.app.Application;
 

@@ -29,9 +29,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "mastodon.app"
-               BlueprintName = "mastodon"
-               ReferencedContainer = "container:mastodon.xcodeproj">
+               BuildableName = "Gakki2.app"
+               BlueprintName = "Gakki2"
+               ReferencedContainer = "container:Gakki2.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -43,9 +43,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "mastodonTests.xctest"
-               BlueprintName = "mastodonTests"
-               ReferencedContainer = "container:mastodon.xcodeproj">
+               BuildableName = "Gakki2Tests.xctest"
+               BlueprintName = "Gakki2Tests"
+               ReferencedContainer = "container:Gakki2.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -61,9 +61,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "mastodonTests.xctest"
-               BlueprintName = "mastodonTests"
-               ReferencedContainer = "container:mastodon.xcodeproj">
+               BuildableName = "Gakki2Tests.xctest"
+               BlueprintName = "Gakki2Tests"
+               ReferencedContainer = "container:Gakki2.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -71,9 +71,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "mastodon.app"
-            BlueprintName = "mastodon"
-            ReferencedContainer = "container:mastodon.xcodeproj">
+            BuildableName = "Gakki2.app"
+            BlueprintName = "Gakki2"
+            ReferencedContainer = "container:Gakki2.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -94,9 +94,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "mastodon.app"
-            BlueprintName = "mastodon"
-            ReferencedContainer = "container:mastodon.xcodeproj">
+            BuildableName = "Gakki2.app"
+            BlueprintName = "Gakki2"
+            ReferencedContainer = "container:Gakki2.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -109,13 +109,13 @@
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
       <BuildableProductRunnable
-         runnableDebuggingMode = "1">
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "mastodon.app"
-            BlueprintName = "mastodon"
-            ReferencedContainer = "container:mastodon.xcodeproj">
+            BuildableName = "Gakki2.app"
+            BlueprintName = "Gakki2"
+            ReferencedContainer = "container:Gakki2.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
