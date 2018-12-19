@@ -1,5 +1,11 @@
 import React, { Component } from 'react'
-import { Text, Dimensions, View, StyleSheet } from 'react-native'
+import {
+  Text,
+  Dimensions,
+  View,
+  StyleSheet,
+  TouchableOpacity
+} from 'react-native'
 import {
   Container,
   Header,
@@ -12,12 +18,14 @@ import {
   Card,
   CardItem,
   Thumbnail
+  // Icon
 } from 'native-base'
 import Ripple from 'react-native-material-ripple'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { getStatuses, favourite, reblog } from '../utils/api'
 import HTML from 'react-native-render-html'
 import moment from 'moment'
+import RNPopoverMenu from 'react-native-popover-menu'
 
 /**
  * Toot详情页面
@@ -115,6 +123,14 @@ export default class TootDetail extends Component {
     }
   }
 
+  componentDidMount() {
+    getStatuses(this.props.navigation.getParam('id')).then(res => {
+      this.setState({
+        toot: res
+      })
+    })
+  }
+
   /**
    * @description 给toot点赞，如果已经点过赞就取消点赞
    */
@@ -165,17 +181,28 @@ export default class TootDetail extends Component {
     })
   }
 
-  componentDidMount() {
-    getStatuses(this.props.navigation.getParam('id')).then(res => {
-      this.setState({
-        toot: res
-      })
+  renderMenu = ref => {
+    let remove = <Icon name="bell" size={30} color={'red'} />
+    let menus = [
+      {
+        menus: [{ label: 'Remove'}, { label: 'Block' }]
+      }
+    ]
+
+    RNPopoverMenu.Show(ref, {
+      menus: menus,
+      onDone: (sectionSelection, menuSelection) => {
+        console.log('selected item index: ' + menuSelection)
+      },
+      onCancel: () => {
+        console.log('popover canceled')
+      }
     })
   }
 
   render() {
     return (
-      <Container>
+      <Container ref={this.detail}>
         <Header>
           <Left>
             <Button transparent>
@@ -224,7 +251,7 @@ export default class TootDetail extends Component {
             <CardItem style={{ marginTop: 10 }}>
               <View style={styles.leftBody}>
                 <Button transparent>
-                  <Icon style={styles.icon} name="reply" />
+                  <Icon name="reply" />
                   <Text style={styles.bottomText}>
                     {this.state.toot.replies_count}
                   </Text>
@@ -236,13 +263,13 @@ export default class TootDetail extends Component {
                       name="retweet"
                     />
                   ) : (
-                    <Icon style={styles.icon} name="retweet" />
+                    <Icon name="retweet" />
                   )}
                   <Text style={styles.bottomText}>
                     {this.state.toot.reblogs_count}
                   </Text>
                 </Button>
-                <Button transparent onPress={this.favourite}>
+                <Button transparent onPress={this.invokePopoverMenu}>
                   {this.state.toot.favourited ? (
                     <Icon
                       style={{ ...styles.icon, color: '#ca8f04' }}
@@ -250,7 +277,7 @@ export default class TootDetail extends Component {
                       solid
                     />
                   ) : (
-                    <Icon style={styles.icon} name="star" />
+                    <Icon name="star" />
                   )}
                   <Text style={styles.bottomText}>
                     {this.state.toot.favourites_count}
@@ -258,7 +285,16 @@ export default class TootDetail extends Component {
                 </Button>
               </View>
               <Right>
-                <Icon style={styles.icon} name="ellipsis-h" />
+                <TouchableOpacity
+                  ref={ref => {
+                    this.ref = ref
+                  }}
+                  onPress={() => {
+                    this.renderMenu(this.ref)
+                  }}
+                >
+                  <Icon name="ellipsis-h" />
+                </TouchableOpacity>
               </Right>
             </CardItem>
           </Card>

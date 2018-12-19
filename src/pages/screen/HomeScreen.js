@@ -18,7 +18,6 @@ import { getHomeTimelines, favourite, reblog } from '../../utils/api'
 import moment from 'moment'
 import 'moment/locale/zh-cn'
 import HTML from 'react-native-render-html'
-// import RNPopoverMenu from 'react-native-popover-menu'
 
 YellowBox.ignoreWarnings(['Remote debugger'])
 
@@ -32,27 +31,6 @@ export default class HomeScreen extends Component {
   }
   componentDidMount() {
     this.fetchTimelines()
-    // let menus = [
-    //   {
-    //     label: 'Editing',
-    //     menus: [{ label: 'Copy', icon: copy }, { label: 'Paste', icon: paste }]
-    //   },
-    //   {
-    //     label: 'Other',
-    //     menus: [{ label: 'Share', icon: share }]
-    //   },
-    //   {
-    //     label: '',
-    //     menus: [{ label: 'Share me please' }]
-    //   }
-    // ]
-
-    // RNPopoverMenu.Show(this.ref, {
-    //   title: '123',
-    //   menus: menus,
-    //   onDone: selection => {},
-    //   onCancel: () => {}
-    // })
   }
 
   /**
