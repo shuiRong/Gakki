@@ -255,8 +255,6 @@ const styles = StyleSheet.create({
     marginTop: 20
   },
   leftBody: {
-    width: 500,
-    backgroundColor: 'pink',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between'

@@ -9,11 +9,9 @@ export default class SideBar extends Component {
     super(props)
     this.state = {
       username: 'shuiRong',
-      avatar:
-        'https://img.pawoo.net/accounts/avatars/000/720/873/original/61d849cdb203a6f4.jpg',
-      header:
-        'https://img.pawoo.net/accounts/headers/000/720/873/original/a4f049961e7f50e5.jpeg',
-      host: 'pawoo.net'
+      avatar: '',
+      header: '',
+      host: 'cmx.im'
     }
   }
   componentDidMount() {

@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const service = axios.create({
-  baseURL: 'https://pawoo.net',
+  baseURL: 'https://cmx.im',
   timeout: 5000 // 请求超时时间限制
 })
 

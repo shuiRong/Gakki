@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, RefreshControl } from 'react-native'
+import { View, RefreshControl } from 'react-native'
 import {
   Drawer,
   Container,
@@ -8,7 +8,8 @@ import {
   Tab,
   Tabs,
   TabHeading,
-  Fab
+  Fab,
+  ScrollableTab
 } from 'native-base'
 import HeaderItem from './Header'
 import Icon from 'react-native-vector-icons/FontAwesome5'
@@ -48,7 +49,10 @@ export default class Home extends Component {
           onClose={this.closeDrawer}
         >
           <Container>
-            <HeaderItem openDrawer={this.openDrawer} {...this.props} />
+            <HeaderItem
+              openDrawer={this.openDrawer}
+              navigation={this.props.navigation}
+            />
             <Content
               refreshControl={
                 <RefreshControl
@@ -57,25 +61,19 @@ export default class Home extends Component {
                 />
               }
             >
-              <Tabs onChangeTab={this.tabChanged}>
+              <Tabs
+                onChangeTab={this.tabChanged}
+                renderTabBar={() => <ScrollableTab />}
+              >
                 <Tab
                   heading={
                     <TabHeading>
-                      {this.state.tab === 0 ? (
-                        <Icon
-                          style={{ ...styles.icon, color: '#fff' }}
-                          name="home"
-                        />
-                      ) : (
-                        <Icon style={styles.icon} name="home" />
-                      )}
                       <Text>主页</Text>
                     </TabHeading>
                   }
-                  activeTabStyle={{ color: 'pink' }}
                 >
                   <HomeScreen
-                    {...this.props}
+                    navigation={this.props.navigation}
                     url={'home'}
                     refreshing={this.state.refreshing}
                     finishRefresh={() => this.setState({ refreshing: false })}
@@ -84,20 +82,12 @@ export default class Home extends Component {
                 <Tab
                   heading={
                     <TabHeading>
-                      {this.state.tab === 1 ? (
-                        <Icon
-                          style={{ ...styles.icon, color: '#fff' }}
-                          name="users"
-                        />
-                      ) : (
-                        <Icon style={styles.icon} name="users" />
-                      )}
                       <Text>本站</Text>
                     </TabHeading>
                   }
                 >
                   <HomeScreen
-                    {...this.props}
+                    navigation={this.props.navigation}
                     url={'public'}
                     query={{ local: true, only_media: false }}
                     refreshing={this.state.refreshing}
@@ -107,20 +97,12 @@ export default class Home extends Component {
                 <Tab
                   heading={
                     <TabHeading>
-                      {this.state.tab === 2 ? (
-                        <Icon
-                          style={{ ...styles.icon, color: '#fff' }}
-                          name="globe-americas"
-                        />
-                      ) : (
-                        <Icon style={styles.icon} name="globe-americas" />
-                      )}
                       <Text>跨站</Text>
                     </TabHeading>
                   }
                 >
                   <HomeScreen
-                    {...this.props}
+                    navigation={this.props.navigation}
                     url={'public'}
                     query={{ only_media: false }}
                     refreshing={this.state.refreshing}
@@ -143,10 +125,3 @@ export default class Home extends Component {
     )
   }
 }
-
-const styles = StyleSheet.create({
-  icon: {
-    color: '#bbb',
-    fontSize: 17
-  }
-})

@@ -60,3 +60,11 @@ export const reblog = (id, reblog) => {
     headers
   })
 }
+
+export const mute = (id, muted) => {
+  return request({
+    url: `/api/v1/statuses/${id}/${muted ? 'unmute' : 'mute'}`,
+    method: 'post',
+    headers
+  })
+}

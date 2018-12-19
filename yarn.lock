@@ -4528,6 +4528,7 @@ react-native-vector-icons@6.0.2:
 react-native-vector-icons@^6.1.0:
   version "6.1.0"
   resolved "http://registry.npm.taobao.org/react-native-vector-icons/download/react-native-vector-icons-6.1.0.tgz#770a3f8ced692d75deb3afbb9829195ceed1eedd"
+  integrity sha1-dwo/jO1pLXXes6+7mCkZXO7R7t0=
   dependencies:
     lodash "^4.0.0"
     prop-types "^15.6.2"

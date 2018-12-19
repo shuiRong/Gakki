@@ -25,7 +25,7 @@ export default class HomeScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      list: [],
+      list: undefined,
       loading: false
     }
   }
@@ -52,10 +52,45 @@ export default class HomeScreen extends Component {
 
   /**
    * @description props变化的钩子函数
+   * 如果处于刷新之中，重新加载数据
+   * 如果带有一些参数；根据参数更新数据状态
    */
-  componentWillReceiveProps({ refreshing, finishRefresh }) {
+  componentWillReceiveProps({ refreshing, finishRefresh, navigation }) {
     if (refreshing) {
       this.fetchTimelines(finishRefresh)
+    }
+    if (!navigation) {
+      return
+    }
+    const params = navigation.getParam('data')
+
+    if (params && params.id) {
+      let newList = this.state.list
+      if (params.muted) {
+        // 如果某人被‘隐藏’，那么首页去除所有该用户的消息
+        newList = newList.filter(item => item.account.id !== params.accountId)
+        this.setState({
+          list: newList
+        })
+        return
+      }
+      // 改变某条toot的点赞等状态
+      newList = newList.map(item => {
+        if (item.id !== params.id) {
+          return item
+        }
+        return {
+          ...item,
+          reblogs_count: params.reblogs_count,
+          favourites_count: params.favourites_count,
+          favourited: params.favourited,
+          reblogged: params.reblogged
+        }
+      })
+
+      this.setState({
+        list: newList
+      })
     }
   }
 
@@ -108,6 +143,9 @@ export default class HomeScreen extends Component {
    * 跳转入Toot详情页面
    */
   goTootDetail = id => {
+    if (!this.props) {
+      return
+    }
     this.props.navigation.navigate('TootDetail', {
       id: id
     })
@@ -119,91 +157,91 @@ export default class HomeScreen extends Component {
     }
     return (
       <View style={styles.container}>
-        <List>
-          {this.state.list.map(item => {
-            return (
-              <ListItem
-                avatar
-                style={styles.list}
-                key={item.id}
-                button={true}
-                onPress={() => this.goTootDetail(item.id)}
-              >
-                <Left>
-                  <Thumbnail source={{ uri: item.account.avatar }} />
-                </Left>
-                <Body>
-                  <View style={styles.row}>
-                    <Text numberOfLines={1} style={styles.titleWidth}>
-                      <Text style={styles.displayName}>
-                        {item.account.display_name || item.account.username}
-                      </Text>
-                      <Text style={styles.smallGrey}>
-                        &nbsp;@{item.account.username}
-                      </Text>
+        <List
+          dataArray={this.state.list}
+          renderRow={item => (
+            <ListItem
+              avatar
+              style={styles.list}
+              key={item.id}
+              button={true}
+              onPress={() => this.goTootDetail(item.id)}
+            >
+              <Left>
+                <Thumbnail source={{ uri: item.account.avatar }} />
+              </Left>
+              <Body>
+                <View style={styles.row}>
+                  <Text numberOfLines={1} style={styles.titleWidth}>
+                    <Text style={styles.displayName}>
+                      {item.account.display_name || item.account.username}
                     </Text>
-                    <Text>
-                      {moment(item.created_at, 'YYYY-MM-DD')
-                        .startOf('day')
-                        .fromNow()}
+                    <Text style={styles.smallGrey}>
+                      &nbsp;@{item.account.username}
                     </Text>
-                  </View>
-                  <View style={styles.htmlBox}>
-                    <HTML
-                      html={item.content}
-                      tagsStyles={tagsStyles}
-                      imagesMaxWidth={Dimensions.get('window').width}
-                    />
-                  </View>
-                  <View style={styles.iconBox}>
-                    <Button transparent>
-                      <Icon style={styles.icon} name="reply" />
-                      <Text style={styles.bottomText}>
-                        {item.replies_count}
-                      </Text>
-                    </Button>
-                    <Button
-                      transparent
-                      onPress={() => this.reblog(item.id, item.reblogged)}
-                    >
-                      {item.reblogged ? (
-                        <Icon
-                          style={{ ...styles.icon, color: '#ca8f04' }}
-                          name="retweet"
-                        />
-                      ) : (
-                        <Icon style={styles.icon} name="retweet" />
-                      )}
-                      <Text style={styles.bottomText}>
-                        {item.reblogs_count}
-                      </Text>
-                    </Button>
-                    <Button
-                      transparent
-                      onPress={() => this.favourite(item.id, item.favourited)}
-                    >
-                      {item.favourited ? (
-                        <Icon
-                          style={{ ...styles.icon, color: '#ca8f04' }}
-                          name="star"
-                          solid
-                        />
-                      ) : (
-                        <Icon style={styles.icon} name="star" />
-                      )}
-                      <Text style={styles.bottomText}>
-                        {item.favourites_count}
-                      </Text>
-                    </Button>
-                    <Button transparent>
-                      <Icon style={styles.icon} name="ellipsis-h" />
-                    </Button>
-                  </View>
-                </Body>
-              </ListItem>
-            )
-          })}
-        </List>
+                  </Text>
+                  <Text>
+                    {moment(item.created_at, 'YYYY-MM-DD')
+                      .startOf('day')
+                      .fromNow()}
+                  </Text>
+                </View>
+                <View style={styles.htmlBox}>
+                  <HTML
+                    html={item.content}
+                    tagsStyles={tagsStyles}
+                    imagesMaxWidth={Dimensions.get('window').width}
+                  />
+                </View>
+                <View style={styles.iconBox}>
+                  <Button
+                    transparent
+                    onPress={this.props.navigation.navigate('Reply', {
+                      id: item.id
+                    })}
+                  >
+                    <Icon style={styles.icon} name="reply" />
+                    <Text style={styles.bottomText}>{item.replies_count}</Text>
+                  </Button>
+                  <Button
+                    transparent
+                    onPress={() => this.reblog(item.id, item.reblogged)}
+                  >
+                    {item.reblogged ? (
+                      <Icon
+                        style={{ ...styles.icon, color: '#ca8f04' }}
+                        name="retweet"
+                      />
+                    ) : (
+                      <Icon style={styles.icon} name="retweet" />
+                    )}
+                    <Text style={styles.bottomText}>{item.reblogs_count}</Text>
+                  </Button>
+                  <Button
+                    transparent
+                    onPress={() => this.favourite(item.id, item.favourited)}
+                  >
+                    {item.favourited ? (
+                      <Icon
+                        style={{ ...styles.icon, color: '#ca8f04' }}
+                        name="star"
+                        solid
+                      />
+                    ) : (
+                      <Icon style={styles.icon} name="star" />
+                    )}
+                    <Text style={styles.bottomText}>
+                      {item.favourites_count}
+                    </Text>
+                  </Button>
+                  <Button transparent>
+                    <Icon style={styles.icon} name="ellipsis-h" />
+                  </Button>
+                </View>
+              </Body>
+            </ListItem>
+          )}
+        />
       </View>
     )
   }
