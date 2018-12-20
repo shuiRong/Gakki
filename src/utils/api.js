@@ -45,6 +45,15 @@ export const getStatuses = id => {
   })
 }
 
+// 获取评论
+export const context = id => {
+  return request({
+    url: `/api/v1/statuses/${id}/context`,
+    method: 'get',
+    headers
+  })
+}
+
 export const favourite = (id, favourite) => {
   return request({
     url: `/api/v1/statuses/${id}/${favourite ? 'unfavourite' : 'favourite'}`,

@@ -2,9 +2,11 @@ import React, { Component } from 'react'
 import {
   Text,
   Dimensions,
-  View,
   StyleSheet,
-  TouchableOpacity
+  TouchableOpacity,
+  RefreshControl,
+  View,
+  TextInput
 } from 'react-native'
 import {
   Container,
@@ -17,14 +19,19 @@ import {
   Content,
   Card,
   CardItem,
-  Thumbnail
+  Thumbnail,
+  Spinner,
+  Textarea,
+  Footer
 } from 'native-base'
 import Ripple from 'react-native-material-ripple'
 import Icon from 'react-native-vector-icons/FontAwesome5'
-import { getStatuses, favourite, reblog, mute } from '../utils/api'
+import { getStatuses, favourite, reblog, mute, context } from '../utils/api'
 import HTML from 'react-native-render-html'
 import moment from 'moment'
 import RNPopoverMenu from 'react-native-popover-menu'
+import Context from './common/Context'
+import { contextData, tootDetail } from '../mock'
 
 /**
  * Toot详情页面
@@ -35,14 +42,37 @@ export default class TootDetail extends Component {
     this.state = {
       toot: {
         account: {}
-      }
+      },
+      context: [],
+      refreshing: false,
+      text: '',
+      singular: true
     }
   }
 
   componentDidMount() {
-    getStatuses(this.props.navigation.getParam('id')).then(res => {
+    // this.fetchData()
+    this.setState({
+      toot: tootDetail,
+      context: contextData
+    })
+  }
+
+  fetchData = () => {
+    this.setState({
+      refreshing: true
+    })
+    const id = this.props.navigation.getParam('id')
+    getStatuses(id).then(res => {
       this.setState({
-        toot: res
+        toot: res,
+        refreshing: false
+      })
+    })
+
+    context(id).then(res => {
+      this.setState({
+        context: res.descendants
       })
     })
   }
@@ -130,6 +160,97 @@ export default class TootDetail extends Component {
   }
 
   render() {
+    let content = <Spinner style={{ marginTop: 250 }} color="#5067FF" />
+    if (this.state.toot.id) {
+      content = (
+        <Card transparent>
+          <CardItem>
+            <Left>
+              <Thumbnail source={{ uri: this.state.toot.account.avatar }} />
+              <Body>
+                <Text style={styles.black}>
+                  {this.state.toot.account.display_name ||
+                    this.state.toot.account.username}
+                </Text>
+                <Text note>{this.state.toot.account.username}</Text>
+              </Body>
+            </Left>
+          </CardItem>
+          <CardItem cardBody style={styles.body}>
+            <Ripple>
+              <HTML
+                html={this.state.toot.content}
+                tagsStyles={tagsStyles}
+                imagesMaxWidth={Dimensions.get('window').width}
+              />
+              <Text style={styles.time}>
+                {moment(this.state.toot.created_at).format('LLL')}
+              </Text>
+            </Ripple>
+          </CardItem>
+          <CardItem style={styles.tools}>
+            <Left style={styles.leftIcon}>
+              <Button transparent>
+                <Icon name="reply" style={styles.icon} />
+                <Text style={styles.bottomText}>
+                  {this.state.toot.replies_count}
+                </Text>
+              </Button>
+              <Button transparent onPress={this.reblog}>
+                {this.state.toot.reblogged ? (
+                  <Icon
+                    style={{ ...styles.icon, color: '#ca8f04' }}
+                    name="retweet"
+                  />
+                ) : (
+                  <Icon name="retweet" style={styles.icon} />
+                )}
+                <Text style={styles.bottomText}>
+                  {this.state.toot.reblogs_count}
+                </Text>
+              </Button>
+              <Button transparent onPress={this.favourite}>
+                {this.state.toot.favourited ? (
+                  <Icon
+                    style={{ ...styles.icon, color: '#ca8f04' }}
+                    name="star"
+                    solid
+                  />
+                ) : (
+                  <Icon name="star" style={styles.icon} />
+                )}
+                <Text style={styles.bottomText}>
+                  {this.state.toot.favourites_count}
+                </Text>
+              </Button>
+            </Left>
+            <Right>
+              <TouchableOpacity
+                ref={ref => {
+                  this.ref = ref
+                }}
+                onPress={() => {
+                  this.renderMenu(this.ref)
+                }}
+              >
+                <Icon name="ellipsis-h" style={styles.icon} />
+              </TouchableOpacity>
+            </Right>
+          </CardItem>
+        </Card>
+      )
+    }
+
+    let inputStyle = {
+      height: 50,
+      borderColor: '#ddd',
+      borderWidth: 1,
+      padding: 20
+    }
+    if (!this.state.singular) {
+      inputStyle.height = 200
+    }
+
     return (
       <Container ref={this.detail}>
         <Header>
@@ -151,83 +272,42 @@ export default class TootDetail extends Component {
             </Button>
           </Right>
         </Header>
-        <Content padder>
-          <Card transparent>
-            <CardItem>
-              <Left>
-                <Thumbnail source={{ uri: this.state.toot.account.avatar }} />
-                <Body>
-                  <Text>
-                    {this.state.toot.account.display_name ||
-                      this.state.toot.account.username}
-                  </Text>
-                  <Text note>{this.state.toot.account.username}</Text>
-                </Body>
-              </Left>
-            </CardItem>
-            <CardItem cardBody style={styles.body}>
-              <Ripple>
-                <HTML
-                  html={this.state.toot.content}
-                  tagsStyles={tagsStyles}
-                  imagesMaxWidth={Dimensions.get('window').width}
-                />
-                <Text style={styles.time}>
-                  {moment(this.state.toot.created_at).format('LLL')}
-                </Text>
-              </Ripple>
-            </CardItem>
-            <CardItem style={{ marginTop: 10 }}>
-              <View style={styles.leftBody}>
-                <Button transparent>
-                  <Icon name="reply" />
-                  <Text style={styles.bottomText}>
-                    {this.state.toot.replies_count}
-                  </Text>
-                </Button>
-                <Button transparent onPress={this.reblog}>
-                  {this.state.toot.reblogged ? (
-                    <Icon
-                      style={{ ...styles.icon, color: '#ca8f04' }}
-                      name="retweet"
-                    />
-                  ) : (
-                    <Icon name="retweet" />
-                  )}
-                  <Text style={styles.bottomText}>
-                    {this.state.toot.reblogs_count}
-                  </Text>
-                </Button>
-                <Button transparent onPress={this.favourite}>
-                  {this.state.toot.favourited ? (
-                    <Icon
-                      style={{ ...styles.icon, color: '#ca8f04' }}
-                      name="star"
-                      solid
-                    />
-                  ) : (
-                    <Icon name="star" />
-                  )}
-                  <Text style={styles.bottomText}>
-                    {this.state.toot.favourites_count}
-                  </Text>
-                </Button>
-              </View>
-              <Right>
-                <TouchableOpacity
-                  ref={ref => {
-                    this.ref = ref
-                  }}
-                  onPress={() => {
-                    this.renderMenu(this.ref)
-                  }}
-                >
-                  <Icon name="ellipsis-h" />
-                </TouchableOpacity>
-              </Right>
-            </CardItem>
-          </Card>
+        <Content
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.refreshing}
+              onRefresh={this.fetchData}
+            />
+          }
+          padder
+        >
+          {content}
+          <Context data={this.state.context} />
         </Content>
+        <View style={styles.inputBox}>
+          <TextInput
+            style={inputStyle}
+            onChangeText={text => this.setState({ text })}
+            value={this.state.text}
+            multiline={true}
+            textAlignVertical={'top'}
+            placeholder={'-_- 说些什么呢？'}
+            maxLength={400}
+            numberOfLines={3}
+            onFocus={() => this.setState({ singular: false })}
+            onBlur={() => this.setState({ singular: true })}
+          />
+          <View
+            style={{ flexDirection: 'row', justifyContent: 'space-between' }}
+          >
+            <Button bordered success>
+              <Text>CW</Text>
+            </Button>
+            <Button primary>
+              <Text>TOOT!</Text>
+            </Button>
+          </View>
+        </View>
       </Container>
     )
   }
@@ -254,15 +334,14 @@ const styles = StyleSheet.create({
     fontSize: 15,
     marginTop: 20
   },
-  leftBody: {
+  leftIcon: {
     width: 500,
-    backgroundColor: 'pink',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between'
   },
   icon: {
-    fontSize: 17
+    fontSize: 15
   },
   navIcon: {
     fontSize: 20,
@@ -270,5 +349,18 @@ const styles = StyleSheet.create({
   },
   bottomText: {
     marginLeft: 10
+  },
+  black: {
+    color: 'black'
+  },
+  tools: {
+    height: 40,
+    borderTopColor: '#ddd',
+    borderTopWidth: 1,
+    marginTop: 10,
+    alignItems: 'center'
+  },
+  inputBox: {
+    height: 300
   }
 })

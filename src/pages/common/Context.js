@@ -1,174 +1,130 @@
-/**
- * 主页主体内容
- */
-
 import React, { Component } from 'react'
-import { View, StyleSheet, Dimensions, Text } from 'react-native'
 import {
-  List,
-  ListItem,
+  Text,
+  Dimensions,
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  Image
+} from 'react-native'
+import {
   Left,
   Body,
-  Thumbnail,
+  Right,
   Button,
-  Spinner
+  Card,
+  CardItem,
+  Thumbnail,
+  List,
+  ListItem
 } from 'native-base'
 import Icon from 'react-native-vector-icons/FontAwesome5'
-import { getHomeTimelines, favourite, reblog } from '../../utils/api'
-import moment from 'moment'
-import 'moment/locale/zh-cn'
+import { favourite, reblog, mute } from '../../utils/api'
 import HTML from 'react-native-render-html'
+import moment from 'moment'
+import RNPopoverMenu from 'react-native-popover-menu'
 
-export default class HomeScreen extends Component {
+/**
+ * 评论组件
+ */
+export default class Context extends Component {
   constructor(props) {
     super(props)
-    this.state = {
-      list: undefined,
-      loading: false
-    }
-  }
-  componentDidMount() {
-    this.fetchTimelines()
-  }
-
-  /**
-   * @description 获取时间线数据
-   * @param {cb}: 成功后的回调函数
-   */
-  fetchTimelines = cb => {
-    this.setState({
-      loading: true
-    })
-    getHomeTimelines(this.props.url, this.props.query).then(res => {
-      this.setState({
-        list: res,
-        loading: false
-      })
-      if (cb) cb()
-    })
-  }
-
-  /**
-   * @description props变化的钩子函数
-   * 如果处于刷新之中，重新加载数据
-   * 如果带有一些参数；根据参数更新数据状态
-   */
-  componentWillReceiveProps({ refreshing, finishRefresh, navigation }) {
-    if (refreshing) {
-      this.fetchTimelines(finishRefresh)
-    }
-    if (!navigation) {
-      return
-    }
-    const params = navigation.getParam('data')
-
-    if (params && params.id) {
-      let newList = this.state.list
-      if (params.muted) {
-        // 如果某人被‘隐藏’，那么首页去除所有该用户的消息
-        newList = newList.filter(item => item.account.id !== params.accountId)
-        this.setState({
-          list: newList
-        })
-        return
-      }
-      // 改变某条toot的点赞等状态
-      newList = newList.map(item => {
-        if (item.id !== params.id) {
-          return item
-        }
-        return {
-          ...item,
-          reblogs_count: params.reblogs_count,
-          favourites_count: params.favourites_count,
-          favourited: params.favourited,
-          reblogged: params.reblogged
-        }
-      })
-
-      this.setState({
-        list: newList
-      })
-    }
   }
 
   /**
    * @description 给toot点赞，如果已经点过赞就取消点赞
-   * @param {id}: id
-   * @param {favourited}: 点赞状态
    */
-  favourite = (id, favourited) => {
-    favourite(id, favourited).then(() => {
-      this.update(id, 'favourited', favourited, 'favourites_count')
+  favourite = () => {
+    favourite(item.id, item.favourited).then(() => {
+      this.update('favourited', 'favourites_count')
     })
   }
 
   /**
    * @description 转发toot
-   * @param {id}: id
-   * @param {reblogged}: 转发状态
    */
-  reblog = (id, reblogged) => {
-    reblog(id, reblogged).then(() => {
-      this.update(id, 'reblogged', reblogged, 'reblogs_count')
+  reblog = () => {
+    reblog(item.id, item.reblogged).then(() => {
+      this.update('reblogged', 'reblogs_count')
     })
   }
 
   /**
    * @description 更改前端点赞和转发的状态值，并且增减数量
    * @param {status}: 状态名 favourited/reblogged
-   * @param {value}: 状态值 true/false
    * @param {statusCount}: 状态的数量key
    */
-  update = (id, status, value, statusCount) => {
-    const newList = [...this.state.list]
-    newList.forEach(list => {
-      if (list.id === id) {
-        list[status] = !value
-        if (value) {
-          list[statusCount] -= 1
-        } else {
-          list[statusCount] += 1
-        }
-      }
-    })
+  update = (status, statusCount) => {
+    const value = item[status]
+    const newToot = { ...item }
+    newToot[status] = !value
+    if (value) {
+      newToot[statusCount] -= 1
+    } else {
+      newToot[statusCount] += 1
+    }
     this.setState({
-      list: newList
+      toot: newToot
     })
   }
 
   /**
-   * 跳转入Toot详情页面
+   * @description 隐藏某人，不看所有动态
    */
-  goTootDetail = id => {
-    if (!this.props) {
-      return
-    }
-    this.props.navigation.navigate('TootDetail', {
-      id: id
+  mute = () => {
+    mute(item.id, item.muted).then(() => {
+      this.goBackWithParam()
+    })
+  }
+
+  renderMenu = ref => {
+    let menus = [
+      {
+        menus: [{ label: '隐藏' }, { label: '屏蔽' }]
+      }
+    ]
+
+    RNPopoverMenu.Show(ref, {
+      menus: menus,
+      onDone: (sectionSelection, menuIndex) => {
+        if (menuIndex === 0) {
+          this.mute()
+        } else if (menuIndex === 1) {
+        }
+      },
+      onCancel: () => {}
     })
   }
 
   render() {
-    if (this.state.loading) {
-      return <Spinner style={{ marginTop: 250 }} color="#5067FF" />
+    if (!this.props.data) {
+      return <Text>没有传入评论数据</Text>
     }
     return (
       <View style={styles.container}>
         <List
-          dataArray={this.state.list}
+          dataArray={this.props.data}
           renderRow={item => (
             <ListItem
               avatar
-              style={styles.list}
+              style={styles.listItem}
               key={item.id}
               button={true}
               onPress={() => this.goTootDetail(item.id)}
             >
-              <Left>
-                <Thumbnail source={{ uri: item.account.avatar }} />
-              </Left>
-              <Body>
+              <View>
+                <Image
+                  style={styles.image}
+                  source={{ uri: item.account.avatar }}
+                />
+              </View>
+              <View
+                style={{
+                  flex: 1,
+                  marginLeft: 10
+                }}
+              >
                 <View style={styles.row}>
                   <Text numberOfLines={1} style={styles.titleWidth}>
                     <Text style={styles.displayName}>
@@ -238,7 +194,7 @@ export default class HomeScreen extends Component {
                     <Icon style={styles.icon} name="ellipsis-h" />
                   </Button>
                 </View>
-              </Body>
+              </View>
             </ListItem>
           )}
         />
@@ -260,18 +216,22 @@ const tagsStyles = {
 
 const styles = StyleSheet.create({
   container: {
-    paddingRight: 10,
     flex: 1,
-    flexDirection: 'column'
+    flexDirection: 'column',
+    borderTopColor: '#ddd',
+    borderTopWidth: 1
+  },
+  listItem: {
+    marginLeft: 0,
+    borderBottomColor: '#ddd',
+    borderBottomWidth: 1,
+    padding: 10,
+    alignItems: 'flex-start'
   },
   image: {
-    height: 50,
     width: 50,
-    borderRadius: 50,
-    marginRight: 20
-  },
-  list: {
-    marginBottom: 10
+    height: 50,
+    borderRadius: 50
   },
   right: {
     flexDirection: 'column',
@@ -283,8 +243,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between'
   },
   smallGrey: {
-    color: 'grey',
-    fontWeight: 'normal'
+    color: 'grey'
   },
   titleWidth: {
     width: 170,
@@ -293,14 +252,12 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start'
   },
   displayName: {
-    color: '#333',
-    fontSize: 18
+    color: 'black'
   },
   iconBox: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginRight: 20,
-    marginTop: 10
+    marginRight: 20
   },
   htmlBox: {
     flex: 1,
