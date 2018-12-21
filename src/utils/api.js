@@ -77,3 +77,13 @@ export const mute = (id, muted) => {
     headers
   })
 }
+
+// 发送toot
+export const sendStatuses = data => {
+  return request({
+    url: 'api/v1/statuses',
+    method: 'post',
+    data,
+    headers
+  })
+}

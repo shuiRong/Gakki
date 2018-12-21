@@ -98,20 +98,19 @@ export default class Context extends Component {
   }
 
   render() {
-    if (!this.props.data) {
-      return <Text>没有传入评论数据</Text>
+    if (!this.props.data.length) {
+      return <View />
     }
     return (
       <View style={styles.container}>
         <List
           dataArray={this.props.data}
-          renderRow={item => (
+          renderRow={(item, index) => (
             <ListItem
               avatar
               style={styles.listItem}
               key={item.id}
               button={true}
-              onPress={() => this.goTootDetail(item.id)}
             >
               <View>
                 <Image
