@@ -3728,6 +3728,7 @@ jsbn@~0.1.0:
 jsc-android@^236355.1.1:
   version "236355.1.1"
   resolved "http://registry.npm.taobao.org/jsc-android/download/jsc-android-236355.1.1.tgz#43e153b722e3c60dd0595be4e7430baf65e67c9c"
+  integrity sha1-Q+FTtyLjxg3QWVvk50MLr2XmfJw=
 
 jsdom@^11.5.1:
   version "11.12.0"

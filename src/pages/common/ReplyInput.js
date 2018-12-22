@@ -11,7 +11,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5'
 import { sendStatuses } from '../../utils/api'
 import globe from '../../utils/store'
 
-// @observer
+@observer
 export default class ReplyInput extends Component {
   constructor(props) {
     super(props)
