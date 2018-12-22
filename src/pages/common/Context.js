@@ -8,17 +8,7 @@ import {
   FlatList,
   View
 } from 'react-native'
-import {
-  Left,
-  Body,
-  Right,
-  Button,
-  Card,
-  CardItem,
-  Thumbnail,
-  List,
-  ListItem
-} from 'native-base'
+import { Button } from 'native-base'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { favourite, reblog, mute, deleteStatuses } from '../../utils/api'
 import HTML from 'react-native-render-html'
@@ -140,11 +130,9 @@ export default class Context extends Component {
     return (
       <View style={styles.container}>
         <FlatList
-          ItemSeparatorComponent={({ highlighted }) => (
-            <View style={styles.divider} />
-          )}
+          ItemSeparatorComponent={() => <View style={styles.divider} />}
           data={this.state.context}
-          renderItem={({ item, separators }) => (
+          renderItem={({ item }) => (
             <View style={styles.listItem}>
               <View
                 style={{

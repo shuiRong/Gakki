@@ -26,7 +26,14 @@ import {
 } from 'native-base'
 import Ripple from 'react-native-material-ripple'
 import Icon from 'react-native-vector-icons/FontAwesome5'
-import { getStatuses, favourite, reblog, mute, context } from '../utils/api'
+import {
+  getStatuses,
+  favourite,
+  reblog,
+  muteAccount,
+  context,
+  blockAccount
+} from '../utils/api'
 import HTML from 'react-native-render-html'
 import moment from 'moment'
 import RNPopoverMenu from 'react-native-popover-menu'
@@ -51,12 +58,12 @@ export default class TootDetail extends Component {
   }
 
   componentDidMount() {
-    // this.fetchData()
+    this.fetchData()
     // 使用模拟数据
-    this.setState({
-      toot: tootDetail,
-      context: contextData
-    })
+    // this.setState({
+    //   toot: tootDetail,
+    //   context: contextData
+    // })
   }
 
   fetchData = () => {
@@ -66,8 +73,8 @@ export default class TootDetail extends Component {
         account: {}
       }
     })
-    // const id = this.props.navigation.getParam('id')
-    const id = '101273579009552513'
+    const id = this.props.navigation.getParam('id')
+    // const id = '101273579009552513'
     getStatuses(id).then(res => {
       this.setState({
         toot: res,
@@ -125,15 +132,25 @@ export default class TootDetail extends Component {
    * @description 隐藏某人，不看所有动态
    */
   mute = () => {
-    mute(this.state.toot.id, this.state.toot.muted).then(() => {
-      this.goBackWithParam()
+    muteAccount(this.state.toot.account.id, true).then(() => {
+      this.goBackWithParam(true)
+    })
+  }
+
+  /**
+   * @description 屏蔽某人
+   */
+  block = () => {
+    blockAccount(this.state.toot.account.id, true).then(() => {
+      this.goBackWithParam(true)
     })
   }
 
   /**
    * @description 回到主页，带着一些可能变化的数据
+   * @param {mute} 隐藏某人动态
    */
-  goBackWithParam = () => {
+  goBackWithParam = mute => {
     this.props.navigation.navigate('Home', {
       data: {
         id: this.state.toot.id,
@@ -142,7 +159,7 @@ export default class TootDetail extends Component {
         reblogs_count: this.state.toot.reblogs_count,
         favourited: this.state.toot.favourited,
         favourites_count: this.state.toot.favourites_count,
-        muted: this.state.toot.muted
+        mute: mute
       }
     })
   }
@@ -160,6 +177,7 @@ export default class TootDetail extends Component {
         if (menuIndex === 0) {
           this.mute()
         } else if (menuIndex === 1) {
+          this.block()
         }
       },
       onCancel: () => {}

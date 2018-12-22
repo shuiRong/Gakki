@@ -3,7 +3,7 @@
  */
 
 import React, { Component } from 'react'
-import { View, StyleSheet, Dimensions, Text } from 'react-native'
+import { View, StyleSheet, Dimensions, Text, FlatList } from 'react-native'
 import {
   List,
   ListItem,
@@ -18,6 +18,7 @@ import { getHomeTimelines, favourite, reblog } from '../../utils/api'
 import moment from 'moment'
 import 'moment/locale/zh-cn'
 import HTML from 'react-native-render-html'
+import { homeData } from '../../mock'
 
 export default class HomeScreen extends Component {
   constructor(props) {
@@ -28,7 +29,10 @@ export default class HomeScreen extends Component {
     }
   }
   componentDidMount() {
-    this.fetchTimelines()
+    // this.fetchTimelines()
+    this.setState({
+      list: homeData
+    })
   }
 
   /**
@@ -64,7 +68,7 @@ export default class HomeScreen extends Component {
 
     if (params && params.id) {
       let newList = this.state.list
-      if (params.muted) {
+      if (params.mute) {
         // 如果某人被‘隐藏’，那么首页去除所有该用户的消息
         newList = newList.filter(item => item.account.id !== params.accountId)
         this.setState({
@@ -155,16 +159,12 @@ export default class HomeScreen extends Component {
     }
     return (
       <View style={styles.container}>
-        <List
-          dataArray={this.state.list}
-          renderRow={item => (
-            <ListItem
-              avatar
-              style={styles.list}
-              key={item.id}
-              button={true}
-              onPress={() => this.goTootDetail(item.id)}
-            >
+        <FlatList
+          ItemSeparatorComponent={() => <View style={styles.divider} />}
+          style={styles.list}
+          data={this.state.list}
+          renderItem={({ item }) => (
+            <View>
               <Left>
                 <Thumbnail source={{ uri: item.account.avatar }} />
               </Left>
@@ -239,9 +239,21 @@ export default class HomeScreen extends Component {
                   </Button>
                 </View>
               </Body>
-            </ListItem>
+            </View>
           )}
         />
+        {/* <List
+          dataArray={this.state.list}
+          renderRow={item => (
+            <ListItem
+              avatar
+              style={styles.list}
+              key={item.id}
+              button={true}
+              onPress={() => this.goTootDetail(item.id)}
+            />
+          )}
+        /> */}
       </View>
     )
   }
@@ -312,5 +324,10 @@ const styles = StyleSheet.create({
   },
   bottomText: {
     marginLeft: 10
+  },
+  divider: {
+    borderColor: '#ddd',
+    borderWidth: 1,
+    borderBottomWidth: 0
   }
 })

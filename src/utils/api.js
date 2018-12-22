@@ -53,7 +53,6 @@ export const deleteStatuses = id => {
   })
 }
 
-
 // 获取评论
 export const context = id => {
   return request({
@@ -79,9 +78,28 @@ export const reblog = (id, reblog) => {
   })
 }
 
-export const mute = (id, muted) => {
+// 隐藏/取消隐藏 某人
+export const muteAccount = (id, mute) => {
   return request({
-    url: `/api/v1/statuses/${id}/${muted ? 'unmute' : 'mute'}`,
+    url: `/api/v1/accounts/${id}/${mute ? 'mute' : 'unmute'}`,
+    method: 'post',
+    headers
+  })
+}
+
+// 获取隐藏用户列表
+export const mutesList = () => {
+  return request({
+    url: '/api/v1/mutes',
+    method: 'get',
+    headers
+  })
+}
+
+// 屏蔽/取消屏蔽 某人
+export const blockAccount = (id, block) => {
+  return request({
+    url: `/api/v1/accounts/${id}/${block ? 'block' : 'unblock'}`,
     method: 'post',
     headers
   })

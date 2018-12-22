@@ -16,7 +16,7 @@ const stack = createStackNavigator(
     SendToot: SendToot
   },
   {
-    initialRouteName: 'TootDetail',
+    initialRouteName: 'Home',
     headerMode: 'none'
   }
 )
