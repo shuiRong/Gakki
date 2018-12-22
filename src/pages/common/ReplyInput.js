@@ -34,11 +34,11 @@ export default class ReplyInput extends Component {
     const props = this.props
 
     sendStatuses({
-      in_reply_to_id: props.tootId,
+      in_reply_to_id: globe.reply_to_id,
       status: state.status,
       spoiler_text: state.cw ? state.spoiler_text : '',
       visibility: 'public',
-      sensitive: false
+      sensitive: falsescrollToEnd
     }).then(res => {
       props.appendReply(res)
       this.setState({

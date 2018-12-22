@@ -45,6 +45,15 @@ export const getStatuses = id => {
   })
 }
 
+export const deleteStatuses = id => {
+  return request({
+    url: `/api/v1/statuses/${id}`,
+    method: 'delete',
+    headers
+  })
+}
+
+
 // 获取评论
 export const context = id => {
   return request({

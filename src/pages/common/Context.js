@@ -20,7 +20,7 @@ import {
   ListItem
 } from 'native-base'
 import Icon from 'react-native-vector-icons/FontAwesome5'
-import { favourite, reblog, mute } from '../../utils/api'
+import { favourite, reblog, mute, deleteStatuses } from '../../utils/api'
 import HTML from 'react-native-render-html'
 import moment from 'moment'
 import RNPopoverMenu from 'react-native-popover-menu'
@@ -35,6 +35,13 @@ export default class Context extends Component {
     this.state = {
       context: props.data
     }
+  }
+
+  componentWillReceiveProps({ data }) {
+    // 更新评论数据
+    this.setState({
+      context: data
+    })
   }
 
   /**
@@ -97,16 +104,26 @@ export default class Context extends Component {
     globe.updateReply(id, username)
   }
 
-  renderMenu = ref => {
-    let menus = [
-      {
-        menus: [{ label: '隐藏' }, { label: '屏蔽' }]
-      }
-    ]
+  /**
+   * @description 根据是否是用户的toot来展示不同的菜单
+   * @param {id}: 用户id
+   * @param {ref}: 元素引用
+   */
+  renderMenu = (id, ref) => {
+    let menus = [{ menus: [{ label: '隐藏' }, { label: '屏蔽' }] }]
+
+    if (id !== globe.account.id) {
+      // 如果不是自己的toot
+      munus = [
+        {
+          menus: [{ label: '删除' }, { label: '删除并重新编辑' }]
+        }
+      ]
+    }
 
     RNPopoverMenu.Show(ref, {
       menus: menus,
-      onDone: (sectionSelection, menuIndex) => {
+      onDone: menuIndex => {
         if (menuIndex === 0) {
           this.mute()
         } else if (menuIndex === 1) {
@@ -203,7 +220,16 @@ export default class Context extends Component {
                     </Text>
                   </Button>
                   <Button transparent>
-                    <Icon style={styles.icon} name="ellipsis-h" />
+                    <TouchableOpacity
+                      ref={ref => {
+                        this.ref = ref
+                      }}
+                      onPress={() => {
+                        this.renderMenu(item.account.id, this.ref)
+                      }}
+                    >
+                      <Icon name="ellipsis-h" style={styles.icon} />
+                    </TouchableOpacity>
                   </Button>
                 </View>
               </View>

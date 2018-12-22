@@ -1,8 +1,8 @@
 import React, { Component } from 'react'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { View, Text, Image, StyleSheet, ImageBackground } from 'react-native'
-
 import { getCurrentUser } from '../utils/api'
+import globe from '../utils/store'
 
 export default class SideBar extends Component {
   constructor(props) {
@@ -22,6 +22,7 @@ export default class SideBar extends Component {
           username: res.username,
           header: res.header
         })
+        globe.updateAccount(res.account)
       })
       .catch(err => {
         alert(JSON.stringify(err.response))

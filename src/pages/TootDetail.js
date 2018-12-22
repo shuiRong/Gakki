@@ -33,6 +33,7 @@ import RNPopoverMenu from 'react-native-popover-menu'
 import Context from './common/Context'
 import ReplyInput from './common/ReplyInput'
 import { contextData, tootDetail } from '../mock'
+import globe from '../utils/store'
 
 /**
  * Toot详情页面
@@ -66,12 +67,14 @@ export default class TootDetail extends Component {
       }
     })
     // const id = this.props.navigation.getParam('id')
-    const id = '101272687477812350'
+    const id = '101273579009552513'
     getStatuses(id).then(res => {
       this.setState({
         toot: res,
         refreshing: false
       })
+
+      globe.updateReply(res.account.id, res.account.username)
     })
 
     context(id).then(res => {
