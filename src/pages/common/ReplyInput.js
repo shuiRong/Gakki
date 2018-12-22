@@ -87,7 +87,7 @@ export default class ReplyInput extends Component {
 
     return (
       <View style={boxStyle}>
-        <Text style={{ marginBottom: 5 }}>回复@QQQ@cmx.im</Text>
+        <Text style={{ marginBottom: 5 }}>回复@{globe.reply_to}</Text>
         {cwElement}
         <TextInput
           style={inputStyle}

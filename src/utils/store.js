@@ -3,8 +3,8 @@ import { observable } from 'mobx'
 class Globe {
   constructor() {}
 
-  @observable reply_to = '' // 回复对象的username
-  @observable reply_to_id = undefined // 回复对象的id
+  @observable reply_to = 'asd' // 回复对象的username
+  @observable reply_to_id = '123' // 回复对象的id
 
   updateReply(id, username) {
     this.reply_to = username
