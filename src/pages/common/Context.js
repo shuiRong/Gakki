@@ -3,9 +3,10 @@ import {
   Text,
   Dimensions,
   StyleSheet,
-  View,
   TouchableOpacity,
-  Image
+  Image,
+  FlatList,
+  View
 } from 'react-native'
 import {
   Left,
@@ -23,6 +24,7 @@ import { favourite, reblog, mute } from '../../utils/api'
 import HTML from 'react-native-render-html'
 import moment from 'moment'
 import RNPopoverMenu from 'react-native-popover-menu'
+import globe from '../../utils/store'
 
 /**
  * 评论组件
@@ -30,42 +32,50 @@ import RNPopoverMenu from 'react-native-popover-menu'
 export default class Context extends Component {
   constructor(props) {
     super(props)
+    this.state = {
+      context: props.data
+    }
   }
 
   /**
    * @description 给toot点赞，如果已经点过赞就取消点赞
    */
-  favourite = () => {
-    favourite(item.id, item.favourited).then(() => {
-      this.update('favourited', 'favourites_count')
+  favourite = (id, favourited) => {
+    favourite(id, favourited).then(() => {
+      this.update(id, 'favourited', 'favourites_count')
     })
   }
 
   /**
    * @description 转发toot
    */
-  reblog = () => {
-    reblog(item.id, item.reblogged).then(() => {
-      this.update('reblogged', 'reblogs_count')
+  reblog = (id, reblogged) => {
+    reblog(id, reblogged).then(() => {
+      this.update(id, 'reblogged', 'reblogs_count')
     })
   }
 
   /**
    * @description 更改前端点赞和转发的状态值，并且增减数量
+   * @param {id}: 评论id
    * @param {status}: 状态名 favourited/reblogged
    * @param {statusCount}: 状态的数量key
    */
-  update = (status, statusCount) => {
-    const value = item[status]
-    const newToot = { ...item }
-    newToot[status] = !value
-    if (value) {
-      newToot[statusCount] -= 1
-    } else {
-      newToot[statusCount] += 1
-    }
+  update = (id, status, statusCount) => {
+    const newData = [...this.props.data]
+    newData.forEach(list => {
+      if (list.id === id) {
+        list[status] = !list[status]
+
+        if (list[status]) {
+          list[statusCount] += 1
+        } else {
+          list[statusCount] -= 1
+        }
+      }
+    })
     this.setState({
-      toot: newToot
+      context: newData
     })
   }
 
@@ -76,6 +86,15 @@ export default class Context extends Component {
     mute(item.id, item.muted).then(() => {
       this.goBackWithParam()
     })
+  }
+
+  /**
+   * @description 回复某人
+   * @param {id}: id
+   * @param {username}: 用户名
+   */
+  replyTo = (id, username) => {
+    globe.updateReply(id, username)
   }
 
   renderMenu = ref => {
@@ -103,27 +122,23 @@ export default class Context extends Component {
     }
     return (
       <View style={styles.container}>
-        <List
-          dataArray={this.props.data}
-          renderRow={(item, index) => (
-            <ListItem
-              avatar
-              style={styles.listItem}
-              key={item.id}
-              button={true}
-            >
-              <View>
+        <FlatList
+          ItemSeparatorComponent={({ highlighted }) => (
+            <View style={styles.divider} />
+          )}
+          data={this.state.context}
+          renderItem={({ item, separators }) => (
+            <View style={styles.listItem}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  marginTop: 10
+                }}
+              >
                 <Image
                   style={styles.image}
                   source={{ uri: item.account.avatar }}
                 />
-              </View>
-              <View
-                style={{
-                  flex: 1,
-                  marginLeft: 10
-                }}
-              >
                 <View style={styles.row}>
                   <Text numberOfLines={1} style={styles.titleWidth}>
                     <Text style={styles.displayName}>
@@ -139,6 +154,8 @@ export default class Context extends Component {
                       .fromNow()}
                   </Text>
                 </View>
+              </View>
+              <View>
                 <View style={styles.htmlBox}>
                   <HTML
                     html={item.content}
@@ -149,11 +166,7 @@ export default class Context extends Component {
                 <View style={styles.iconBox}>
                   <Button
                     transparent
-                    onPress={() =>
-                      this.props.navigation.navigate('Reply', {
-                        id: item.id
-                      })
-                    }
+                    onPress={() => this.replyTo(item.id, item.account.username)}
                   >
                     <Icon style={styles.icon} name="reply" />
                     <Text style={styles.bottomText}>{item.replies_count}</Text>
@@ -194,7 +207,7 @@ export default class Context extends Component {
                   </Button>
                 </View>
               </View>
-            </ListItem>
+            </View>
           )}
         />
       </View>
@@ -221,22 +234,23 @@ const styles = StyleSheet.create({
     borderTopWidth: 1
   },
   listItem: {
-    marginLeft: 0,
-    borderBottomColor: '#ddd',
-    borderBottomWidth: 1,
-    padding: 10,
-    alignItems: 'flex-start'
+    alignItems: 'flex-start',
+    marginBottom: 10,
+    justifyContent: 'space-between',
+    alignItems: 'stretch'
   },
   image: {
     width: 50,
     height: 50,
-    borderRadius: 50
+    borderRadius: 50,
+    marginRight: 20
   },
   right: {
     flexDirection: 'column',
     width: 260
   },
   row: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between'
@@ -255,17 +269,21 @@ const styles = StyleSheet.create({
   },
   iconBox: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginRight: 20
+    justifyContent: 'space-around'
   },
   htmlBox: {
-    flex: 1,
-    marginTop: 10
+    marginTop: 20,
+    marginBottom: 10
   },
   icon: {
     fontSize: 15
   },
   bottomText: {
     marginLeft: 10
+  },
+  divider: {
+    borderColor: '#ddd',
+    borderWidth: 1,
+    borderBottomWidth: 0
   }
 })

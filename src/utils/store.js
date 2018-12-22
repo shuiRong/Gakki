@@ -1,29 +1,17 @@
-// /**
-//  * 存储全局状态
-//  */
-
-import { observable, autorun } from 'mobx'
+import { observable } from 'mobx'
 
 class Globe {
   constructor() {}
 
-  @observable screen = 0
+  @observable reply_to = '' // 回复对象的username
+  @observable reply_to_id = undefined // 回复对象的id
 
-  updateScreen(screen) {
-    this.screen = screen
+  updateReply(id, username) {
+    this.reply_to = username
+    this.reply_to_id = id
   }
 }
 
 const globe = new Globe()
-
-// autorun(() => {
-//   alert(globe.screen)
-//   console.log('screen is: %d', globe.screen)
-//   console.log('count is: %d', globe.count)
-// })
-
-// setInterval(() => {
-//   globe.updateScreen(globe.screen + 1)
-// }, 2000)
 
 export default globe

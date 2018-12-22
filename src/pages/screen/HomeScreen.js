@@ -300,7 +300,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginRight: 20,
-    marginTop: 10
+    marginTop: 10,
+    flex: 1
   },
   htmlBox: {
     flex: 1,

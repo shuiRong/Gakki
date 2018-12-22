@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-
+import { observer } from 'mobx-react'
 import {
   Text,
   StyleSheet,
@@ -9,7 +9,9 @@ import {
 } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { sendStatuses } from '../../utils/api'
+import globe from '../../utils/store'
 
+// @observer
 export default class ReplyInput extends Component {
   constructor(props) {
     super(props)
@@ -52,7 +54,7 @@ export default class ReplyInput extends Component {
   render() {
     let inputStyle = {
       ...inputCommonStyle,
-      height: 50
+      height: 40
     }
     let boxStyle = {
       ...boxCommonStyle,
