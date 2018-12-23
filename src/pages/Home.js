@@ -35,7 +35,6 @@ export default class Home extends Component {
       tab: i
     })
   }
-  componentDidMount() {}
 
   render() {
     return (

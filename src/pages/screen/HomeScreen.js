@@ -3,16 +3,16 @@
  */
 
 import React, { Component } from 'react'
-import { View, StyleSheet, Dimensions, Text, FlatList } from 'react-native'
 import {
-  List,
-  ListItem,
-  Left,
-  Body,
-  Thumbnail,
-  Button,
-  Spinner
-} from 'native-base'
+  View,
+  StyleSheet,
+  Dimensions,
+  Image,
+  Text,
+  FlatList,
+  TouchableOpacity
+} from 'react-native'
+import { Button, Spinner } from 'native-base'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { getHomeTimelines, favourite, reblog } from '../../utils/api'
 import moment from 'moment'
@@ -29,10 +29,10 @@ export default class HomeScreen extends Component {
     }
   }
   componentDidMount() {
-    // this.fetchTimelines()
-    this.setState({
-      list: homeData
-    })
+    this.fetchTimelines()
+    // this.setState({
+    //   list: homeData
+    // })
   }
 
   /**
@@ -53,7 +53,7 @@ export default class HomeScreen extends Component {
   }
 
   /**
-   * @description props变化的钩子函数
+   * @description 检测其他页面跳转过来的动作，比如发嘟页面跳转过来时可能带有toot数据，塞入数据流中
    * 如果处于刷新之中，重新加载数据
    * 如果带有一些参数；根据参数更新数据状态
    */
@@ -89,6 +89,17 @@ export default class HomeScreen extends Component {
           reblogged: params.reblogged
         }
       })
+
+      this.setState({
+        list: newList
+      })
+    }
+
+    const toot = navigation.getParam('newToot')
+    if (toot) {
+      // 将新toot塞入数据最上方
+      const newList = [...this.state.list]
+      newList.unshift(toot)
 
       this.setState({
         list: newList
@@ -153,6 +164,19 @@ export default class HomeScreen extends Component {
     })
   }
 
+  /**
+   * @description 跳转入个人详情页面
+   * @param {id}: id
+   */
+  goProfile = id => {
+    if (!this.props) {
+      return
+    }
+    this.props.navigation.navigate('Profile', {
+      id: id
+    })
+  }
+
   render() {
     if (this.state.loading) {
       return <Spinner style={{ marginTop: 250 }} color="#5067FF" />
@@ -161,99 +185,111 @@ export default class HomeScreen extends Component {
       <View style={styles.container}>
         <FlatList
           ItemSeparatorComponent={() => <View style={styles.divider} />}
-          style={styles.list}
           data={this.state.list}
           renderItem={({ item }) => (
-            <View>
-              <Left>
-                <Thumbnail source={{ uri: item.account.avatar }} />
-              </Left>
-              <Body>
-                <View style={styles.row}>
-                  <Text numberOfLines={1} style={styles.titleWidth}>
-                    <Text style={styles.displayName}>
-                      {item.account.display_name || item.account.username}
+            <View style={{ flex: 1, flexDirection: 'row', marginTop: 15 }}>
+              <TouchableOpacity
+                activeOpacity={1}
+                onPress={() => this.goProfile(item.account.id)}
+              >
+                <Image
+                  style={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: 5,
+                    marginRight: 10
+                  }}
+                  source={{ uri: item.account.avatar }}
+                />
+              </TouchableOpacity>
+              <View style={styles.list}>
+                <TouchableOpacity
+                  activeOpacity={1}
+                  onPress={() => this.goTootDetail(item.id)}
+                >
+                  <View style={styles.row}>
+                    <Text numberOfLines={1} style={styles.titleWidth}>
+                      <Text style={styles.displayName}>
+                        {item.account.display_name || item.account.username}
+                      </Text>
+                      <Text style={styles.smallGrey}>
+                        &nbsp;@{item.account.username}
+                      </Text>
                     </Text>
-                    <Text style={styles.smallGrey}>
-                      &nbsp;@{item.account.username}
+                    <Text
+                      style={{
+                        flex: 1,
+                        textAlign: 'right'
+                      }}
+                    >
+                      {moment(item.created_at, 'YYYY-MM-DD')
+                        .startOf('day')
+                        .fromNow()}
                     </Text>
-                  </Text>
-                  <Text>
-                    {moment(item.created_at, 'YYYY-MM-DD')
-                      .startOf('day')
-                      .fromNow()}
-                  </Text>
-                </View>
-                <View style={styles.htmlBox}>
-                  <HTML
-                    html={item.content}
-                    tagsStyles={tagsStyles}
-                    imagesMaxWidth={Dimensions.get('window').width}
-                  />
-                </View>
-                <View style={styles.iconBox}>
-                  <Button
-                    transparent
-                    onPress={() =>
-                      this.props.navigation.navigate('Reply', {
-                        id: item.id
-                      })
-                    }
-                  >
-                    <Icon style={styles.icon} name="reply" />
-                    <Text style={styles.bottomText}>{item.replies_count}</Text>
-                  </Button>
-                  <Button
-                    transparent
-                    onPress={() => this.reblog(item.id, item.reblogged)}
-                  >
-                    {item.reblogged ? (
-                      <Icon
-                        style={{ ...styles.icon, color: '#ca8f04' }}
-                        name="retweet"
-                      />
-                    ) : (
-                      <Icon style={styles.icon} name="retweet" />
-                    )}
-                    <Text style={styles.bottomText}>{item.reblogs_count}</Text>
-                  </Button>
-                  <Button
-                    transparent
-                    onPress={() => this.favourite(item.id, item.favourited)}
-                  >
-                    {item.favourited ? (
-                      <Icon
-                        style={{ ...styles.icon, color: '#ca8f04' }}
-                        name="star"
-                        solid
-                      />
-                    ) : (
-                      <Icon style={styles.icon} name="star" />
-                    )}
-                    <Text style={styles.bottomText}>
-                      {item.favourites_count}
-                    </Text>
-                  </Button>
-                  <Button transparent>
-                    <Icon style={styles.icon} name="ellipsis-h" />
-                  </Button>
-                </View>
-              </Body>
+                  </View>
+                  <View style={styles.htmlBox}>
+                    <HTML
+                      html={item.content}
+                      tagsStyles={tagsStyles}
+                      imagesMaxWidth={Dimensions.get('window').width}
+                    />
+                  </View>
+                  <View style={styles.iconBox}>
+                    <Button
+                      transparent
+                      onPress={() =>
+                        this.props.navigation.navigate('Reply', {
+                          id: item.id
+                        })
+                      }
+                    >
+                      <Icon style={styles.icon} name="reply" />
+                      <Text style={styles.bottomText}>
+                        {item.replies_count}
+                      </Text>
+                    </Button>
+                    <Button
+                      transparent
+                      onPress={() => this.reblog(item.id, item.reblogged)}
+                    >
+                      {item.reblogged ? (
+                        <Icon
+                          style={{ ...styles.icon, color: '#ca8f04' }}
+                          name="retweet"
+                        />
+                      ) : (
+                        <Icon style={styles.icon} name="retweet" />
+                      )}
+                      <Text style={styles.bottomText}>
+                        {item.reblogs_count}
+                      </Text>
+                    </Button>
+                    <Button
+                      transparent
+                      onPress={() => this.favourite(item.id, item.favourited)}
+                    >
+                      {item.favourited ? (
+                        <Icon
+                          style={{ ...styles.icon, color: '#ca8f04' }}
+                          name="star"
+                          solid
+                        />
+                      ) : (
+                        <Icon style={styles.icon} name="star" />
+                      )}
+                      <Text style={styles.bottomText}>
+                        {item.favourites_count}
+                      </Text>
+                    </Button>
+                    <Button transparent>
+                      <Icon style={styles.icon} name="ellipsis-h" />
+                    </Button>
+                  </View>
+                </TouchableOpacity>
+              </View>
             </View>
           )}
         />
-        {/* <List
-          dataArray={this.state.list}
-          renderRow={item => (
-            <ListItem
-              avatar
-              style={styles.list}
-              key={item.id}
-              button={true}
-              onPress={() => this.goTootDetail(item.id)}
-            />
-          )}
-        /> */}
       </View>
     )
   }
@@ -272,22 +308,19 @@ const tagsStyles = {
 
 const styles = StyleSheet.create({
   container: {
-    paddingRight: 10,
     flex: 1,
-    flexDirection: 'column'
+    padding: 10,
+    paddingTop: 0
+  },
+  list: {
+    alignItems: 'stretch',
+    flex: 1
   },
   image: {
     height: 50,
     width: 50,
     borderRadius: 50,
     marginRight: 20
-  },
-  list: {
-    marginBottom: 10
-  },
-  right: {
-    flexDirection: 'column',
-    width: 260
   },
   row: {
     flexDirection: 'row',
@@ -305,19 +338,18 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start'
   },
   displayName: {
-    color: '#333',
-    fontSize: 18
+    color: '#333'
   },
   iconBox: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginRight: 20,
     marginTop: 10,
     flex: 1
   },
   htmlBox: {
     flex: 1,
-    marginTop: 10
+    marginTop: 10,
+    marginRight: 20
   },
   icon: {
     fontSize: 15

@@ -29,7 +29,7 @@ import RNPopoverMenu from 'react-native-popover-menu'
 /**
  * Toot详情页面
  */
-export default class TootDetail extends Component {
+export default class Profile extends Component {
   constructor(props) {
     super(props)
     this.state = {

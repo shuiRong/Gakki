@@ -4,9 +4,7 @@ import {
   Dimensions,
   StyleSheet,
   TouchableOpacity,
-  RefreshControl,
-  View,
-  TextInput
+  RefreshControl
 } from 'react-native'
 import {
   Container,
@@ -20,9 +18,7 @@ import {
   Card,
   CardItem,
   Thumbnail,
-  Spinner,
-  Textarea,
-  Footer
+  Spinner
 } from 'native-base'
 import Ripple from 'react-native-material-ripple'
 import Icon from 'react-native-vector-icons/FontAwesome5'

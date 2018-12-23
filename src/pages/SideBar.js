@@ -44,35 +44,51 @@ export default class SideBar extends Component {
         </ImageBackground>
         <View style={styles.body}>
           <View style={styles.list}>
-            <Icon name="user" style={styles.icon} />
+            <View style={styles.iconBox}>
+              <Icon name="user" style={styles.icon} />
+            </View>
             <Text style={styles.text}>编辑个人资料</Text>
           </View>
           <View style={styles.list}>
-            <Icon name="star" style={styles.icon} />
+            <View style={styles.iconBox}>
+              <Icon name="star" style={styles.icon} />
+            </View>
             <Text style={styles.text}>我的收藏</Text>
           </View>
           <View style={styles.list}>
-            <Icon name="list" style={styles.icon} />
+            <View style={styles.iconBox}>
+              <Icon name="list" style={styles.icon} />
+            </View>
             <Text style={styles.text}>列表</Text>
           </View>
           <View style={styles.list}>
-            <Icon name="book" style={styles.icon} />
+            <View style={styles.iconBox}>
+              <Icon name="book" style={styles.icon} />
+            </View>
             <Text style={styles.text}>草稿</Text>
           </View>
           <View style={styles.list}>
-            <Icon name="user-cog" style={styles.icon} />
+            <View style={styles.iconBox}>
+              <Icon name="user-cog" style={styles.icon} />
+            </View>
             <Text style={styles.text}>账户设置</Text>
           </View>
           <View style={styles.list}>
-            <Icon name="cogs" style={styles.icon} />
+            <View style={styles.iconBox}>
+              <Icon name="cogs" style={styles.icon} />
+            </View>
             <Text style={styles.text}>设置</Text>
           </View>
           <View style={styles.list}>
-            <Icon name="exclamation-circle" style={styles.icon} />
+            <View style={styles.iconBox}>
+              <Icon name="exclamation-circle" style={styles.icon} />
+            </View>
             <Text style={styles.text}>关于</Text>
           </View>
           <View style={styles.list}>
-            <Icon name="sign-out-alt" style={styles.icon} />
+            <View style={styles.iconBox}>
+              <Icon name="sign-out-alt" style={styles.icon} />
+            </View>
             <Text style={styles.text}>退出登录</Text>
           </View>
         </View>
@@ -108,9 +124,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 20
   },
-  icon: {
-    marginRight: 30,
+  iconBox: {
+    width: 40,
+    marginRight: 20,
     marginLeft: 10,
+    alignItems: 'center'
+  },
+  icon: {
     color: '#686868',
     fontSize: 23
   },

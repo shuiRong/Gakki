@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Text, Dimensions, StyleSheet } from 'react-native'
+import { StyleSheet } from 'react-native'
 import {
   Container,
   Header,
@@ -9,20 +9,16 @@ import {
   Button,
   Title,
   Content,
-  Card,
-  CardItem,
-  Thumbnail
+  Card
 } from 'native-base'
-import Ripple from 'react-native-material-ripple'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { getStatuses } from '../utils/api'
-import HTML from 'react-native-render-html'
-import moment from 'moment'
+import ReplyInput from './common/ReplyInput'
 
 /**
  * Toot详情页面
  */
-export default class TootDetail extends Component {
+export default class SendToot extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -40,6 +36,13 @@ export default class TootDetail extends Component {
     })
   }
 
+  // 发完toot，跳转回首页，并且将着返回的toot数据
+  navigateToHome = data => {
+    this.props.navigation.navigate('Home', {
+      newToot: data
+    })
+  }
+
   render() {
     return (
       <Container>
@@ -49,7 +52,7 @@ export default class TootDetail extends Component {
               <Icon
                 style={[styles.icon, styles.navIcon]}
                 name="arrow-left"
-                onPress={() => this.props.navigation.goBack()}
+                onPress={() => this.navigateToHome()}
               />
             </Button>
           </Left>
@@ -63,56 +66,13 @@ export default class TootDetail extends Component {
           </Right>
         </Header>
         <Content padder>
-          <Card transparent>
-            <CardItem>
-              <Left>
-                <Thumbnail source={{ uri: this.state.toot.account.avatar }} />
-                <Body>
-                  <Text>
-                    {this.state.toot.account.display_name ||
-                      this.state.toot.account.username}
-                  </Text>
-                  <Text note>{this.state.toot.account.username}</Text>
-                </Body>
-              </Left>
-            </CardItem>
-            <CardItem cardBody style={styles.body}>
-              <Ripple>
-                <HTML
-                  html={this.state.toot.content}
-                  tagsStyles={tagsStyles}
-                  imagesMaxWidth={Dimensions.get('window').width}
-                />
-                <Text style={styles.time}>
-                  {moment(this.state.toot.created_at).format('LLL')}
-                </Text>
-              </Ripple>
-            </CardItem>
-            <CardItem>
-              <Left style={styles.leftBody}>
-                <Button transparent>
-                  <Icon style={styles.icon} name="reply" />
-                  <Text style={styles.bottomText}>
-                    {this.state.toot.replies_count}
-                  </Text>
-                </Button>
-                <Button transparent>
-                  <Icon style={styles.icon} name="retweet" />
-                  <Text style={styles.bottomText}>
-                    {this.state.toot.reblogs_count}
-                  </Text>
-                </Button>
-                <Button transparent>
-                  <Icon style={styles.icon} name="star" />
-                  <Text style={styles.bottomText}>
-                    {this.state.toot.favourites_count}
-                  </Text>
-                </Button>
-              </Left>
-              <Right>
-                <Icon style={styles.icon} name="ellipsis-h" />
-              </Right>
-            </CardItem>
+          <Card style={{ borderRadius: 5 }}>
+            <ReplyInput
+              autoFocus={true}
+              tootId={this.state.toot.id}
+              sendMode={true}
+              callback={this.navigateToHome}
+            />
           </Card>
         </Content>
       </Container>

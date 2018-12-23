@@ -19,7 +19,8 @@ export default class ReplyInput extends Component {
       status: '',
       spoiler_text: '', // 警告消息，警告前方可能出现的特殊内容
       expand: false, // 输入框是否展开成多行？
-      cw: false // Content Warning 模式是否开启
+      cw: false, // Content Warning 模式是否开启
+      whichIsFocused: '' // 当前哪个输入框被触发了
     }
   }
 
@@ -38,17 +39,38 @@ export default class ReplyInput extends Component {
       status: state.status,
       spoiler_text: state.cw ? state.spoiler_text : '',
       visibility: 'public',
-      sensitive: falsescrollToEnd
+      sensitive: false
     }).then(res => {
-      props.appendReply(res)
+      if (props.appendReply) {
+        props.appendReply(res)
+      }
+      if (props.scrollToEnd) {
+        props.scrollToEnd()
+      }
+      if (props.callback) {
+        props.callback(res)
+      }
       this.setState({
         cw: false,
         expand: false,
         status: '',
         spoiler_text: ''
       })
-      props.scrollToEnd()
     })
+  }
+
+  /**
+   * @description 如果组件没有被在单独页面使用的话，失去焦点的反应就是切换expand
+   * 反之说明在单独页面中使用，则重新触发聚焦
+   */
+  blurHandler = () => {
+    if (!this.props.sendMode) {
+      this.setState({ expand: false })
+      return
+    }
+    if (this.refCW && !this.refCW.isFocused()) {
+      this.refTextarea.focus()
+    }
   }
 
   render() {
@@ -60,18 +82,31 @@ export default class ReplyInput extends Component {
       ...boxCommonStyle,
       height: 140
     }
-    if (this.state.expand) {
+
+    if (this.props.sendMode) {
+      // 如果组件在发送toot页面单独使用的话，初始化高度设置高点
+      inputStyle.height += 180
+      boxStyle.height += 150
+      boxStyle['borderRadius'] = 5
+    }
+
+    if (!this.props.sendMode && this.state.expand) {
       boxStyle.height += 100
       inputStyle.height += 100
     }
     if (this.state.cw) {
-      boxStyle.height += 50
+      if (this.props.sendMode) {
+        inputStyle.height -= 45
+      } else {
+        boxStyle.height += 45
+      }
     }
 
     let cwElement = null
     if (this.state.cw) {
       cwElement = (
         <TextInput
+          ref={ref => (this.refCW = ref)}
           style={{
             ...inputCommonStyle,
             height: 40,
@@ -81,15 +116,20 @@ export default class ReplyInput extends Component {
           value={this.state.spoiler_text}
           maxLength={80}
           placeholder={'折叠部分的警告信息～'}
+          onBlur={this.blurHandler}
         />
       )
     }
 
     return (
       <View style={boxStyle}>
-        <Text style={{ marginBottom: 5 }}>回复@{globe.reply_to}</Text>
+        {!this.props.sendMode && (
+          <Text style={{ marginBottom: 5 }}>回复@{globe.reply_to}</Text>
+        )}
         {cwElement}
         <TextInput
+          ref={ref => (this.refTextarea = ref)}
+          autoFocus={this.props.autoFocus}
           style={inputStyle}
           onChangeText={text => this.setState({ status: text })}
           value={this.state.status}
@@ -99,7 +139,7 @@ export default class ReplyInput extends Component {
           maxLength={400}
           numberOfLines={3}
           onFocus={() => this.setState({ expand: true })}
-          onBlur={() => this.setState({ expand: false })}
+          onBlur={this.blurHandler}
         />
         <View style={styles.inputTools}>
           <Icon name={'camera'} style={styles.icon} />
