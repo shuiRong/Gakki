@@ -5,12 +5,14 @@
 import React, { Component } from 'react'
 import {
   View,
+  ScrollView,
   StyleSheet,
   Dimensions,
   Image,
   Text,
   FlatList,
-  TouchableOpacity
+  TouchableOpacity,
+  RefreshControl
 } from 'react-native'
 import { Button, Spinner } from 'native-base'
 import Icon from 'react-native-vector-icons/FontAwesome5'
@@ -24,32 +26,37 @@ export default class HomeScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      list: undefined,
-      loading: false
+      list: [],
+      loading: false,
+      isInited: false,
+      freshing: false
     }
   }
   componentDidMount() {
-    this.fetchTimelines()
-    // this.setState({
-    //   list: homeData
-    // })
+    // this.fetchTimelines()
+    this.setState({
+      list: homeData
+    })
   }
 
   /**
    * @description 获取时间线数据
    * @param {cb}: 成功后的回调函数
+   * @param {params}: 分页参数
    */
-  fetchTimelines = cb => {
+  fetchTimelines = (cb, params) => {
     this.setState({
       loading: true
     })
-    getHomeTimelines(this.props.url, this.props.query).then(res => {
-      this.setState({
-        list: res,
-        loading: false
-      })
-      if (cb) cb()
-    })
+    getHomeTimelines(this.props.url, { ...this.props.query, ...params }).then(
+      res => {
+        this.setState({
+          list: this.state.list.concat(res),
+          loading: false
+        })
+        if (cb) cb()
+      }
+    )
   }
 
   /**
@@ -177,6 +184,30 @@ export default class HomeScreen extends Component {
     })
   }
 
+  // 滚动到了底部，加载数据
+  onEndReached = distanceFromEnd => {
+    const state = this.state
+    // 页面初始化时会自动调用一次。
+    if (!state.isInited) {
+      this.setState({
+        isInited: true
+      })
+      alert('inside end')
+      return
+    }
+    alert(state.isInited + 'end')
+    // this.fetchTimelines(null, { max_id: state.list[state.list.length - 1].id })
+  }
+
+  onScroll = event => {
+    if (this.props.onScroll) {
+      let y = event.nativeEvent.contentOffset.y
+      if (y >= 270) return
+      this.props.onScroll(event)
+    }
+    // this.props.hideHeaderHandler(y)
+  }
+
   render() {
     if (this.state.loading) {
       return <Spinner style={{ marginTop: 250 }} color="#5067FF" />
@@ -186,8 +217,30 @@ export default class HomeScreen extends Component {
         <FlatList
           ItemSeparatorComponent={() => <View style={styles.divider} />}
           data={this.state.list}
+          onEndReachedThreshold={0.5}
+          onEndReached={this.onEndReached}
+          onScroll={this.onScroll}
+          keyExtractor={item => item.id}
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.refreshing}
+              onRefresh={this.fetchTimelines}
+            />
+          }
+          ListFooterComponent={() => (
+            <View style={{ height: 200, backgroundColor: 'orange' }}>
+              <Text>尾部组件</Text>
+            </View>
+          )}
           renderItem={({ item }) => (
-            <View style={{ flex: 1, flexDirection: 'row', marginTop: 15 }}>
+            <View
+              style={{
+                flex: 1,
+                flexDirection: 'row',
+                margin: 10,
+                marginTop: 15
+              }}
+            >
               <TouchableOpacity
                 activeOpacity={1}
                 onPress={() => this.goProfile(item.account.id)}
@@ -309,7 +362,6 @@ const tagsStyles = {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 10,
     paddingTop: 0
   },
   list: {

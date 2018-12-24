@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
-import { StyleSheet } from 'react-native'
+import { StyleSheet, View } from 'react-native'
 import { Header, Left, Body, Right, Button, Title } from 'native-base'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 
 export default class HeaderItem extends Component {
   render() {
     return (
-      <Header>
+      <Header style={this.props.style}>
         <Left>
           <Button transparent onPress={this.props.openDrawer}>
             <Icon style={styles.icon} name="bars" />

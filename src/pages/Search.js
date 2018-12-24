@@ -13,11 +13,9 @@ import {
   CardItem,
   Thumbnail
 } from 'native-base'
-import Ripple from 'react-native-material-ripple'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { getStatuses } from '../utils/api'
-import HTML from 'react-native-render-html'
-import moment from 'moment'
+import Test from './Test'
 
 /**
  * Toot详情页面
@@ -63,57 +61,7 @@ export default class TootDetail extends Component {
           </Right>
         </Header>
         <Content padder>
-          <Card transparent>
-            <CardItem>
-              <Left>
-                <Thumbnail source={{ uri: this.state.toot.account.avatar }} />
-                <Body>
-                  <Text>
-                    {this.state.toot.account.display_name ||
-                      this.state.toot.account.username}
-                  </Text>
-                  <Text note>{this.state.toot.account.username}</Text>
-                </Body>
-              </Left>
-            </CardItem>
-            <CardItem cardBody style={styles.body}>
-              <Ripple>
-                <HTML
-                  html={this.state.toot.content}
-                  tagsStyles={tagsStyles}
-                  imagesMaxWidth={Dimensions.get('window').width}
-                />
-                <Text style={styles.time}>
-                  {moment(this.state.toot.created_at).format('LLL')}
-                </Text>
-              </Ripple>
-            </CardItem>
-            <CardItem>
-              <Left style={styles.leftBody}>
-                <Button transparent>
-                  <Icon style={styles.icon} name="reply" />
-                  <Text style={styles.bottomText}>
-                    {this.state.toot.replies_count}
-                  </Text>
-                </Button>
-                <Button transparent>
-                  <Icon style={styles.icon} name="retweet" />
-                  <Text style={styles.bottomText}>
-                    {this.state.toot.reblogs_count}
-                  </Text>
-                </Button>
-                <Button transparent>
-                  <Icon style={styles.icon} name="star" />
-                  <Text style={styles.bottomText}>
-                    {this.state.toot.favourites_count}
-                  </Text>
-                </Button>
-              </Left>
-              <Right>
-                <Icon style={styles.icon} name="ellipsis-h" />
-              </Right>
-            </CardItem>
-          </Card>
+          <Test />
         </Content>
       </Container>
     )
