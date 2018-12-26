@@ -1,65 +1,75 @@
 import React, { Component } from 'react'
-import {
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  Platform,
-  Image,
-  Animated,
-  Easing,
-  ScrollView
-} from 'react-native'
+import { StyleSheet, Text, View, Animated, FlatList } from 'react-native'
 
-let deviceHeight = require('Dimensions').get('window').height
-let deviceWidth = require('Dimensions').get('window').width
-export default class AnimatedScrollDemo extends React.Component {
-  state: {
-    xOffset: Animated
+class List extends Component {
+  render() {
+    // 模拟列表数据
+    const mockData = [
+      '富强',
+      '民主',
+      '文明',
+      '和谐',
+      '自由',
+      '平等',
+      '公正',
+      '法治',
+      '爱国',
+      '敬业',
+      '诚信',
+      '友善'
+    ]
+
+    return (
+      <FlatList
+        onScroll={this.props.onScroll}
+        data={mockData}
+        renderItem={({ item }) => (
+          <View style={styles.list}>
+            <Text>{item}</Text>
+          </View>
+        )}
+      />
+    )
   }
+}
+
+export default class AnimatedScrollDemo extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      xOffset: new Animated.Value(1.0)
+      headerTop: new Animated.Value(0)
     }
   }
+
+  componentWillMount() {
+    // P.S. 270,217,280区间的映射是告诉interpolate，所有大于270的值都映射成-50
+    // 这样就不会导致Header在上滑的过程中一直向上滑动了
+    this.top = this.state.headerTop.interpolate({
+      inputRange: [0, 270, 271, 280],
+      outputRange: [0, -50, -50, -50]
+    })
+
+    this.animatedEvent = Animated.event([
+      {
+        nativeEvent: {
+          contentOffset: { y: this.state.headerTop }
+        }
+      }
+    ])
+  }
+
   render() {
     return (
       <View style={styles.container}>
-        <ScrollView
-          horizontal={true} //水平滑动
-          showsHorizontalScrollIndicator={false}
-          style={{ width: deviceWidth, height: deviceHeight }} //设置大小
-          onScroll={Animated.event(
-            [{ nativeEvent: { contentOffset: { x: this.state.xOffset } } }] //把contentOffset.x绑定给this.state.xOffset
-          )}
-          scrollEventThrottle={100} //onScroll回调间隔
-        >
-          <Animated.Image
-            source={{
-              uri:
-                'https://img.moegirl.org/common/thumb/1/11/Winner-elimination-2015.jpg/250px-Winner-elimination-2015.jpg'
-            }}
-            style={{
-              height: deviceHeight,
-              width: deviceWidth,
-              opacity: this.state.xOffset.interpolate({
-                //映射到0.0,1.0之间
-                inputRange: [0, 375],
-                outputRange: [1.0, 0.0]
-              })
-            }}
-            resizeMode="cover"
-          />
-          <Image
-            source={{
-              uri:
-                'https://img.moegirl.org/common/thumb/6/68/Chitanda.Eru.full.1053233.jpg/250px-Chitanda.Eru.full.1053233.jpg'
-            }}
-            style={{ height: deviceHeight, width: deviceWidth }}
-            resizeMode="cover"
-          />
-        </ScrollView>
+        <Animated.View style={{ top: this.top }}>
+          <View style={styles.header}>
+            <Text style={styles.text}>linshuirong.cn</Text>
+          </View>
+        </Animated.View>
+        {/* 在oHeader组件上移的同时，列表容器也需要同时向上移动，需要注意。 */}
+        <Animated.View style={{ top: this.top }}>
+          <List onScroll={this.animatedEvent} />
+        </Animated.View>
       </View>
     )
   }
@@ -67,7 +77,23 @@ export default class AnimatedScrollDemo extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 25,
     flex: 1
+  },
+  list: {
+    height: 80,
+    backgroundColor: 'pink',
+    marginBottom: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    color: 'white'
+  },
+  header: {
+    height: 50,
+    backgroundColor: '#3F51B5',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  text: {
+    color: 'white'
   }
 })

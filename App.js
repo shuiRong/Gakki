@@ -1,9 +1,9 @@
-import { createAppContainer, createStackNavigator } from 'react-navigation'
+import { createStackNavigator } from 'react-navigation'
 import Main from './src/Main'
-// 禁用所有黄色警告
+// // 禁用所有黄色警告
 console.disableYellowBox = true
 
-const stack = createStackNavigator(
+export default createStackNavigator(
   {
     SignedIn: Main
   },
@@ -12,5 +12,3 @@ const stack = createStackNavigator(
     headerMode: 'none'
   }
 )
-
-export default createAppContainer(stack)

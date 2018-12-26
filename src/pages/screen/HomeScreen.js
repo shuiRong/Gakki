@@ -5,7 +5,6 @@
 import React, { Component } from 'react'
 import {
   View,
-  ScrollView,
   StyleSheet,
   Dimensions,
   Image,
@@ -199,15 +198,6 @@ export default class HomeScreen extends Component {
     // this.fetchTimelines(null, { max_id: state.list[state.list.length - 1].id })
   }
 
-  onScroll = event => {
-    if (this.props.onScroll) {
-      let y = event.nativeEvent.contentOffset.y
-      if (y >= 270) return
-      this.props.onScroll(event)
-    }
-    // this.props.hideHeaderHandler(y)
-  }
-
   render() {
     if (this.state.loading) {
       return <Spinner style={{ marginTop: 250 }} color="#5067FF" />
@@ -216,10 +206,11 @@ export default class HomeScreen extends Component {
       <View style={styles.container}>
         <FlatList
           ItemSeparatorComponent={() => <View style={styles.divider} />}
+          showsVerticalScrollIndicator={false}
           data={this.state.list}
           onEndReachedThreshold={0.5}
           onEndReached={this.onEndReached}
-          onScroll={this.onScroll}
+          onScroll={this.props.onScroll}
           keyExtractor={item => item.id}
           refreshControl={
             <RefreshControl
@@ -228,8 +219,14 @@ export default class HomeScreen extends Component {
             />
           }
           ListFooterComponent={() => (
-            <View style={{ height: 200, backgroundColor: 'orange' }}>
-              <Text>尾部组件</Text>
+            <View
+              style={{
+                height: 100,
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
+            >
+              <Text>正在加载...</Text>
             </View>
           )}
           renderItem={({ item }) => (

@@ -1,16 +1,6 @@
 import React, { Component } from 'react'
-import { View, RefreshControl, Animated, Easing } from 'react-native'
-import {
-  Drawer,
-  Text,
-  Content,
-  Tab,
-  Tabs,
-  TabHeading,
-  Fab,
-  Container,
-  ScrollableTab
-} from 'native-base'
+import { View, Animated, StyleSheet } from 'react-native'
+import { Drawer, Fab } from 'native-base'
 import HeaderItem from './Header'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import SideBar from './SideBar'
@@ -27,10 +17,23 @@ export default class Home extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      tab: 0,
       headerTop: new Animated.Value(0)
     }
   }
+  componentWillMount() {
+    this.top = this.state.headerTop.interpolate({
+      inputRange: [0, 270, 271, 280],
+      outputRange: [0, -50, -50, -50]
+    })
+    this.animatedEvent = Animated.event([
+      {
+        nativeEvent: {
+          contentOffset: { y: this.state.headerTop }
+        }
+      }
+    ])
+  }
+
   closeDrawer = () => {
     this.drawer._root.close()
   }
@@ -43,13 +46,40 @@ export default class Home extends Component {
     })
   }
 
-  componentDidMount() {}
+  renderTab = () => {
+    const tab = [
+      {
+        label: '本站',
+        url: 'public',
+        query: {}
+      },
+      {
+        label: '主页',
+        url: 'public',
+        query: { local: true, only_media: false }
+      },
+      {
+        label: '跨站',
+        url: 'public',
+        query: { only_media: false }
+      }
+    ]
+    return tab.map(item => {
+      return (
+        <HomeScreen
+          tabLabel={item.label}
+          onScroll={this.animatedEvent}
+          navigation={this.props.navigation}
+          url={item.url}
+          query={item.qurey}
+          refreshing={this.state.refreshing}
+          finishRefresh={() => this.setState({ refreshing: false })}
+        />
+      )
+    })
+  }
 
   render() {
-    const top = this.state.headerTop.interpolate({
-      inputRange: [0, 270],
-      outputRange: [0, -50]
-    })
     return (
       <View style={{ flex: 1 }}>
         <Drawer
@@ -61,68 +91,20 @@ export default class Home extends Component {
           onClose={this.closeDrawer}
         >
           <View style={{ flex: 1 }}>
-            <Animated.View style={{ top: top }}>
+            <Animated.View style={{ top: this.top }}>
               <HeaderItem
                 openDrawer={this.openDrawer}
                 navigation={this.props.navigation}
               />
             </Animated.View>
-            {/* <Tabs onChangeTab={this.tabChanged}>
-              <Tab
-                heading={
-                  <TabHeading>
-                    <Text>主页</Text>
-                  </TabHeading>
-                }
-              >
-                <HomeScreen
-                  navigation={this.props.navigation}
-                  url={'home'}
-                  refreshing={this.state.refreshing}
-                  finishRefresh={() => this.setState({ refreshing: false })}
-                />
-              </Tab>
-              <Tab
-                heading={
-                  <TabHeading>
-                    <Text>本站</Text>
-                  </TabHeading>
-                }
-              >
-                <HomeScreen
-                  navigation={this.props.navigation}
-                  url={'public'}
-                  query={{ local: true, only_media: false }}
-                  refreshing={this.state.refreshing}
-                  finishRefresh={() => this.setState({ refreshing: false })}
-                />
-              </Tab>
-              <Tab
-                heading={
-                  <TabHeading>
-                    <Text>跨站</Text>
-                  </TabHeading>
-                }
-              >
-                <HomeScreen
-                  navigation={this.props.navigation}
-                  url={'public'}
-                  query={{ only_media: false }}
-                  refreshing={this.state.refreshing}
-                  finishRefresh={() => this.setState({ refreshing: false })}
-                />
-              </Tab>
-            </Tabs> */}
             <Animated.View
               style={{
                 height: deviceHeight,
-                top: top,
-                backgroundColor: 'pink'
+                top: this.top
               }}
             >
               <ScrollableTabView
-                // style={{ top: this.state.headerTop }}
-                initialPage={1}
+                initialPage={0}
                 renderTabBar={() => (
                   <DefaultTabBar
                     backgroundColor={'#3F51B5'}
@@ -131,56 +113,12 @@ export default class Home extends Component {
                   />
                 )}
               >
-                <HomeScreen
-                  tabLabel="React"
-                  onScroll={Animated.event([
-                    {
-                      nativeEvent: {
-                        contentOffset: { y: this.state.headerTop }
-                      }
-                    }
-                  ])}
-                  navigation={this.props.navigation}
-                  url={'public'}
-                  query={{ local: true, only_media: false }}
-                  refreshing={this.state.refreshing}
-                  finishRefresh={() => this.setState({ refreshing: false })}
-                />
-                <HomeScreen
-                  tabLabel="React2"
-                  onScroll={Animated.event([
-                    {
-                      nativeEvent: {
-                        contentOffset: { y: this.state.headerTop }
-                      }
-                    }
-                  ])}
-                  navigation={this.props.navigation}
-                  url={'public'}
-                  query={{ local: true, only_media: false }}
-                  refreshing={this.state.refreshing}
-                  finishRefresh={() => this.setState({ refreshing: false })}
-                />
-                <HomeScreen
-                  tabLabel="React3"
-                  onScroll={Animated.event([
-                    {
-                      nativeEvent: {
-                        contentOffset: { y: this.state.headerTop }
-                      }
-                    }
-                  ])}
-                  navigation={this.props.navigation}
-                  url={'public'}
-                  query={{ local: true, only_media: false }}
-                  refreshing={this.state.refreshing}
-                  finishRefresh={() => this.setState({ refreshing: false })}
-                />
+                {this.renderTab()}
               </ScrollableTabView>
             </Animated.View>
             <Fab
               direction="up"
-              style={{ backgroundColor: '#5067FF' }}
+              style={styles.fab}
               position="bottomRight"
               onPress={() => this.props.navigation.navigate('SendToot')}
             >
@@ -192,3 +130,7 @@ export default class Home extends Component {
     )
   }
 }
+
+const styles = StyleSheet.create({
+  fab: { backgroundColor: '#5067FF' }
+})
