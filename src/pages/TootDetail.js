@@ -32,7 +32,7 @@ import {
 } from '../utils/api'
 import HTML from 'react-native-render-html'
 import moment from 'moment'
-import RNPopoverMenu from 'react-native-popover-menu'
+// import RNPopoverMenu from 'react-native-popover-menu'
 import Context from './common/Context'
 import ReplyInput from './common/ReplyInput'
 import { contextData, tootDetail } from '../mock'
@@ -167,17 +167,17 @@ export default class TootDetail extends Component {
       }
     ]
 
-    RNPopoverMenu.Show(ref, {
-      menus: menus,
-      onDone: (sectionSelection, menuIndex) => {
-        if (menuIndex === 0) {
-          this.mute()
-        } else if (menuIndex === 1) {
-          this.block()
-        }
-      },
-      onCancel: () => {}
-    })
+    // RNPopoverMenu.Show(ref, {
+    //   menus: menus,
+    //   onDone: (sectionSelection, menuIndex) => {
+    //     if (menuIndex === 0) {
+    //       this.mute()
+    //     } else if (menuIndex === 1) {
+    //       this.block()
+    //     }
+    //   },
+    //   onCancel: () => {}
+    // })
   }
 
   scrollToEnd = () => {

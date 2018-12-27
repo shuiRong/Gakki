@@ -16,10 +16,13 @@ import {
 import { Button, Spinner } from 'native-base'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { getHomeTimelines, favourite, reblog } from '../../utils/api'
-import moment from 'moment'
+import momentTimezone from 'moment-timezone'
 import 'moment/locale/zh-cn'
 import HTML from 'react-native-render-html'
 import { homeData } from '../../mock'
+import jstz from 'jstz'
+import { RelativeTime } from 'relative-time-react-native-component'
+import { zh } from '../../utils/locale'
 
 export default class HomeScreen extends Component {
   constructor(props) {
@@ -28,14 +31,16 @@ export default class HomeScreen extends Component {
       list: [],
       loading: false,
       isInited: false,
-      freshing: false
+      freshing: false,
+      timezone: jstz.determine().name(), // 获得当前用户所在的时区
+      locale: zh
     }
   }
   componentDidMount() {
-    // this.fetchTimelines()
-    this.setState({
-      list: homeData
-    })
+    this.fetchTimelines()
+    // this.setState({
+    //   list: homeData
+    // })
   }
 
   /**
@@ -184,18 +189,25 @@ export default class HomeScreen extends Component {
   }
 
   // 滚动到了底部，加载数据
-  onEndReached = distanceFromEnd => {
+  onEndReached = () => {
     const state = this.state
     // 页面初始化时会自动调用一次。
     if (!state.isInited) {
       this.setState({
         isInited: true
       })
-      alert('inside end')
       return
     }
-    alert(state.isInited + 'end')
-    // this.fetchTimelines(null, { max_id: state.list[state.list.length - 1].id })
+    alert('end')
+    this.fetchTimelines(null, { max_id: state.list[state.list.length - 1].id })
+  }
+
+  getTimeValue = time => {
+    return new Date(
+      momentTimezone(time)
+        .tz(this.state.timezone)
+        .format()
+    ).valueOf()
   }
 
   render() {
@@ -272,9 +284,10 @@ export default class HomeScreen extends Component {
                         textAlign: 'right'
                       }}
                     >
-                      {moment(item.created_at, 'YYYY-MM-DD')
-                        .startOf('day')
-                        .fromNow()}
+                      <RelativeTime
+                        locale={this.state.locale}
+                        time={this.getTimeValue(item.created_at)}
+                      />
                     </Text>
                   </View>
                   <View style={styles.htmlBox}>

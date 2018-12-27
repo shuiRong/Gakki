@@ -51,12 +51,12 @@ export default class Home extends Component {
       {
         label: '本站',
         url: 'public',
-        query: {}
+        query: { local: true, only_media: false }
       },
       {
         label: '主页',
-        url: 'public',
-        query: { local: true, only_media: false }
+        url: 'home',
+        query: {}
       },
       {
         label: '跨站',
@@ -104,7 +104,7 @@ export default class Home extends Component {
               }}
             >
               <ScrollableTabView
-                initialPage={0}
+                initialPage={1}
                 renderTabBar={() => (
                   <DefaultTabBar
                     backgroundColor={'#3F51B5'}

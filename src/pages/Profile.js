@@ -24,7 +24,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5'
 import { getStatuses, favourite, reblog, mute } from '../utils/api'
 import HTML from 'react-native-render-html'
 import moment from 'moment'
-import RNPopoverMenu from 'react-native-popover-menu'
+// import RNPopoverMenu from 'react-native-popover-menu'
 
 /**
  * Toot详情页面
@@ -117,16 +117,16 @@ export default class Profile extends Component {
       }
     ]
 
-    RNPopoverMenu.Show(ref, {
-      menus: menus,
-      onDone: (sectionSelection, menuIndex) => {
-        if (menuIndex === 0) {
-          this.mute()
-        } else if (menuIndex === 1) {
-        }
-      },
-      onCancel: () => {}
-    })
+    // RNPopoverMenu.Show(ref, {
+    //   menus: menus,
+    //   onDone: (sectionSelection, menuIndex) => {
+    //     if (menuIndex === 0) {
+    //       this.mute()
+    //     } else if (menuIndex === 1) {
+    //     }
+    //   },
+    //   onCancel: () => {}
+    // })
   }
 
   render() {

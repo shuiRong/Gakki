@@ -13,7 +13,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5'
 import { favourite, reblog, mute, deleteStatuses } from '../../utils/api'
 import HTML from 'react-native-render-html'
 import moment from 'moment'
-import RNPopoverMenu from 'react-native-popover-menu'
+// import RNPopoverMenu from 'react-native-popover-menu'
 import globe from '../../utils/store'
 
 /**
@@ -111,16 +111,16 @@ export default class Context extends Component {
       ]
     }
 
-    RNPopoverMenu.Show(ref, {
-      menus: menus,
-      onDone: menuIndex => {
-        if (menuIndex === 0) {
-          this.mute()
-        } else if (menuIndex === 1) {
-        }
-      },
-      onCancel: () => {}
-    })
+    // RNPopoverMenu.Show(ref, {
+    //   menus: menus,
+    //   onDone: menuIndex => {
+    //     if (menuIndex === 0) {
+    //       this.mute()
+    //     } else if (menuIndex === 1) {
+    //     }
+    //   },
+    //   onCancel: () => {}
+    // })
   }
 
   render() {
