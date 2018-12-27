@@ -36,7 +36,7 @@ import moment from 'moment'
 import Context from './common/Context'
 import ReplyInput from './common/ReplyInput'
 import { contextData, tootDetail } from '../mock'
-import globe from '../utils/store'
+import globe from '../utils/mobx'
 
 /**
  * Toot详情页面

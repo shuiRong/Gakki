@@ -1,22 +1,13 @@
-import { observable } from 'mobx'
+import { AsyncStorage } from 'react-native'
 
-class Globe {
-  constructor() {}
-
-  @observable reply_to = '' // 回复对象的username
-  @observable reply_to_id = '' // 回复对象的id
-  @observable account = {} //当前用户的账户信息
-
-  updateReply(id, username) {
-    this.reply_to = username
-    this.reply_to_id = id
-  }
-
-  updateAccount(account) {
-    this.account = account
-  }
+export const save = (key, value) => {
+  return AsyncStorage.setItem(key, JSON.stringify(value))
 }
 
-const globe = new Globe()
+export const fetch = key => {
+  return AsyncStorage.getItem(key)
+}
 
-export default globe
+export const merge = (key, value, cb) => {
+  return AsyncStorage.mergeItem(key, value, cb)
+}

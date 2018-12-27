@@ -5,6 +5,8 @@ import HeaderItem from './Header'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import SideBar from './SideBar'
 import HomeScreen from './screen/HomeScreen'
+import LocalScreen from './screen/LocalScreen'
+import PublicScreen from './screen/PublicScreen'
 import ScrollableTabView, {
   DefaultTabBar
 } from 'react-native-scrollable-tab-view'
@@ -17,7 +19,8 @@ export default class Home extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      headerTop: new Animated.Value(0)
+      headerTop: new Animated.Value(0),
+      tab: 1
     }
   }
   componentWillMount() {
@@ -39,44 +42,6 @@ export default class Home extends Component {
   }
   openDrawer = () => {
     this.drawer._root.open()
-  }
-  tabChanged = ({ i }) => {
-    this.setState({
-      tab: i
-    })
-  }
-
-  renderTab = () => {
-    const tab = [
-      {
-        label: '本站',
-        url: 'public',
-        query: { local: true, only_media: false }
-      },
-      {
-        label: '主页',
-        url: 'home',
-        query: {}
-      },
-      {
-        label: '跨站',
-        url: 'public',
-        query: { only_media: false }
-      }
-    ]
-    return tab.map(item => {
-      return (
-        <HomeScreen
-          tabLabel={item.label}
-          onScroll={this.animatedEvent}
-          navigation={this.props.navigation}
-          url={item.url}
-          query={item.qurey}
-          refreshing={this.state.refreshing}
-          finishRefresh={() => this.setState({ refreshing: false })}
-        />
-      )
-    })
   }
 
   render() {
@@ -105,6 +70,7 @@ export default class Home extends Component {
             >
               <ScrollableTabView
                 initialPage={1}
+                onChangeTab={({ i }) => this.setState({ tab: i })}
                 renderTabBar={() => (
                   <DefaultTabBar
                     backgroundColor={'#3F51B5'}
@@ -113,7 +79,21 @@ export default class Home extends Component {
                   />
                 )}
               >
-                {this.renderTab()}
+                <LocalScreen
+                  tabLabel={'本站'}
+                  onScroll={this.animatedEvent}
+                  navigation={this.props.navigation}
+                />
+                <HomeScreen
+                  tabLabel={'主页'}
+                  onScroll={this.animatedEvent}
+                  navigation={this.props.navigation}
+                />
+                <PublicScreen
+                  tabLabel={'跨站'}
+                  onScroll={this.animatedEvent}
+                  navigation={this.props.navigation}
+                />
               </ScrollableTabView>
             </Animated.View>
             <Fab

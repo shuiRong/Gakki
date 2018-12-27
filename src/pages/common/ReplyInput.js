@@ -9,7 +9,7 @@ import {
 } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { sendStatuses } from '../../utils/api'
-import globe from '../../utils/store'
+import globe from '../../utils/mobx'
 
 @observer
 export default class ReplyInput extends Component {

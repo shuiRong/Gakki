@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { View, Text, Image, StyleSheet, ImageBackground } from 'react-native'
 import { getCurrentUser } from '../utils/api'
-import globe from '../utils/store'
+import globe from '../utils/mobx'
 
 export default class SideBar extends Component {
   constructor(props) {

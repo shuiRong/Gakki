@@ -14,7 +14,7 @@ import { favourite, reblog, mute, deleteStatuses } from '../../utils/api'
 import HTML from 'react-native-render-html'
 import moment from 'moment'
 // import RNPopoverMenu from 'react-native-popover-menu'
-import globe from '../../utils/store'
+import globe from '../../utils/mobx'
 
 /**
  * 评论组件

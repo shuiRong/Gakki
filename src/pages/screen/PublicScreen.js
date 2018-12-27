@@ -24,7 +24,7 @@ import { RelativeTime } from 'relative-time-react-native-component'
 import { zh } from '../../utils/locale'
 import { Label } from 'teaset'
 
-export default class HomeScreen extends Component {
+export default class PublicScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -32,8 +32,8 @@ export default class HomeScreen extends Component {
       loading: true,
       timezone: jstz.determine().name(), // 获得当前用户所在的时区
       locale: zh,
-      url: 'home',
-      baseParams: {}
+      url: 'public',
+      baseParams: { only_media: false }
     }
   }
   componentDidMount() {
