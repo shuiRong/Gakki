@@ -17,7 +17,6 @@ import Ripple from 'react-native-material-ripple'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { getStatuses } from '../utils/api'
 import HTML from 'react-native-render-html'
-import moment from 'moment'
 
 /**
  * Toot详情页面

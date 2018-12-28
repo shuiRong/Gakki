@@ -4,45 +4,93 @@ import {
   Dimensions,
   View,
   StyleSheet,
-  TouchableOpacity
+  Image,
+  ImageBackground,
+  TouchableOpacity,
+  Animated
 } from 'react-native'
-import {
-  Container,
-  Header,
-  Left,
-  Body,
-  Right,
-  Button,
-  Title,
-  Content,
-  Card,
-  CardItem,
-  Thumbnail
-} from 'native-base'
-import Ripple from 'react-native-material-ripple'
 import Icon from 'react-native-vector-icons/FontAwesome5'
-import { getStatuses, favourite, reblog, mute } from '../utils/api'
+import {
+  favourite,
+  reblog,
+  mute,
+  getAccountData,
+  getRelationship
+} from '../utils/api'
 import HTML from 'react-native-render-html'
-import moment from 'moment'
-// import RNPopoverMenu from 'react-native-popover-menu'
+import { profileData, relationshipData } from '../mock'
+import ScrollableTabView, {
+  DefaultTabBar
+} from 'react-native-scrollable-tab-view'
+import TootScreen from './screen/TootScreen'
+import MediaScreen from './screen/MediaScreen'
+import Fab from './common/Fab'
 
 /**
  * Toot详情页面
  */
+let deviceHeight = require('Dimensions').get('window').height
 export default class Profile extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      toot: {
-        account: {}
-      }
+      profile: {},
+      relationship: {},
+      headerTop: new Animated.Value(0)
     }
   }
 
+  componentWillMount() {
+    this.animatedEvent = Animated.event([
+      {
+        nativeEvent: {
+          contentOffset: { y: this.state.headerTop }
+        }
+      }
+    ])
+
+    const headerTop = this.state.headerTop
+
+    this.distanceFromTop = headerTop.interpolate({
+      inputRange: [0, 800, 801, 802],
+      outputRange: [0, -370, -370, -370]
+    })
+
+    this.opacity = headerTop.interpolate({
+      inputRange: [0, 456, 690, 691, 692],
+      outputRange: [0, 0, 1, 1, 1]
+    })
+  }
+
   componentDidMount() {
-    getStatuses(this.props.navigation.getParam('id')).then(res => {
+    console.log(22, this.props.navigation.getParam('id'))
+    const id = this.props.navigation.getParam('id')
+    this.getAccountData(id)
+    this.getRelationship(id)
+    // this.setState({
+    //   profile: profileData,
+    //   relationship: relationshipData[0]
+    // })
+    // getStatuses(this.props.navigation.getParam('id')).then(res => {
+    //   this.setState({
+    //     toot: res
+    //   })
+    // })
+  }
+
+  getAccountData = id => {
+    getAccountData(id).then(res => {
       this.setState({
-        toot: res
+        profile: res
+      })
+    })
+  }
+
+  getRelationship = id => {
+    getRelationship(id).then(res => {
+      console.log(44, res)
+      this.setState({
+        relationship: res[0]
       })
     })
   }
@@ -110,133 +158,260 @@ export default class Profile extends Component {
     })
   }
 
-  renderMenu = ref => {
-    let menus = [
-      {
-        menus: [{ label: '隐藏' }, { label: '屏蔽' }]
+  /**
+   * @description 返回是否已经关注对方的Element
+   */
+  getRelationshop = () => {
+    let configStyle = {
+      backgroundColor: '#3F51B5',
+      iconName: 'user',
+      iconColor: 'white',
+      text: '已关注',
+      textColor: 'white'
+    }
+    console.log(233, this.state.relationship)
+    if (!this.state.relationship.following) {
+      configStyle = {
+        backgroundColor: 'white',
+        iconName: 'user-plus',
+        iconColor: '#3F51B5',
+        text: '关注',
+        textColor: '#3F51B5'
       }
-    ]
+    }
 
-    // RNPopoverMenu.Show(ref, {
-    //   menus: menus,
-    //   onDone: (sectionSelection, menuIndex) => {
-    //     if (menuIndex === 0) {
-    //       this.mute()
-    //     } else if (menuIndex === 1) {
-    //     }
-    //   },
-    //   onCancel: () => {}
-    // })
+    return (
+      <View
+        style={{
+          ...styles.followButton,
+          backgroundColor: configStyle.backgroundColor
+        }}
+      >
+        <Icon
+          name={configStyle.iconName}
+          style={{
+            fontSize: 20,
+            color: configStyle.iconColor,
+            marginRight: 10
+          }}
+        />
+        <Text style={{ color: configStyle.textColor }}>{configStyle.text}</Text>
+      </View>
+    )
   }
 
   render() {
+    const profile = this.state.profile
+
     return (
-      <Container ref={this.detail}>
-        <Header>
-          <Left>
-            <Button transparent>
-              <Icon
-                style={[styles.icon, styles.navIcon]}
-                name="arrow-left"
-                onPress={this.goBackWithParam}
-              />
-            </Button>
-          </Left>
-          <Body>
-            <Title>Header</Title>
-          </Body>
-          <Right>
-            <Button transparent>
-              <Icon style={[styles.icon, styles.navIcon]} name="ellipsis-h" />
-            </Button>
-          </Right>
-        </Header>
-        <Content padder>
-          <Card transparent>
-            <CardItem>
-              <Left>
-                <Thumbnail source={{ uri: this.state.toot.account.avatar }} />
-                <Body>
-                  <Text>
-                    {this.state.toot.account.display_name ||
-                      this.state.toot.account.username}
-                  </Text>
-                  <Text note>{this.state.toot.account.username}</Text>
-                </Body>
-              </Left>
-            </CardItem>
-            <CardItem cardBody style={styles.body}>
-              <Ripple>
-                <HTML
-                  html={this.state.toot.content}
-                  tagsStyles={tagsStyles}
-                  imagesMaxWidth={Dimensions.get('window').width}
-                />
-                <Text style={styles.time}>
-                  {moment(this.state.toot.created_at).format('LLL')}
-                </Text>
-              </Ripple>
-            </CardItem>
-            <CardItem style={{ marginTop: 10 }}>
-              <View style={styles.leftBody}>
-                <Button transparent>
-                  <Icon name="reply" />
-                  <Text style={styles.bottomText}>
-                    {this.state.toot.replies_count}
-                  </Text>
-                </Button>
-                <Button transparent onPress={this.reblog}>
-                  {this.state.toot.reblogged ? (
-                    <Icon
-                      style={{ ...styles.icon, color: '#ca8f04' }}
-                      name="retweet"
-                    />
-                  ) : (
-                    <Icon name="retweet" />
-                  )}
-                  <Text style={styles.bottomText}>
-                    {this.state.toot.reblogs_count}
-                  </Text>
-                </Button>
-                <Button transparent onPress={this.favourite}>
-                  {this.state.toot.favourited ? (
-                    <Icon
-                      style={{ ...styles.icon, color: '#ca8f04' }}
-                      name="star"
-                      solid
-                    />
-                  ) : (
-                    <Icon name="star" />
-                  )}
-                  <Text style={styles.bottomText}>
-                    {this.state.toot.favourites_count}
-                  </Text>
-                </Button>
-              </View>
-              <Right>
-                <TouchableOpacity
-                  ref={ref => {
-                    this.ref = ref
-                  }}
-                  onPress={() => {
-                    this.renderMenu(this.ref)
+      <View style={styles.contianer}>
+        <View style={styles.header}>
+          <Animated.View
+            style={{
+              backgroundColor: '#3F51B5',
+              opacity: this.opacity,
+              position: 'absolute',
+              top: 0,
+              left: 0,
+              width: '100%',
+              height: 50,
+              zIndex: -1,
+              justifyContent: 'center'
+            }}
+          >
+            <View
+              style={{
+                marginLeft: 50,
+                flexDirection: 'row',
+                alignItems: 'center',
+                width: '75%',
+                overflow: 'hidden'
+              }}
+            >
+              <Text
+                numberOfLines={1}
+                style={{
+                  fontWeight: 'bold',
+                  fontSize: 17,
+                  color: 'white',
+                  marginRight: 5
+                }}
+              >
+                {profile.display_name}
+              </Text>
+              <Text
+                numberOfLines={1}
+                style={{
+                  color: '#ddd',
+                  fontSize: 14
+                }}
+              >
+                @{profile.username}
+              </Text>
+            </View>
+          </Animated.View>
+          <TouchableOpacity
+            style={{ marginLeft: 20 }}
+            onPress={this.props.navigation.goBack}
+          >
+            <Icon style={styles.navIcon} name="arrow-left" />
+          </TouchableOpacity>
+          <TouchableOpacity style={{ marginRight: 20 }}>
+            <Icon style={styles.navIcon} name="ellipsis-v" />
+          </TouchableOpacity>
+        </View>
+        <Animated.View
+          style={{
+            top: this.distanceFromTop
+          }}
+        >
+          <ImageBackground source={{ uri: profile.header }} style={styles.bg}>
+            <View
+              style={{
+                flex: 1,
+                margin: 10,
+                marginTop: 30,
+                alignItems: 'center',
+                justifyContent: 'space-between'
+              }}
+            >
+              <View
+                style={{
+                  alignItems: 'center',
+                  justifyContent: 'space-between'
+                }}
+              >
+                <Image source={{ uri: profile.avatar }} style={styles.image} />
+                <Text
+                  style={{
+                    fontWeight: 'bold',
+                    fontSize: 17,
+                    color: 'white'
                   }}
                 >
-                  <Icon name="ellipsis-h" />
-                </TouchableOpacity>
-              </Right>
-            </CardItem>
-          </Card>
-        </Content>
-      </Container>
+                  {profile.display_name}
+                </Text>
+                <Text
+                  style={{
+                    color: '#ddd',
+                    fontSize: 14,
+                    marginBottom: 5
+                  }}
+                >
+                  @{profile.username}
+                </Text>
+                <TouchableOpacity>{this.getRelationshop()}</TouchableOpacity>
+              </View>
+              <HTML
+                html={profile.note}
+                tagsStyles={tagsStyles}
+                imagesMaxWidth={Dimensions.get('window').width}
+              />
+              <View
+                style={{
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  width: '70%',
+                  justifyContent: 'space-around'
+                }}
+              >
+                <View
+                  style={{
+                    justifyContent: 'space-between',
+                    alignItems: 'center'
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: 'white',
+                      fontWeight: 'bold',
+                      fontSize: 15,
+                      textAlign: 'center'
+                    }}
+                  >
+                    {profile.followers_count}
+                  </Text>
+                  <Text style={{ color: 'white' }}>关注者</Text>
+                </View>
+                <View
+                  style={{
+                    justifyContent: 'space-between',
+                    alignItems: 'center'
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: 'white',
+                      fontWeight: 'bold',
+                      fontSize: 15,
+                      textAlign: 'center'
+                    }}
+                  >
+                    {profile.following_count}
+                  </Text>
+                  <Text style={{ color: 'white' }}>正在关注</Text>
+                </View>
+                <View
+                  style={{
+                    justifyContent: 'space-between',
+                    alignItems: 'center'
+                  }}
+                >
+                  <Text
+                    style={{
+                      color: 'white',
+                      fontWeight: 'bold',
+                      fontSize: 15,
+                      textAlign: 'center'
+                    }}
+                  >
+                    {profile.statuses_count}
+                  </Text>
+                  <Text style={{ color: 'white' }}>嘟文</Text>
+                </View>
+              </View>
+            </View>
+          </ImageBackground>
+        </Animated.View>
+        <Animated.View
+          style={{
+            height: deviceHeight,
+            top: this.distanceFromTop
+          }}
+        >
+          <ScrollableTabView
+            initialPage={0}
+            renderTabBar={() => (
+              <DefaultTabBar
+                backgroundColor={'#fff'}
+                activeTextColor={'#3F51B5'}
+                underlineStyle={{ backgroundColor: '#3F51B5' }}
+              />
+            )}
+          >
+            <TootScreen
+              tabLabel={'嘟文'}
+              onScroll={this.animatedEvent}
+              navigation={this.props.navigation}
+            />
+            <MediaScreen
+              tabLabel={'媒体'}
+              onScroll={this.animatedEvent}
+              navigation={this.props.navigation}
+            />
+          </ScrollableTabView>
+        </Animated.View>
+        <Fab navigation={this.props.navigation} />
+      </View>
     )
   }
 }
 
 const tagsStyles = {
   p: {
-    color: '#2b2e3d',
-    fontSize: 16,
+    color: 'white',
+    fontSize: 11,
+    letterSpacing: 1,
     lineHeight: 20
   },
   a: {
@@ -245,8 +420,39 @@ const tagsStyles = {
 }
 
 const styles = StyleSheet.create({
+  contianer: { flex: 1, backgroundColor: 'white' },
   body: {
     flexDirection: 'column'
+  },
+  bg: {
+    width: '100%',
+    height: 370
+  },
+  image: {
+    height: 60,
+    width: 60,
+    borderRadius: 50,
+    marginBottom: 5
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    width: '100%',
+    height: 50,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    zIndex: 1
+  },
+  followButton: {
+    width: 100,
+    height: 35,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 5,
+    marginBottom: 5
   },
   time: {
     alignSelf: 'flex-start',
@@ -259,12 +465,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between'
   },
-  icon: {
-    fontSize: 17
-  },
   navIcon: {
     fontSize: 20,
-    color: '#fff'
+    color: 'white'
   },
   bottomText: {
     marginLeft: 10

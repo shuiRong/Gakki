@@ -1660,3 +1660,82 @@ export const homeData = [
     card: null
   }
 ]
+
+export const profileData = {
+  id: '4549',
+  username: 'shioko',
+  acct: 'shioko',
+  display_name: ':cmx_elph:🍩รђเ๏к๏',
+  locked: false,
+  bot: false,
+  created_at: '2017-09-19T13:25:34.247Z',
+  note: '<p>测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试测试</p>',
+  url: 'https://cmx.im/@shioko',
+  avatar:
+    'https://cmx.im/system/accounts/avatars/000/004/549/original/5bb9cf3a14f6423a.png?1520761785',
+  avatar_static:
+    'https://cmx.im/system/accounts/avatars/000/004/549/original/5bb9cf3a14f6423a.png?1520761785',
+  header:
+    'https://cmx.im/system/accounts/headers/000/004/549/original/cb3bca41f78636508c2d85aea1bd440a.png?1534518305',
+  header_static:
+    'https://cmx.im/system/accounts/headers/000/004/549/original/cb3bca41f78636508c2d85aea1bd440a.png?1534518305',
+  followers_count: 338,
+  following_count: 88,
+  statuses_count: 7258,
+  emojis: [
+    {
+      shortcode: 'cmx_elph',
+      url:
+        'https://cmx.im/system/custom_emojis/images/000/008/037/original/cmx-elpt.png?1527944201',
+      static_url:
+        'https://cmx.im/system/custom_emojis/images/000/008/037/static/cmx-elpt.png?1527944201',
+      visible_in_picker: true
+    },
+    {
+      shortcode: '0230',
+      url:
+        'https://cmx.im/system/custom_emojis/images/000/000/167/original/0230.png?1508161142',
+      static_url:
+        'https://cmx.im/system/custom_emojis/images/000/000/167/static/0230.png?1508161142',
+      visible_in_picker: true
+    }
+  ],
+  fields: [
+    {
+      name: '部落格',
+      value:
+        '<a href="https://co5.me" rel="me nofollow noopener" target="_blank"><span class="invisible">https://</span><span class="">co5.me</span><span class="invisible"></span></a>',
+      verified_at: '2018-11-26T06:25:19.148+00:00'
+    },
+    {
+      name: '#草莓象',
+      value: '看置顶',
+      verified_at: null
+    },
+    {
+      name: '重构',
+      value: '是不存在的',
+      verified_at: null
+    },
+    {
+      name: '什么格式原理',
+      value: '能跑就行 :0230:',
+      verified_at: null
+    }
+  ]
+}
+
+export const relationshipData = [
+  {
+    id: '4549',
+    following: true,
+    showing_reblogs: true,
+    followed_by: false,
+    blocking: false,
+    muting: false,
+    muting_notifications: false,
+    requested: false,
+    domain_blocking: false,
+    endorsed: false
+  }
+]

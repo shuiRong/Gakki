@@ -31,7 +31,7 @@ import {
   blockAccount
 } from '../utils/api'
 import HTML from 'react-native-render-html'
-import moment from 'moment'
+
 // import RNPopoverMenu from 'react-native-popover-menu'
 import Context from './common/Context'
 import ReplyInput from './common/ReplyInput'

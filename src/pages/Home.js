@@ -1,12 +1,12 @@
 import React, { Component } from 'react'
-import { View, Animated, StyleSheet } from 'react-native'
-import { Drawer, Fab } from 'native-base'
+import { View, Animated } from 'react-native'
+import { Drawer } from 'native-base'
 import HeaderItem from './Header'
-import Icon from 'react-native-vector-icons/FontAwesome5'
 import SideBar from './SideBar'
 import HomeScreen from './screen/HomeScreen'
 import LocalScreen from './screen/LocalScreen'
 import PublicScreen from './screen/PublicScreen'
+import Fab from './common/Fab'
 import ScrollableTabView, {
   DefaultTabBar
 } from 'react-native-scrollable-tab-view'
@@ -19,8 +19,7 @@ export default class Home extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      headerTop: new Animated.Value(0),
-      tab: 1
+      headerTop: new Animated.Value(0)
     }
   }
   componentWillMount() {
@@ -70,7 +69,6 @@ export default class Home extends Component {
             >
               <ScrollableTabView
                 initialPage={1}
-                onChangeTab={({ i }) => this.setState({ tab: i })}
                 renderTabBar={() => (
                   <DefaultTabBar
                     backgroundColor={'#3F51B5'}
@@ -96,21 +94,10 @@ export default class Home extends Component {
                 />
               </ScrollableTabView>
             </Animated.View>
-            <Fab
-              direction="up"
-              style={styles.fab}
-              position="bottomRight"
-              onPress={() => this.props.navigation.navigate('SendToot')}
-            >
-              <Icon name="pen" />
-            </Fab>
+            <Fab navigation={this.props.navigation} />
           </View>
         </Drawer>
       </View>
     )
   }
 }
-
-const styles = StyleSheet.create({
-  fab: { backgroundColor: '#5067FF' }
-})

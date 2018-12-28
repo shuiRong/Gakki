@@ -12,7 +12,7 @@ import { Button } from 'native-base'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { favourite, reblog, mute, deleteStatuses } from '../../utils/api'
 import HTML from 'react-native-render-html'
-import moment from 'moment'
+
 // import RNPopoverMenu from 'react-native-popover-menu'
 import globe from '../../utils/mobx'
 

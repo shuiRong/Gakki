@@ -1,5 +1,5 @@
 /**
- * 本站信息流
+ * 个人主页的嘟文信息流
  */
 
 import React, { Component } from 'react'
@@ -24,7 +24,7 @@ import { RelativeTime } from 'relative-time-react-native-component'
 import { zh } from '../../utils/locale'
 import { Label } from 'teaset'
 
-export default class LocalScreen extends Component {
+export default class TootScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -32,15 +32,16 @@ export default class LocalScreen extends Component {
       loading: true,
       timezone: jstz.determine().name(), // 获得当前用户所在的时区
       locale: zh,
-      url: 'public',
-      baseParams: { local: true, only_media: false }
+      url: 'home',
+      baseParams: {}
     }
   }
   componentDidMount() {
-    this.fetchTimelines()
-    // this.setState({
-    //   list: homeData
-    // })
+    // this.fetchTimelines()
+    this.setState({
+      list: homeData,
+      loading: false
+    })
   }
 
   /**
@@ -48,8 +49,6 @@ export default class LocalScreen extends Component {
    * 如果带有一些参数；根据参数更新数据状态
    */
   componentWillReceiveProps({ tab, navigation }) {
-    console.log('newProps')
-
     if (!navigation) {
       return
     }
@@ -216,7 +215,7 @@ export default class LocalScreen extends Component {
 
   render() {
     if (this.state.loading) {
-      return <Spinner style={{ marginTop: 250 }} color="#5067FF" />
+      return <Spinner style={{ marginTop: 50 }} color="#5067FF" />
     }
     return (
       <View style={styles.container}>
@@ -376,7 +375,7 @@ const tagsStyles = {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 0
+    paddingTop: 0,
   },
   list: {
     alignItems: 'stretch',

@@ -108,9 +108,27 @@ export const blockAccount = (id, block) => {
 // 发送toot
 export const sendStatuses = data => {
   return request({
-    url: 'api/v1/statuses',
+    url: '/api/v1/statuses',
     method: 'post',
     data,
+    headers
+  })
+}
+
+// 获取和某人的关系数据
+export const getRelationship = id => {
+  return request({
+    url: `/api/v1/accounts/relationships?id[]=${id}`,
+    method: 'get',
+    headers
+  })
+}
+
+// 获取某人详情数据
+export const getAccountData = id => {
+  return request({
+    url: `/api/v1/accounts/${id}`,
+    method: 'get',
     headers
   })
 }

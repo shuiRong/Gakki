@@ -1,5 +1,5 @@
 /**
- * 主页主体内容
+ * 跨站信息流
  */
 
 import React, { Component } from 'react'
