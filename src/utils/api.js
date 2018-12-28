@@ -4,11 +4,11 @@ const headers = {
   Authorization: config.token
 }
 
-export const authorize = data => {
+export const authorize = params => {
   return request({
     url: '/oauth/authorize',
     method: 'get',
-    params: data
+    params
   })
 }
 
@@ -37,6 +37,7 @@ export const getCurrentUser = () => {
   })
 }
 
+// 获取时间线上的toot
 export const getStatuses = id => {
   return request({
     url: `/api/v1/statuses/${id}`,
@@ -45,6 +46,17 @@ export const getStatuses = id => {
   })
 }
 
+// 获取用户发送的toot
+export const getUserStatuses = (id, params) => {
+  return request({
+    url: `/api/v1/accounts/${id}/statuses`,
+    method: 'get',
+    headers,
+    params
+  })
+}
+
+// 删除toot
 export const deleteStatuses = id => {
   return request({
     url: `/api/v1/statuses/${id}`,

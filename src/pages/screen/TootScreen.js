@@ -15,10 +15,9 @@ import {
 } from 'react-native'
 import { Button, Spinner } from 'native-base'
 import Icon from 'react-native-vector-icons/FontAwesome5'
-import { getHomeTimelines, favourite, reblog } from '../../utils/api'
+import { favourite, reblog, getUserStatuses } from '../../utils/api'
 import momentTimezone from 'moment-timezone'
 import HTML from 'react-native-render-html'
-import { homeData } from '../../mock'
 import jstz from 'jstz'
 import { RelativeTime } from 'relative-time-react-native-component'
 import { zh } from '../../utils/locale'
@@ -37,11 +36,9 @@ export default class TootScreen extends Component {
     }
   }
   componentDidMount() {
-    // this.fetchTimelines()
-    this.setState({
-      list: homeData,
-      loading: false
-    })
+    console.log('start')
+    this.getUserStatuses()
+    this.getUserPinnedStatuses()
   }
 
   /**
@@ -98,25 +95,33 @@ export default class TootScreen extends Component {
   }
 
   /**
-   * @description 获取时间线数据
+   * @description 获取用户发送的toot
    * @param {cb}: 成功后的回调函数
-   * @param {params}: 分页参数
+   * @param {params}: 参数
    */
-  fetchTimelines = (cb, params) => {
-    // this.setState({
-    //   loading: true
-    // })
-    getHomeTimelines(this.state.url, {
-      ...this.state.baseParams,
-      ...params
+  getUserStatuses = cb => {
+    getUserStatuses(this.props.navigation.getParam('id'), {
+      exclude_replies: true
     }).then(res => {
-      console.log('data: ', params, res)
+      console.log(2333, res)
       // 同时将数据更新到state数据中，刷新视图
       this.setState({
         list: this.state.list.concat(res),
         loading: false
       })
       if (cb) cb()
+    })
+  }
+
+  getUserPinnedStatuses = () => {
+    getUserStatuses(this.props.navigation.getParam('id'), {
+      pinned: true
+    }).then(res => {
+      const newList = res.concat(this.state.list)
+      this.setState({
+        list: newList,
+        loading: false
+      })
     })
   }
 

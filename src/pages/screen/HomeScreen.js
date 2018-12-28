@@ -48,15 +48,12 @@ export default class HomeScreen extends Component {
    * 如果带有一些参数；根据参数更新数据状态
    */
   componentWillReceiveProps({ tab, navigation }) {
-    console.log('newProps')
-
     if (!navigation) {
       return
     }
     const params = navigation.getParam('data')
 
     if (params && params.id) {
-      console.log('params')
       let newList = this.state.list
       if (params.mute) {
         // 如果某人被‘隐藏’，那么首页去除所有该用户的消息
@@ -87,7 +84,6 @@ export default class HomeScreen extends Component {
 
     const toot = navigation.getParam('newToot')
     if (toot) {
-      console.log('newToot')
       // 将新toot塞入数据最上方
       const newList = [...this.state.list]
       newList.unshift(toot)
@@ -111,7 +107,6 @@ export default class HomeScreen extends Component {
       ...this.state.baseParams,
       ...params
     }).then(res => {
-      console.log('data: ', params, res)
       // 同时将数据更新到state数据中，刷新视图
       this.setState({
         list: this.state.list.concat(res),
@@ -202,7 +197,6 @@ export default class HomeScreen extends Component {
   // 滚动到了底部，加载数据
   onEndReached = () => {
     const state = this.state
-    console.log('end')
     this.fetchTimelines(null, { max_id: state.list[state.list.length - 1].id })
   }
 
@@ -376,7 +370,8 @@ const tagsStyles = {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 0
+    paddingTop: 0,
+    backgroundColor: 'white'
   },
   list: {
     alignItems: 'stretch',

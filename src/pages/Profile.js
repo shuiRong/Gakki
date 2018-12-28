@@ -18,7 +18,6 @@ import {
   getRelationship
 } from '../utils/api'
 import HTML from 'react-native-render-html'
-import { profileData, relationshipData } from '../mock'
 import ScrollableTabView, {
   DefaultTabBar
 } from 'react-native-scrollable-tab-view'
@@ -63,21 +62,15 @@ export default class Profile extends Component {
   }
 
   componentDidMount() {
-    console.log(22, this.props.navigation.getParam('id'))
     const id = this.props.navigation.getParam('id')
     this.getAccountData(id)
     this.getRelationship(id)
-    // this.setState({
-    //   profile: profileData,
-    //   relationship: relationshipData[0]
-    // })
-    // getStatuses(this.props.navigation.getParam('id')).then(res => {
-    //   this.setState({
-    //     toot: res
-    //   })
-    // })
   }
 
+  /**
+   * @description 获取用户个人详情
+   * @param {id}: id
+   */
   getAccountData = id => {
     getAccountData(id).then(res => {
       this.setState({
@@ -86,9 +79,12 @@ export default class Profile extends Component {
     })
   }
 
+  /**
+   * @description 获取你与该用户的关系数据
+   * @param {id}: id
+   */
   getRelationship = id => {
     getRelationship(id).then(res => {
-      console.log(44, res)
       this.setState({
         relationship: res[0]
       })
@@ -169,7 +165,7 @@ export default class Profile extends Component {
       text: '已关注',
       textColor: 'white'
     }
-    console.log(233, this.state.relationship)
+
     if (!this.state.relationship.following) {
       configStyle = {
         backgroundColor: 'white',

@@ -13,7 +13,7 @@ export default class HeaderItem extends Component {
           </Button>
         </Left>
         <Body>
-          <Title>Mastodon</Title>
+          <Title>Gakki</Title>
         </Body>
         <Right>
           <Button

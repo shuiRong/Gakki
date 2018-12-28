@@ -57,7 +57,7 @@ export default class SendToot extends Component {
             </Button>
           </Left>
           <Body>
-            <Title>Header</Title>
+            <Title>发嘟</Title>
           </Body>
           <Right>
             <Button transparent>
