@@ -22,7 +22,7 @@ import jstz from 'jstz'
 import { RelativeTime } from 'relative-time-react-native-component'
 import { zh } from '../../utils/locale'
 import { Label } from 'teaset'
-import { onlyMediaData } from '../../mock'
+import MediaBox from '../common/MediaBox'
 
 export default class TootScreen extends Component {
   constructor(props) {
@@ -32,17 +32,12 @@ export default class TootScreen extends Component {
       loading: true,
       timezone: jstz.determine().name(), // 获得当前用户所在的时区
       locale: zh,
-      url: 'home',
-      baseParams: {}
+      url: 'home'
     }
   }
   componentDidMount() {
     this.getUserStatuses()
     this.getUserPinnedStatuses()
-    // this.setState({
-    //   list: onlyMediaData,
-    //   loading: false
-    // })
   }
 
   /**
@@ -101,9 +96,10 @@ export default class TootScreen extends Component {
    * @param {cb}: 成功后的回调函数
    * @param {params}: 参数
    */
-  getUserStatuses = cb => {
+  getUserStatuses = (cb, params) => {
     getUserStatuses(this.props.navigation.getParam('id'), {
-      exclude_replies: true
+      exclude_replies: true,
+      ...params
     }).then(res => {
       // 同时将数据更新到state数据中，刷新视图
       this.setState({
@@ -131,7 +127,7 @@ export default class TootScreen extends Component {
       loading: true,
       list: []
     })
-    this.fetchTimelines()
+    this.getUserStatuses()
   }
 
   /**
@@ -207,7 +203,7 @@ export default class TootScreen extends Component {
   // 滚动到了底部，加载数据
   onEndReached = () => {
     const state = this.state
-    this.fetchTimelines(null, { max_id: state.list[state.list.length - 1].id })
+    this.getUserStatuses(null, { max_id: state.list[state.list.length - 1].id })
   }
 
   getTimeValue = time => {
@@ -305,6 +301,10 @@ export default class TootScreen extends Component {
                       imagesMaxWidth={Dimensions.get('window').width}
                     />
                   </View>
+                  <MediaBox
+                    data={item.media_attachments}
+                    sensitive={item.sensitive}
+                  />
                   <View style={styles.iconBox}>
                     <Button
                       transparent

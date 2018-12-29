@@ -18,7 +18,6 @@ import Icon from 'react-native-vector-icons/FontAwesome5'
 import { getHomeTimelines, favourite, reblog } from '../../utils/api'
 import momentTimezone from 'moment-timezone'
 import HTML from 'react-native-render-html'
-import { homeData } from '../../mock'
 import jstz from 'jstz'
 import { RelativeTime } from 'relative-time-react-native-component'
 import { zh } from '../../utils/locale'
@@ -39,9 +38,6 @@ export default class HomeScreen extends Component {
   }
   componentDidMount() {
     this.fetchTimelines()
-    // this.setState({
-    //   list: homeData
-    // })
   }
 
   /**
@@ -101,9 +97,6 @@ export default class HomeScreen extends Component {
    * @param {params}: 分页参数
    */
   fetchTimelines = (cb, params) => {
-    // this.setState({
-    //   loading: true
-    // })
     getHomeTimelines(this.state.url, {
       ...this.state.baseParams,
       ...params

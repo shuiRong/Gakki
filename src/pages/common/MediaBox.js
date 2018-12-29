@@ -48,7 +48,7 @@ class ImageBox extends Component {
     const image = this.state.image
     const showMedia = () => this.changeMediaStatus(false)
 
-    if (image.hide && image.sensitive) {
+    if (image.sensitive && image.hide) {
       return (
         <BlackMirror key={image.id} text={'敏感内容'} showMedia={showMedia} />
       )
@@ -92,7 +92,7 @@ export default class MediaBox extends Component {
       <View style={{ flex: 1, marginTop: 10 }}>
         {data.map(media => {
           if (media.type === 'image') {
-            return <ImageBox data={{ ...media, sensitive }} />
+            return <ImageBox data={{ ...media, sensitive, hide: sensitive }} />
           } else if (media.type === 'video') {
             return this.getVideoElement(media)
           }
@@ -108,7 +108,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     height: 180,
-    borderRadius: 5
+    borderRadius: 5,
+    marginBottom: 5
   },
   sensitiveText: {
     fontSize: 15,
@@ -119,7 +120,8 @@ const styles = StyleSheet.create({
   },
   mediaBox: {
     width: '100%',
-    height: 180
+    height: 180,
+    marginBottom: 5
   },
   eyeSlashBox: {
     position: 'absolute',

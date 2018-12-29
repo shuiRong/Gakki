@@ -18,11 +18,11 @@ import Icon from 'react-native-vector-icons/FontAwesome5'
 import { getHomeTimelines, favourite, reblog } from '../../utils/api'
 import momentTimezone from 'moment-timezone'
 import HTML from 'react-native-render-html'
-import { homeData } from '../../mock'
 import jstz from 'jstz'
 import { RelativeTime } from 'relative-time-react-native-component'
 import { zh } from '../../utils/locale'
 import { Label } from 'teaset'
+import MediaBox from '../common/MediaBox'
 
 export default class PublicScreen extends Component {
   constructor(props) {
@@ -38,9 +38,6 @@ export default class PublicScreen extends Component {
   }
   componentDidMount() {
     this.fetchTimelines()
-    // this.setState({
-    //   list: homeData
-    // })
   }
 
   /**
@@ -48,7 +45,6 @@ export default class PublicScreen extends Component {
    * 如果带有一些参数；根据参数更新数据状态
    */
   componentWillReceiveProps({ tab, navigation }) {
-
     if (!navigation) {
       return
     }
@@ -101,9 +97,6 @@ export default class PublicScreen extends Component {
    * @param {params}: 分页参数
    */
   fetchTimelines = (cb, params) => {
-    // this.setState({
-    //   loading: true
-    // })
     getHomeTimelines(this.state.url, {
       ...this.state.baseParams,
       ...params
@@ -296,6 +289,10 @@ export default class PublicScreen extends Component {
                       imagesMaxWidth={Dimensions.get('window').width}
                     />
                   </View>
+                  <MediaBox
+                    data={item.media_attachments}
+                    sensitive={item.sensitive}
+                  />
                   <View style={styles.iconBox}>
                     <Button
                       transparent
@@ -371,7 +368,8 @@ const tagsStyles = {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 0
+    paddingTop: 0,
+    backgroundColor: 'white'
   },
   list: {
     alignItems: 'stretch',

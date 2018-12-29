@@ -45,7 +45,7 @@ export default class Home extends Component {
 
   render() {
     return (
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, backgroundColor: 'white' }}>
         <Drawer
           ref={ref => {
             this.drawer = ref
