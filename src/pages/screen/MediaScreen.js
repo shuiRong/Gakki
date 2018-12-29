@@ -6,42 +6,46 @@ import React, { Component } from 'react'
 import {
   View,
   StyleSheet,
-  Dimensions,
   Image,
   Text,
+  Dimensions,
   FlatList,
   TouchableOpacity,
   RefreshControl
 } from 'react-native'
-import { Button, Spinner } from 'native-base'
-import Icon from 'react-native-vector-icons/FontAwesome5'
-import { getHomeTimelines, favourite, reblog } from '../../utils/api'
-import momentTimezone from 'moment-timezone'
-import HTML from 'react-native-render-html'
-import { homeData } from '../../mock'
-import jstz from 'jstz'
-import { RelativeTime } from 'relative-time-react-native-component'
-import { zh } from '../../utils/locale'
-import { Label } from 'teaset'
+import { getUserStatuses } from '../../utils/api'
+import { Spinner } from 'native-base'
 
+let deviceWidth = require('Dimensions').get('window').width
 export default class TootScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
       list: [],
       loading: true,
-      timezone: jstz.determine().name(), // 获得当前用户所在的时区
-      locale: zh,
       url: 'home',
       baseParams: {}
     }
   }
   componentDidMount() {
-    // this.fetchTimelines()
-    this.setState({
-      list: homeData,
-      loading: false
-    })
+    this.getUserMediaStatuses()
+    // const newList = []
+    // onlyMediaData.forEach(item => {
+    //   const mediaList = item.media_attachments
+    //   if (!mediaList || mediaList.length === 0) {
+    //     return
+    //   }
+    //   mediaList.forEach(media => {
+    //     newList.push({
+    //       preview_url: media.preview_url,
+    //       id: item.id
+    //     })
+    //   })
+    // })
+    // this.setState({
+    //   list: newList,
+    //   loading: false
+    // })
   }
 
   /**
@@ -55,7 +59,6 @@ export default class TootScreen extends Component {
     const params = navigation.getParam('data')
 
     if (params && params.id) {
-      console.log('params')
       let newList = this.state.list
       if (params.mute) {
         // 如果某人被‘隐藏’，那么首页去除所有该用户的消息
@@ -86,7 +89,6 @@ export default class TootScreen extends Component {
 
     const toot = navigation.getParam('newToot')
     if (toot) {
-      console.log('newToot')
       // 将新toot塞入数据最上方
       const newList = [...this.state.list]
       newList.unshift(toot)
@@ -98,22 +100,31 @@ export default class TootScreen extends Component {
   }
 
   /**
-   * @description 获取时间线数据
+   * @description 获取用户发送的toot
    * @param {cb}: 成功后的回调函数
-   * @param {params}: 分页参数
+   * @param {params}: 参数
    */
-  fetchTimelines = (cb, params) => {
-    // this.setState({
-    //   loading: true
-    // })
-    getHomeTimelines(this.state.url, {
-      ...this.state.baseParams,
+  getUserMediaStatuses = (cb, params) => {
+    getUserStatuses(this.props.navigation.getParam('id'), {
+      only_media: true,
       ...params
     }).then(res => {
-      console.log('data: ', params, res)
       // 同时将数据更新到state数据中，刷新视图
+      const newList = []
+      res.forEach(item => {
+        const mediaList = item.media_attachments
+        if (!mediaList || mediaList.length === 0) {
+          return
+        }
+        mediaList.forEach(media => {
+          newList.push({
+            preview_url: media.preview_url,
+            id: item.id
+          })
+        })
+      })
       this.setState({
-        list: this.state.list.concat(res),
+        list: this.state.list.concat(newList),
         loading: false
       })
       if (cb) cb()
@@ -177,23 +188,7 @@ export default class TootScreen extends Component {
    * 跳转入Toot详情页面
    */
   goTootDetail = id => {
-    if (!this.props) {
-      return
-    }
     this.props.navigation.navigate('TootDetail', {
-      id: id
-    })
-  }
-
-  /**
-   * @description 跳转入个人详情页面
-   * @param {id}: id
-   */
-  goProfile = id => {
-    if (!this.props) {
-      return
-    }
-    this.props.navigation.navigate('Profile', {
       id: id
     })
   }
@@ -201,16 +196,9 @@ export default class TootScreen extends Component {
   // 滚动到了底部，加载数据
   onEndReached = () => {
     const state = this.state
-    console.log('end')
-    this.fetchTimelines(null, { max_id: state.list[state.list.length - 1].id })
-  }
-
-  getTimeValue = time => {
-    return new Date(
-      momentTimezone(time)
-        .tz(this.state.timezone)
-        .format()
-    ).valueOf()
+    this.getUserMediaStatuses(null, {
+      max_id: state.list[state.list.length - 1].id
+    })
   }
 
   render() {
@@ -220,10 +208,10 @@ export default class TootScreen extends Component {
     return (
       <View style={styles.container}>
         <FlatList
-          ItemSeparatorComponent={() => <View style={styles.divider} />}
+          numColumns={3}
           showsVerticalScrollIndicator={false}
           data={this.state.list}
-          onEndReachedThreshold={0.1}
+          onEndReachedThreshold={0.4}
           onEndReached={this.onEndReached}
           onScroll={this.props.onScroll}
           keyExtractor={item => item.id}
@@ -236,7 +224,7 @@ export default class TootScreen extends Component {
           ListFooterComponent={() => (
             <View
               style={{
-                height: 100,
+                height: 200,
                 justifyContent: 'center',
                 alignItems: 'center'
               }}
@@ -245,115 +233,23 @@ export default class TootScreen extends Component {
             </View>
           )}
           renderItem={({ item }) => (
-            <View
+            <TouchableOpacity
               style={{
-                flex: 1,
+                justifyContent: 'center',
                 flexDirection: 'row',
-                margin: 10,
-                marginTop: 15
+                alignItems: 'center'
               }}
+              activeOpacity={1}
+              onPress={() => this.goTootDetail(item.id)}
             >
-              <TouchableOpacity
-                activeOpacity={1}
-                onPress={() => this.goProfile(item.account.id)}
-              >
-                <Image
-                  style={{
-                    width: 40,
-                    height: 40,
-                    borderRadius: 5,
-                    marginRight: 10
-                  }}
-                  source={{ uri: item.account.avatar }}
-                />
-              </TouchableOpacity>
-              <View style={styles.list}>
-                <TouchableOpacity
-                  activeOpacity={1}
-                  onPress={() => this.goTootDetail(item.id)}
-                >
-                  <View style={styles.row}>
-                    <Text numberOfLines={1} style={styles.titleWidth}>
-                      <Text style={styles.displayName}>
-                        {item.account.display_name || item.account.username}
-                      </Text>
-                      <Text style={styles.smallGrey}>
-                        &nbsp;@{item.account.username}
-                      </Text>
-                    </Text>
-                    <Text
-                      style={{
-                        flex: 1,
-                        textAlign: 'right'
-                      }}
-                    >
-                      <RelativeTime
-                        locale={this.state.locale}
-                        time={this.getTimeValue(item.created_at)}
-                      />
-                    </Text>
-                  </View>
-                  <View style={styles.htmlBox}>
-                    <HTML
-                      html={item.content}
-                      tagsStyles={tagsStyles}
-                      imagesMaxWidth={Dimensions.get('window').width}
-                    />
-                  </View>
-                  <View style={styles.iconBox}>
-                    <Button
-                      transparent
-                      onPress={() =>
-                        this.props.navigation.navigate('Reply', {
-                          id: item.id
-                        })
-                      }
-                    >
-                      <Icon style={styles.icon} name="reply" />
-                      <Text style={styles.bottomText}>
-                        {item.replies_count}
-                      </Text>
-                    </Button>
-                    <Button
-                      transparent
-                      onPress={() => this.reblog(item.id, item.reblogged)}
-                    >
-                      {item.reblogged ? (
-                        <Icon
-                          style={{ ...styles.icon, color: '#ca8f04' }}
-                          name="retweet"
-                        />
-                      ) : (
-                        <Icon style={styles.icon} name="retweet" />
-                      )}
-                      <Text style={styles.bottomText}>
-                        {item.reblogs_count}
-                      </Text>
-                    </Button>
-                    <Button
-                      transparent
-                      onPress={() => this.favourite(item.id, item.favourited)}
-                    >
-                      {item.favourited ? (
-                        <Icon
-                          style={{ ...styles.icon, color: '#ca8f04' }}
-                          name="star"
-                          solid
-                        />
-                      ) : (
-                        <Icon style={styles.icon} name="star" />
-                      )}
-                      <Text style={styles.bottomText}>
-                        {item.favourites_count}
-                      </Text>
-                    </Button>
-                    <Button transparent>
-                      <Icon style={styles.icon} name="ellipsis-h" />
-                    </Button>
-                  </View>
-                </TouchableOpacity>
-              </View>
-            </View>
+              <Image
+                style={{
+                  width: deviceWidth / 3,
+                  height: deviceWidth / 3
+                }}
+                source={{ uri: item.preview_url }}
+              />
+            </TouchableOpacity>
           )}
         />
       </View>
@@ -361,21 +257,10 @@ export default class TootScreen extends Component {
   }
 }
 
-const tagsStyles = {
-  p: {
-    color: '#2b2e3d',
-    fontSize: 16,
-    lineHeight: 20
-  },
-  a: {
-    lineHeight: 20
-  }
-}
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 0,
+    paddingTop: 0
   },
   list: {
     alignItems: 'stretch',
@@ -386,45 +271,5 @@ const styles = StyleSheet.create({
     width: 50,
     borderRadius: 50,
     marginRight: 20
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between'
-  },
-  smallGrey: {
-    color: 'grey',
-    fontWeight: 'normal'
-  },
-  titleWidth: {
-    width: 170,
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    justifyContent: 'flex-start'
-  },
-  displayName: {
-    color: '#333'
-  },
-  iconBox: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 10,
-    flex: 1
-  },
-  htmlBox: {
-    flex: 1,
-    marginTop: 10,
-    marginRight: 20
-  },
-  icon: {
-    fontSize: 15
-  },
-  bottomText: {
-    marginLeft: 10
-  },
-  divider: {
-    borderColor: '#ddd',
-    borderWidth: 1,
-    borderBottomWidth: 0
   }
 })

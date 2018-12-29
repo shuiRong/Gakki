@@ -37,6 +37,8 @@ import Context from './common/Context'
 import ReplyInput from './common/ReplyInput'
 import { contextData, tootDetail } from '../mock'
 import globe from '../utils/mobx'
+import jstz from 'jstz'
+import momentTimezone from 'moment-timezone'
 
 /**
  * Toot详情页面
@@ -48,6 +50,7 @@ export default class TootDetail extends Component {
       toot: {
         account: {}
       },
+      timezone: jstz.determine().name(), // 获得当前用户所在的时区
       context: [],
       refreshing: false
     }
@@ -197,7 +200,7 @@ export default class TootDetail extends Component {
           </Button>
         </Left>
         <Body>
-          <Title>Header</Title>
+          <Title>嘟文</Title>
         </Body>
         <Right>
           <Button transparent>
@@ -250,7 +253,9 @@ export default class TootDetail extends Component {
                   imagesMaxWidth={Dimensions.get('window').width}
                 />
                 <Text style={styles.time}>
-                  {moment(this.state.toot.created_at).format('LLL')}
+                  {momentTimezone(this.state.toot.created_at)
+                    .tz(this.state.timezone)
+                    .format('LLL')}
                 </Text>
               </Ripple>
             </CardItem>

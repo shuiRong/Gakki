@@ -24,6 +24,7 @@ import ScrollableTabView, {
 import TootScreen from './screen/TootScreen'
 import MediaScreen from './screen/MediaScreen'
 import Fab from './common/Fab'
+import { profileData, relationshipData } from '../mock'
 
 /**
  * Toot详情页面
@@ -65,6 +66,11 @@ export default class Profile extends Component {
     const id = this.props.navigation.getParam('id')
     this.getAccountData(id)
     this.getRelationship(id)
+    // this.setState({
+    //   list: profileData,
+    //   relationship: relationshipData[0],
+    //   loading: false
+    // })
   }
 
   /**
@@ -165,7 +171,6 @@ export default class Profile extends Component {
       text: '已关注',
       textColor: 'white'
     }
-
     if (!this.state.relationship.following) {
       configStyle = {
         backgroundColor: 'white',

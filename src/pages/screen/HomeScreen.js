@@ -22,6 +22,7 @@ import { homeData } from '../../mock'
 import jstz from 'jstz'
 import { RelativeTime } from 'relative-time-react-native-component'
 import { zh } from '../../utils/locale'
+import MediaBox from '../common/MediaBox'
 import { Label } from 'teaset'
 
 export default class HomeScreen extends Component {
@@ -295,6 +296,10 @@ export default class HomeScreen extends Component {
                       imagesMaxWidth={Dimensions.get('window').width}
                     />
                   </View>
+                  <MediaBox
+                    data={item.media_attachments}
+                    sensitive={item.sensitive}
+                  />
                   <View style={styles.iconBox}>
                     <Button
                       transparent

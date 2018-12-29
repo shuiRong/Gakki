@@ -12,7 +12,10 @@ import { Button } from 'native-base'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { favourite, reblog, mute, deleteStatuses } from '../../utils/api'
 import HTML from 'react-native-render-html'
-
+import jstz from 'jstz'
+import { RelativeTime } from 'relative-time-react-native-component'
+import { zh } from '../../utils/locale'
+import momentTimezone from 'moment-timezone'
 // import RNPopoverMenu from 'react-native-popover-menu'
 import globe from '../../utils/mobx'
 
@@ -23,7 +26,9 @@ export default class Context extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      context: props.data
+      context: props.data,
+      timezone: jstz.determine().name(), // 获得当前用户所在的时区
+      locale: zh
     }
   }
 
@@ -94,6 +99,14 @@ export default class Context extends Component {
     globe.updateReply(id, username)
   }
 
+  getTimeValue = time => {
+    return new Date(
+      momentTimezone(time)
+        .tz(this.state.timezone)
+        .format()
+    ).valueOf()
+  }
+
   /**
    * @description 根据是否是用户的toot来展示不同的菜单
    * @param {id}: 用户id
@@ -154,9 +167,10 @@ export default class Context extends Component {
                     </Text>
                   </Text>
                   <Text>
-                    {moment(item.created_at, 'YYYY-MM-DD')
-                      .startOf('day')
-                      .fromNow()}
+                    <RelativeTime
+                      locale={this.state.locale}
+                      time={this.getTimeValue(item.created_at)}
+                    />
                   </Text>
                 </View>
               </View>

@@ -17,6 +17,10 @@ import Ripple from 'react-native-material-ripple'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { getStatuses } from '../utils/api'
 import HTML from 'react-native-render-html'
+import globe from '../utils/mobx'
+import jstz from 'jstz'
+import { zh } from '../utils/locale'
+import momentTimezone from 'moment-timezone'
 
 /**
  * Toot详情页面
@@ -83,7 +87,9 @@ export default class TootDetail extends Component {
                   imagesMaxWidth={Dimensions.get('window').width}
                 />
                 <Text style={styles.time}>
-                  {moment(this.state.toot.created_at).format('LLL')}
+                  {momentTimezone(this.state.toot.created_at)
+                    .tz(this.state.timezone)
+                    .format('LLL')}
                 </Text>
               </Ripple>
             </CardItem>
