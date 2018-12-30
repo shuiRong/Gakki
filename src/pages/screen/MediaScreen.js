@@ -7,14 +7,13 @@ import {
   View,
   StyleSheet,
   Image,
-  Text,
-  Dimensions,
   FlatList,
   TouchableOpacity,
   RefreshControl
 } from 'react-native'
 import { getUserStatuses } from '../../utils/api'
 import { Spinner } from 'native-base'
+import ListFooterComponent from '../common/ListFooterComponent'
 
 let deviceWidth = require('Dimensions').get('window').width
 export default class TootScreen extends Component {
@@ -22,30 +21,11 @@ export default class TootScreen extends Component {
     super(props)
     this.state = {
       list: [],
-      loading: true,
-      url: 'home',
-      baseParams: {}
+      loading: true
     }
   }
   componentDidMount() {
     this.getUserMediaStatuses()
-    // const newList = []
-    // onlyMediaData.forEach(item => {
-    //   const mediaList = item.media_attachments
-    //   if (!mediaList || mediaList.length === 0) {
-    //     return
-    //   }
-    //   mediaList.forEach(media => {
-    //     newList.push({
-    //       preview_url: media.preview_url,
-    //       id: item.id
-    //     })
-    //   })
-    // })
-    // this.setState({
-    //   list: newList,
-    //   loading: false
-    // })
   }
 
   /**
@@ -140,51 +120,6 @@ export default class TootScreen extends Component {
   }
 
   /**
-   * @description 给toot点赞，如果已经点过赞就取消点赞
-   * @param {id}: id
-   * @param {favourited}: 点赞状态
-   */
-  favourite = (id, favourited) => {
-    favourite(id, favourited).then(() => {
-      this.update(id, 'favourited', favourited, 'favourites_count')
-    })
-  }
-
-  /**
-   * @description 转发toot
-   * @param {id}: id
-   * @param {reblogged}: 转发状态
-   */
-  reblog = (id, reblogged) => {
-    reblog(id, reblogged).then(() => {
-      this.update(id, 'reblogged', reblogged, 'reblogs_count')
-    })
-  }
-
-  /**
-   * @description 更改前端点赞和转发的状态值，并且增减数量
-   * @param {status}: 状态名 favourited/reblogged
-   * @param {value}: 状态值 true/false
-   * @param {statusCount}: 状态的数量key
-   */
-  update = (id, status, value, statusCount) => {
-    const newList = [...this.state.list]
-    newList.forEach(list => {
-      if (list.id === id) {
-        list[status] = !value
-        if (value) {
-          list[statusCount] -= 1
-        } else {
-          list[statusCount] += 1
-        }
-      }
-    })
-    this.setState({
-      list: newList
-    })
-  }
-
-  /**
    * 跳转入Toot详情页面
    */
   goTootDetail = id => {
@@ -221,34 +156,14 @@ export default class TootScreen extends Component {
               onRefresh={this.refreshHandler}
             />
           }
-          ListFooterComponent={() => (
-            <View
-              style={{
-                height: 200,
-                justifyContent: 'center',
-                alignItems: 'center'
-              }}
-            >
-              <Text>正在加载...</Text>
-            </View>
-          )}
+          ListFooterComponent={() => <ListFooterComponent />}
           renderItem={({ item }) => (
             <TouchableOpacity
-              style={{
-                justifyContent: 'center',
-                flexDirection: 'row',
-                alignItems: 'center'
-              }}
+              style={styles.imageBox}
               activeOpacity={1}
               onPress={() => this.goTootDetail(item.id)}
             >
-              <Image
-                style={{
-                  width: deviceWidth / 3,
-                  height: deviceWidth / 3
-                }}
-                source={{ uri: item.preview_url }}
-              />
+              <Image style={styles.image} source={{ uri: item.preview_url }} />
             </TouchableOpacity>
           )}
         />
@@ -262,14 +177,13 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 0
   },
-  list: {
-    alignItems: 'stretch',
-    flex: 1
+  imageBox: {
+    justifyContent: 'center',
+    flexDirection: 'row',
+    alignItems: 'center'
   },
   image: {
-    height: 50,
-    width: 50,
-    borderRadius: 50,
-    marginRight: 20
+    width: deviceWidth / 3,
+    height: deviceWidth / 3
   }
 })

@@ -3,26 +3,11 @@
  */
 
 import React, { Component } from 'react'
-import {
-  View,
-  StyleSheet,
-  Dimensions,
-  Image,
-  Text,
-  FlatList,
-  TouchableOpacity,
-  RefreshControl
-} from 'react-native'
-import { Button, Spinner } from 'native-base'
-import Icon from 'react-native-vector-icons/FontAwesome5'
-import { getHomeTimelines, favourite, reblog } from '../../utils/api'
-import momentTimezone from 'moment-timezone'
-import HTML from 'react-native-render-html'
-import jstz from 'jstz'
-import { RelativeTime } from 'relative-time-react-native-component'
-import { zh } from '../../utils/locale'
-import MediaBox from '../common/MediaBox'
-import { Label } from 'teaset'
+import { View, StyleSheet, Text, FlatList, RefreshControl } from 'react-native'
+import { Spinner } from 'native-base'
+import { getHomeTimelines } from '../../utils/api'
+import TootBox from '../common/TootBox'
+import ListFooterComponent from '../common/ListFooterComponent'
 
 export default class HomeScreen extends Component {
   constructor(props) {
@@ -30,8 +15,6 @@ export default class HomeScreen extends Component {
     this.state = {
       list: [],
       loading: true,
-      timezone: jstz.determine().name(), // 获得当前用户所在的时区
-      locale: zh,
       url: 'home',
       baseParams: {}
     }
@@ -44,7 +27,7 @@ export default class HomeScreen extends Component {
    * @description 检测其他页面跳转过来的动作，比如发嘟页面跳转过来时可能带有toot数据，塞入数据流中
    * 如果带有一些参数；根据参数更新数据状态
    */
-  componentWillReceiveProps({ tab, navigation }) {
+  componentWillReceiveProps({ navigation }) {
     if (!navigation) {
       return
     }
@@ -118,88 +101,10 @@ export default class HomeScreen extends Component {
     this.fetchTimelines()
   }
 
-  /**
-   * @description 给toot点赞，如果已经点过赞就取消点赞
-   * @param {id}: id
-   * @param {favourited}: 点赞状态
-   */
-  favourite = (id, favourited) => {
-    favourite(id, favourited).then(() => {
-      this.update(id, 'favourited', favourited, 'favourites_count')
-    })
-  }
-
-  /**
-   * @description 转发toot
-   * @param {id}: id
-   * @param {reblogged}: 转发状态
-   */
-  reblog = (id, reblogged) => {
-    reblog(id, reblogged).then(() => {
-      this.update(id, 'reblogged', reblogged, 'reblogs_count')
-    })
-  }
-
-  /**
-   * @description 更改前端点赞和转发的状态值，并且增减数量
-   * @param {status}: 状态名 favourited/reblogged
-   * @param {value}: 状态值 true/false
-   * @param {statusCount}: 状态的数量key
-   */
-  update = (id, status, value, statusCount) => {
-    const newList = [...this.state.list]
-    newList.forEach(list => {
-      if (list.id === id) {
-        list[status] = !value
-        if (value) {
-          list[statusCount] -= 1
-        } else {
-          list[statusCount] += 1
-        }
-      }
-    })
-    this.setState({
-      list: newList
-    })
-  }
-
-  /**
-   * 跳转入Toot详情页面
-   */
-  goTootDetail = id => {
-    if (!this.props) {
-      return
-    }
-    this.props.navigation.navigate('TootDetail', {
-      id: id
-    })
-  }
-
-  /**
-   * @description 跳转入个人详情页面
-   * @param {id}: id
-   */
-  goProfile = id => {
-    if (!this.props) {
-      return
-    }
-    this.props.navigation.navigate('Profile', {
-      id: id
-    })
-  }
-
   // 滚动到了底部，加载数据
   onEndReached = () => {
     const state = this.state
     this.fetchTimelines(null, { max_id: state.list[state.list.length - 1].id })
-  }
-
-  getTimeValue = time => {
-    return new Date(
-      momentTimezone(time)
-        .tz(this.state.timezone)
-        .format()
-    ).valueOf()
   }
 
   render() {
@@ -222,146 +127,13 @@ export default class HomeScreen extends Component {
               onRefresh={this.refreshHandler}
             />
           }
-          ListFooterComponent={() => (
-            <View
-              style={{
-                height: 100,
-                justifyContent: 'center',
-                alignItems: 'center'
-              }}
-            >
-              <Text>正在加载...</Text>
-            </View>
-          )}
+          ListFooterComponent={() => <ListFooterComponent />}
           renderItem={({ item }) => (
-            <View
-              style={{
-                flex: 1,
-                flexDirection: 'row',
-                margin: 10,
-                marginTop: 15
-              }}
-            >
-              <TouchableOpacity
-                activeOpacity={1}
-                onPress={() => this.goProfile(item.account.id)}
-              >
-                <Image
-                  style={{
-                    width: 40,
-                    height: 40,
-                    borderRadius: 5,
-                    marginRight: 10
-                  }}
-                  source={{ uri: item.account.avatar }}
-                />
-              </TouchableOpacity>
-              <View style={styles.list}>
-                <TouchableOpacity
-                  activeOpacity={1}
-                  onPress={() => this.goTootDetail(item.id)}
-                >
-                  <View style={styles.row}>
-                    <Text numberOfLines={1} style={styles.titleWidth}>
-                      <Text style={styles.displayName}>
-                        {item.account.display_name || item.account.username}
-                      </Text>
-                      <Text style={styles.smallGrey}>
-                        &nbsp;@{item.account.username}
-                      </Text>
-                    </Text>
-                    <Text
-                      style={{
-                        flex: 1,
-                        textAlign: 'right'
-                      }}
-                    >
-                      <RelativeTime
-                        locale={this.state.locale}
-                        time={this.getTimeValue(item.created_at)}
-                      />
-                    </Text>
-                  </View>
-                  <View style={styles.htmlBox}>
-                    <HTML
-                      html={item.content}
-                      tagsStyles={tagsStyles}
-                      imagesMaxWidth={Dimensions.get('window').width}
-                    />
-                  </View>
-                  <MediaBox
-                    data={item.media_attachments}
-                    sensitive={item.sensitive}
-                  />
-                  <View style={styles.iconBox}>
-                    <Button
-                      transparent
-                      onPress={() =>
-                        this.props.navigation.navigate('Reply', {
-                          id: item.id
-                        })
-                      }
-                    >
-                      <Icon style={styles.icon} name="reply" />
-                      <Text style={styles.bottomText}>
-                        {item.replies_count}
-                      </Text>
-                    </Button>
-                    <Button
-                      transparent
-                      onPress={() => this.reblog(item.id, item.reblogged)}
-                    >
-                      {item.reblogged ? (
-                        <Icon
-                          style={{ ...styles.icon, color: '#ca8f04' }}
-                          name="retweet"
-                        />
-                      ) : (
-                        <Icon style={styles.icon} name="retweet" />
-                      )}
-                      <Text style={styles.bottomText}>
-                        {item.reblogs_count}
-                      </Text>
-                    </Button>
-                    <Button
-                      transparent
-                      onPress={() => this.favourite(item.id, item.favourited)}
-                    >
-                      {item.favourited ? (
-                        <Icon
-                          style={{ ...styles.icon, color: '#ca8f04' }}
-                          name="star"
-                          solid
-                        />
-                      ) : (
-                        <Icon style={styles.icon} name="star" />
-                      )}
-                      <Text style={styles.bottomText}>
-                        {item.favourites_count}
-                      </Text>
-                    </Button>
-                    <Button transparent>
-                      <Icon style={styles.icon} name="ellipsis-h" />
-                    </Button>
-                  </View>
-                </TouchableOpacity>
-              </View>
-            </View>
+            <TootBox data={item} navigation={this.props.navigation} />
           )}
         />
       </View>
     )
-  }
-}
-
-const tagsStyles = {
-  p: {
-    color: '#2b2e3d',
-    fontSize: 16,
-    lineHeight: 20
-  },
-  a: {
-    lineHeight: 20
   }
 }
 
@@ -370,51 +142,6 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 0,
     backgroundColor: 'white'
-  },
-  list: {
-    alignItems: 'stretch',
-    flex: 1
-  },
-  image: {
-    height: 50,
-    width: 50,
-    borderRadius: 50,
-    marginRight: 20
-  },
-  row: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between'
-  },
-  smallGrey: {
-    color: 'grey',
-    fontWeight: 'normal'
-  },
-  titleWidth: {
-    width: 170,
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    justifyContent: 'flex-start'
-  },
-  displayName: {
-    color: '#333'
-  },
-  iconBox: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginTop: 10,
-    flex: 1
-  },
-  htmlBox: {
-    flex: 1,
-    marginTop: 10,
-    marginRight: 20
-  },
-  icon: {
-    fontSize: 15
-  },
-  bottomText: {
-    marginLeft: 10
   },
   divider: {
     borderColor: '#ddd',

@@ -16,7 +16,6 @@ import jstz from 'jstz'
 import { RelativeTime } from 'relative-time-react-native-component'
 import { zh } from '../../utils/locale'
 import momentTimezone from 'moment-timezone'
-// import RNPopoverMenu from 'react-native-popover-menu'
 import globe from '../../utils/mobx'
 
 /**
