@@ -117,103 +117,140 @@ export default class TootBox extends Component {
     ).valueOf()
   }
 
+  getAdditionalInfo = () => {
+    const toot = this.state.toot
+    let type = undefined
+    const info = {
+      reblog: '转嘟了',
+      pinned: '置顶嘟文'
+    }
+    const icon = {
+      reblog: 'retweet',
+      pinned: 'thumbtack'
+    }
+
+    if (toot.reblog) {
+      type = 'reblog'
+    } else if (toot.pinned) {
+      type = 'pinned'
+    }
+
+    if (type === undefined) {
+      return type
+    }
+
+    return (
+      <View style={styles.additional}>
+        <Icon name={icon[type]} style={styles.icon} />
+        <Text>{toot.account.display_name || toot.account.username}</Text>
+        <Text>{info[type]}</Text>
+      </View>
+    )
+  }
+
   render() {
-    const data = this.state.toot
-    if (!data) {
+    const toot = this.state.toot
+    if (!toot) {
       return <View />
     }
 
     return (
       <View style={styles.container}>
-        <TouchableOpacity
-          activeOpacity={1}
-          onPress={() => this.goProfile(data.account.id)}
-        >
-          <Image style={styles.avatar} source={{ uri: data.account.avatar }} />
-        </TouchableOpacity>
-        <View style={styles.list}>
+        {this.getAdditionalInfo()}
+        <View style={styles.body}>
           <TouchableOpacity
             activeOpacity={1}
-            onPress={() => this.goTootDetail(data.id)}
+            onPress={() => this.goProfile(toot.account.id)}
           >
-            <View style={styles.row}>
-              <Text numberOfLines={1} style={styles.titleWidth}>
-                <Text style={styles.displayName}>
-                  {data.account.display_name || data.account.username}
-                </Text>
-                <Text style={styles.smallGrey}>
-                  &nbsp;@{data.account.username}
-                </Text>
-              </Text>
-              <Text
-                style={{
-                  flex: 1,
-                  textAlign: 'right'
-                }}
-              >
-                <RelativeTime
-                  locale={this.state.locale}
-                  time={this.getTimeValue(data.created_at)}
-                />
-              </Text>
-            </View>
-            <View style={styles.htmlBox}>
-              <HTML
-                html={data.content}
-                tagsStyles={tagsStyles}
-                imagesMaxWidth={Dimensions.get('window').width}
-              />
-            </View>
-            <MediaBox
-              data={data.media_attachments}
-              sensitive={data.sensitive}
+            <Image
+              style={styles.avatar}
+              source={{ uri: toot.account.avatar }}
             />
-            <View style={styles.iconBox}>
-              <Button
-                transparent
-                onPress={() =>
-                  this.props.navigation.navigate('Reply', {
-                    id: data.id
-                  })
-                }
-              >
-                <Icon style={styles.icon} name="reply" />
-                <Text style={styles.bottomText}>{data.replies_count}</Text>
-              </Button>
-              <Button
-                transparent
-                onPress={() => this.reblog(data.id, data.reblogged)}
-              >
-                {data.reblogged ? (
-                  <Icon
-                    style={{ ...styles.icon, color: '#ca8f04' }}
-                    name="retweet"
-                  />
-                ) : (
-                  <Icon style={styles.icon} name="retweet" />
-                )}
-                <Text style={styles.bottomText}>{data.reblogs_count}</Text>
-              </Button>
-              <Button
-                transparent
-                onPress={() => this.favourite(data.id, data.favourited)}
-              >
-                {data.favourited ? (
-                  <Icon
-                    style={{ ...styles.icon, color: '#ca8f04' }}
-                    name="star"
-                    solid
-                  />
-                ) : (
-                  <Icon style={styles.icon} name="star" />
-                )}
-                <Text style={styles.bottomText}>{data.favourites_count}</Text>
-              </Button>
-              <Button transparent>
-                <Icon style={styles.icon} name="ellipsis-h" />
-              </Button>
-            </View>
           </TouchableOpacity>
+          <View style={styles.list}>
+            <TouchableOpacity
+              activeOpacity={1}
+              onPress={() => this.goTootDetail(toot.id)}
+            >
+              <View style={styles.row}>
+                <Text numberOfLines={1} style={styles.titleWidth}>
+                  <Text style={styles.displayName}>
+                    {toot.account.display_name || toot.account.username}
+                  </Text>
+                  <Text style={styles.smallGrey}>
+                    &nbsp;@{toot.account.username}
+                  </Text>
+                </Text>
+                <Text
+                  style={{
+                    flex: 1,
+                    textAlign: 'right'
+                  }}
+                >
+                  <RelativeTime
+                    locale={this.state.locale}
+                    time={this.getTimeValue(toot.created_at)}
+                  />
+                </Text>
+              </View>
+              <View style={styles.htmlBox}>
+                <HTML
+                  html={toot.content}
+                  tagsStyles={tagsStyles}
+                  imagesMaxWidth={Dimensions.get('window').width}
+                />
+              </View>
+              <MediaBox
+                data={toot.media_attachments}
+                sensitive={toot.sensitive}
+              />
+              <View style={styles.iconBox}>
+                <Button
+                  transparent
+                  onPress={() =>
+                    this.props.navigation.navigate('Reply', {
+                      id: toot.id
+                    })
+                  }
+                >
+                  <Icon style={styles.icon} name="reply" />
+                  <Text style={styles.bottomText}>{toot.replies_count}</Text>
+                </Button>
+                <Button
+                  transparent
+                  onPress={() => this.reblog(toot.id, toot.reblogged)}
+                >
+                  {toot.reblogged ? (
+                    <Icon
+                      style={{ ...styles.icon, color: '#ca8f04' }}
+                      name="retweet"
+                    />
+                  ) : (
+                    <Icon style={styles.icon} name="retweet" />
+                  )}
+                  <Text style={styles.bottomText}>{toot.reblogs_count}</Text>
+                </Button>
+                <Button
+                  transparent
+                  onPress={() => this.favourite(toot.id, toot.favourited)}
+                >
+                  {toot.favourited ? (
+                    <Icon
+                      style={{ ...styles.icon, color: '#ca8f04' }}
+                      name="star"
+                      solid
+                    />
+                  ) : (
+                    <Icon style={styles.icon} name="star" />
+                  )}
+                  <Text style={styles.bottomText}>{toot.favourites_count}</Text>
+                </Button>
+                <Button transparent>
+                  <Icon style={styles.icon} name="ellipsis-h" />
+                </Button>
+              </View>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     )
@@ -234,13 +271,16 @@ const tagsStyles = {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'row',
     margin: 10,
     marginTop: 15
   },
+  additional: {},
   list: {
     alignItems: 'stretch',
     flex: 1
+  },
+  body: {
+    flexDirection: 'row'
   },
   avatar: {
     width: 40,
