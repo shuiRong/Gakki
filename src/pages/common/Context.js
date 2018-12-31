@@ -257,9 +257,7 @@ const tagsStyles = {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'column',
-    borderTopColor: color.lightGrey,
-    borderTopWidth: 1
+    flexDirection: 'column'
   },
   listItem: {
     alignItems: 'flex-start',
@@ -270,7 +268,7 @@ const styles = StyleSheet.create({
   image: {
     width: 50,
     height: 50,
-    borderRadius: 50,
+    borderRadius: 5,
     marginRight: 20
   },
   right: {

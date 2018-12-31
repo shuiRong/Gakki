@@ -8,7 +8,7 @@ import { Spinner } from 'native-base'
 import { getHomeTimelines } from '../../utils/api'
 import TootBox from '../common/TootBox'
 import ListFooterComponent from '../common/ListFooterComponent'
-import {color} from '../../utils/color'
+import { color } from '../../utils/color'
 
 export default class HomeScreen extends Component {
   constructor(props) {
