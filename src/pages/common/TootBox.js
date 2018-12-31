@@ -8,8 +8,7 @@ import {
   TouchableOpacity
 } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
-import { Button } from 'native-base'
-import { favourite, reblog } from '../../utils/api'
+import { favourite, reblog, deleteStatuses, setPin } from '../../utils/api'
 import momentTimezone from 'moment-timezone'
 import HTML from 'react-native-render-html'
 import jstz from 'jstz'
@@ -17,6 +16,8 @@ import { RelativeTime } from 'relative-time-react-native-component'
 import { zh } from '../../utils/locale'
 import MediaBox from './MediaBox'
 import { color } from '../../utils/color'
+import { Menu } from 'teaset'
+import mobx from '../../utils/mobx'
 
 export default class TootBox extends Component {
   constructor(props) {
@@ -83,6 +84,96 @@ export default class TootBox extends Component {
     this.setState({
       list: newList
     })
+  }
+
+  showMenu = () => {
+    const toot = this.state.toot
+    const getTitle = title => (
+      <Text style={{ color: color.moreBlack }}>{title}</Text>
+    )
+    const getIcon = name => <Icon name={name} style={styles.menuIcon} />
+
+    const baseItems = [
+      {
+        title: getTitle('分享'),
+        icon: getIcon('share'),
+        onPress: () => alert('Search')
+      },
+      {
+        title: getTitle('复制链接'),
+        icon: getIcon('share-alt'),
+        onPress: () => alert('Search')
+      }
+    ]
+
+    const myToot = [
+      {
+        title: getTitle('删除'),
+        icon: getIcon('trash-alt'),
+        onPress: this.deleteStatuses
+      },
+      {
+        title: getTitle(toot.pinned ? '取消置顶' : '置顶'),
+        icon: getIcon('thumbtack'),
+        onPress: this.setPin
+      }
+    ]
+
+    const theirToot = [
+      {
+        title: getTitle('隐藏'),
+        icon: getIcon('volume-mute'),
+        onPress: () => alert('Search')
+      },
+      {
+        title: getTitle('屏蔽'),
+        icon: getIcon('lock'),
+        onPress: () => alert('Search')
+      }
+    ]
+
+    this.ref.measureInWindow((x, y, width, height) => {
+      let items = baseItems.concat(this.isMine() ? myToot : theirToot)
+      Menu.show({ x: x - 20, y, width, height }, items, {
+        popoverStyle: {
+          backgroundColor: color.white,
+          justifyContent: 'center'
+        }
+      })
+    })
+  }
+
+  deleteStatuses = () => {
+    const id = this.state.toot.id
+    deleteStatuses(id).then(() => {
+      this.props.deleteToot && this.props.deleteToot(id)
+    })
+  }
+
+  setPin = () => {
+    const toot = this.state.toot
+    setPin(toot.id, toot.pinned).then(() => {
+      this.setState(
+        {
+          toot: { ...toot, pinned: !toot.pinned }
+        },
+        () => {
+          this.props.setPin && this.props.setPin(toot.id, toot.pinned)
+        }
+      )
+    })
+  }
+
+  /**
+   * @description 是否是自己的嘟文
+   */
+
+  isMine = () => {
+    const account = this.state.toot.account
+    const mobxAccount = mobx.account
+    return (
+      mobxAccount.id === account.id && mobxAccount.username === account.username
+    )
   }
 
   /**
@@ -239,8 +330,8 @@ export default class TootBox extends Component {
               sensitive={data.sensitive}
             />
             <View style={styles.iconBox}>
-              <Button
-                transparent
+              <TouchableOpacity
+                style={styles.iconParent}
                 onPress={() =>
                   this.props.navigation.navigate('Reply', {
                     id: data.id
@@ -249,9 +340,9 @@ export default class TootBox extends Component {
               >
                 <Icon style={styles.icon} name="reply" />
                 <Text style={styles.bottomText}>{data.replies_count}</Text>
-              </Button>
-              <Button
-                transparent
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.iconParent}
                 onPress={() => this.reblog(data.id, data.reblogged)}
               >
                 {data.reblogged ? (
@@ -260,9 +351,9 @@ export default class TootBox extends Component {
                   <Icon style={styles.icon} name="retweet" />
                 )}
                 <Text style={styles.bottomText}>{data.reblogs_count}</Text>
-              </Button>
-              <Button
-                transparent
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.iconParent}
                 onPress={() => this.favourite(data.id, data.favourited)}
               >
                 {data.favourited ? (
@@ -271,10 +362,14 @@ export default class TootBox extends Component {
                   <Icon style={styles.icon} name="star" />
                 )}
                 <Text style={styles.bottomText}>{data.favourites_count}</Text>
-              </Button>
-              <Button transparent>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.iconParent}
+                ref={ref => (this.ref = ref)}
+                onPress={this.showMenu}
+              >
                 <Icon style={styles.icon} name="ellipsis-h" />
-              </Button>
+              </TouchableOpacity>
             </View>
           </TouchableOpacity>
         </View>
@@ -370,7 +465,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 10,
-    flex: 1
+    flex: 1,
+    width: '90%'
   },
   htmlBox: {
     flex: 1,
@@ -384,6 +480,11 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: color.moreBlack
   },
+  menuIcon: {
+    color: '#666666',
+    fontSize: 15,
+    marginRight: 10
+  },
   bottomText: {
     marginLeft: 10
   },
@@ -391,5 +492,9 @@ const styles = StyleSheet.create({
     borderColor: color.lightGrey,
     borderWidth: 1,
     borderBottomWidth: 0
+  },
+  iconParent: {
+    flexDirection: 'row',
+    alignItems: 'center'
   }
 })

@@ -93,7 +93,12 @@ export default class MediaBox extends Component {
       <View style={{ flex: 1, marginTop: 10 }}>
         {data.map(media => {
           if (media.type === 'image') {
-            return <ImageBox data={{ ...media, sensitive, hide: sensitive }} />
+            return (
+              <ImageBox
+                key={media.id}
+                data={{ ...media, sensitive, hide: sensitive }}
+              />
+            )
           } else if (media.type === 'video') {
             return this.getVideoElement(media)
           }

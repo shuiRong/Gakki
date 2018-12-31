@@ -75,6 +75,12 @@ export default class HomeScreen extends Component {
     }
   }
 
+  deleteToot = id => {
+    this.setState({
+      list: this.state.list.filter(toot => toot.id !== id)
+    })
+  }
+
   /**
    * @description 获取时间线数据
    * @param {cb}: 成功后的回调函数
@@ -130,7 +136,11 @@ export default class HomeScreen extends Component {
           }
           ListFooterComponent={() => <ListFooterComponent />}
           renderItem={({ item }) => (
-            <TootBox data={item} navigation={this.props.navigation} />
+            <TootBox
+              data={item}
+              navigation={this.props.navigation}
+              deleteToot={this.deleteToot}
+            />
           )}
         />
       </View>

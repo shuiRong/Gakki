@@ -144,3 +144,12 @@ export const getAccountData = id => {
     headers
   })
 }
+
+// 在个人资料页面置顶/取消置顶
+export const setPin = (id, pinned) => {
+  return request({
+    url: `/api/v1/statuses/${id}/${pinned ? 'unpin' : 'pin'}`,
+    method: 'post',
+    headers
+  })
+}

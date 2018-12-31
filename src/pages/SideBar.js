@@ -23,7 +23,7 @@ export default class SideBar extends Component {
           username: res.username,
           header: res.header
         })
-        globe.updateAccount(res.account)
+        globe.updateAccount(res)
       })
       .catch(err => {
         alert(JSON.stringify(err.response))

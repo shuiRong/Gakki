@@ -85,6 +85,8 @@ export default class TootScreen extends Component {
       exclude_replies: true,
       ...params
     }).then(res => {
+      // 手动移除已经被置顶的嘟文
+      res = res.filter(toot => !toot.pinned)
       // 同时将数据更新到state数据中，刷新视图
       this.setState({
         list: this.state.list.concat(res),
@@ -120,6 +122,33 @@ export default class TootScreen extends Component {
     this.getUserStatuses(null, { max_id: state.list[state.list.length - 1].id })
   }
 
+  deleteToot = id => {
+    this.setState({
+      list: this.state.list.filter(toot => toot.id !== id)
+    })
+  }
+
+  // 修改嘟文的置顶状态
+  setPin = (id, pinned) => {
+    let newList = [...this.state.list]
+    const index = newList.findIndex(toot => toot.id === id)
+    if (index < 0) {
+      return
+    }
+    const theToot = newList.splice(index, 1)[0]
+
+    if (pinned) {
+      // 找到第一个未置顶的toot的下标
+      const firstUnPinnedIndex = newList.findIndex(toot => !toot.pinned)
+      newList.splice(firstUnPinnedIndex, 0, theToot)
+    } else {
+      newList.unshift(theToot)
+    }
+    this.setState({
+      list: newList
+    })
+  }
+
   render() {
     if (this.state.loading) {
       return <Spinner style={{ marginTop: 50 }} color={color.headerBg} />
@@ -142,7 +171,12 @@ export default class TootScreen extends Component {
           }
           ListFooterComponent={() => <ListFooterComponent />}
           renderItem={({ item }) => (
-            <TootBox data={item} navigation={this.props.navigation} />
+            <TootBox
+              data={item}
+              navigation={this.props.navigation}
+              deleteToot={this.deleteToot}
+              setPin={this.setPin}
+            />
           )}
         />
       </View>
