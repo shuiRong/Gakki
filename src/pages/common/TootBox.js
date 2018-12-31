@@ -16,6 +16,7 @@ import jstz from 'jstz'
 import { RelativeTime } from 'relative-time-react-native-component'
 import { zh } from '../../utils/locale'
 import MediaBox from './MediaBox'
+import { color } from '../../utils/color'
 
 export default class TootBox extends Component {
   constructor(props) {
@@ -299,7 +300,7 @@ export default class TootBox extends Component {
 
 const tagsStyles = {
   p: {
-    color: '#2b2e3d',
+    color: color.pColor,
     fontSize: 16,
     lineHeight: 20
   },
@@ -323,16 +324,16 @@ const styles = StyleSheet.create({
   additionalIcon: {
     width: 40,
     fontSize: 15,
-    color: '#606984',
+    color: color.lightBlack,
     marginRight: 10,
     textAlign: 'right'
   },
   additionalName: {
     marginRight: 10,
-    color: '#606984'
+    color: color.lightBlack
   },
   additionalTypeInfo: {
-    color: '#606984'
+    color: color.lightBlack
   },
   list: {
     alignItems: 'stretch',
@@ -353,7 +354,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between'
   },
   smallGrey: {
-    color: '#606984',
+    color: color.lightBlack,
     fontWeight: 'normal'
   },
   titleWidth: {
@@ -363,7 +364,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start'
   },
   displayName: {
-    color: '#333'
+    color: color.moreBlack
   },
   iconBox: {
     flexDirection: 'row',
@@ -381,13 +382,13 @@ const styles = StyleSheet.create({
   },
   iconColored: {
     fontSize: 15,
-    color: '#2b90d9'
+    color: color.moreBlack
   },
   bottomText: {
     marginLeft: 10
   },
   divider: {
-    borderColor: '#ddd',
+    borderColor: color.lightGrey,
     borderWidth: 1,
     borderBottomWidth: 0
   }

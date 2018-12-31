@@ -10,6 +10,7 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { sendStatuses } from '../../utils/api'
 import globe from '../../utils/mobx'
+import { color } from '../../utils/color'
 
 @observer
 export default class ReplyInput extends Component {
@@ -160,7 +161,7 @@ export default class ReplyInput extends Component {
 
 const boxCommonStyle = {
   borderWidth: 1,
-  borderColor: '#ddd',
+  borderColor: color.lightGrey,
   padding: 10
 }
 
@@ -178,7 +179,7 @@ const styles = StyleSheet.create({
   },
   sendButton: {
     alignItems: 'center',
-    backgroundColor: '#307FF0',
+    backgroundColor: color.headerBg,
     padding: 9,
     borderRadius: 5,
     width: 80
@@ -190,10 +191,10 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   grey: {
-    color: 'grey'
+    color: color.grey
   },
   sendText: {
     fontWeight: 'bold',
-    color: 'white'
+    color: color.white
   }
 })

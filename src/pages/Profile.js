@@ -24,7 +24,7 @@ import ScrollableTabView, {
 import TootScreen from './screen/TootScreen'
 import MediaScreen from './screen/MediaScreen'
 import Fab from './common/Fab'
-import { profileData, relationshipData } from '../mock'
+import { color } from '../utils/color'
 
 /**
  * Toot详情页面
@@ -66,11 +66,6 @@ export default class Profile extends Component {
     const id = this.props.navigation.getParam('id')
     this.getAccountData(id)
     this.getRelationship(id)
-    // this.setState({
-    //   list: profileData,
-    //   relationship: relationshipData[0],
-    //   loading: false
-    // })
   }
 
   /**
@@ -165,19 +160,19 @@ export default class Profile extends Component {
    */
   getRelationshop = () => {
     let configStyle = {
-      backgroundColor: '#3F51B5',
+      backgroundColor: color.headerBg,
       iconName: 'user',
-      iconColor: 'white',
+      iconColor: color.white,
       text: '已关注',
-      textColor: 'white'
+      textColor: color.white
     }
     if (!this.state.relationship.following) {
       configStyle = {
-        backgroundColor: 'white',
+        backgroundColor: color.white,
         iconName: 'user-plus',
-        iconColor: '#3F51B5',
+        iconColor: color.headerBg,
         text: '关注',
-        textColor: '#3F51B5'
+        textColor: color.headerBg
       }
     }
 
@@ -209,7 +204,7 @@ export default class Profile extends Component {
         <View style={styles.header}>
           <Animated.View
             style={{
-              backgroundColor: '#3F51B5',
+              backgroundColor: color.headerBg,
               opacity: this.opacity,
               position: 'absolute',
               top: 0,
@@ -234,7 +229,7 @@ export default class Profile extends Component {
                 style={{
                   fontWeight: 'bold',
                   fontSize: 17,
-                  color: 'white',
+                  color: color.white,
                   marginRight: 5
                 }}
               >
@@ -243,7 +238,7 @@ export default class Profile extends Component {
               <Text
                 numberOfLines={1}
                 style={{
-                  color: '#ddd',
+                  color: color.lightGrey,
                   fontSize: 14
                 }}
               >
@@ -287,14 +282,14 @@ export default class Profile extends Component {
                   style={{
                     fontWeight: 'bold',
                     fontSize: 17,
-                    color: 'white'
+                    color: color.white
                   }}
                 >
                   {profile.display_name}
                 </Text>
                 <Text
                   style={{
-                    color: '#ddd',
+                    color: color.lightGrey,
                     fontSize: 14,
                     marginBottom: 5
                   }}
@@ -324,7 +319,7 @@ export default class Profile extends Component {
                 >
                   <Text
                     style={{
-                      color: 'white',
+                      color: color.white,
                       fontWeight: 'bold',
                       fontSize: 15,
                       textAlign: 'center'
@@ -332,7 +327,7 @@ export default class Profile extends Component {
                   >
                     {profile.followers_count}
                   </Text>
-                  <Text style={{ color: 'white' }}>关注者</Text>
+                  <Text style={{ color: color.white }}>关注者</Text>
                 </View>
                 <View
                   style={{
@@ -342,7 +337,7 @@ export default class Profile extends Component {
                 >
                   <Text
                     style={{
-                      color: 'white',
+                      color: color.white,
                       fontWeight: 'bold',
                       fontSize: 15,
                       textAlign: 'center'
@@ -350,7 +345,7 @@ export default class Profile extends Component {
                   >
                     {profile.following_count}
                   </Text>
-                  <Text style={{ color: 'white' }}>正在关注</Text>
+                  <Text style={{ color: color.white }}>正在关注</Text>
                 </View>
                 <View
                   style={{
@@ -360,7 +355,7 @@ export default class Profile extends Component {
                 >
                   <Text
                     style={{
-                      color: 'white',
+                      color: color.white,
                       fontWeight: 'bold',
                       fontSize: 15,
                       textAlign: 'center'
@@ -368,7 +363,7 @@ export default class Profile extends Component {
                   >
                     {profile.statuses_count}
                   </Text>
-                  <Text style={{ color: 'white' }}>嘟文</Text>
+                  <Text style={{ color: color.white }}>嘟文</Text>
                 </View>
               </View>
             </View>
@@ -384,9 +379,9 @@ export default class Profile extends Component {
             initialPage={0}
             renderTabBar={() => (
               <DefaultTabBar
-                backgroundColor={'#fff'}
-                activeTextColor={'#3F51B5'}
-                underlineStyle={{ backgroundColor: '#3F51B5' }}
+                backgroundColor={color.white}
+                activeTextColor={color.headerBg}
+                underlineStyle={{ backgroundColor: color.headerBg }}
               />
             )}
           >
@@ -410,7 +405,7 @@ export default class Profile extends Component {
 
 const tagsStyles = {
   p: {
-    color: 'white',
+    color: color.white,
     fontSize: 11,
     letterSpacing: 1,
     lineHeight: 20
@@ -421,7 +416,7 @@ const tagsStyles = {
 }
 
 const styles = StyleSheet.create({
-  contianer: { flex: 1, backgroundColor: 'white' },
+  contianer: { flex: 1, backgroundColor: color.white },
   body: {
     flexDirection: 'column'
   },
@@ -457,7 +452,7 @@ const styles = StyleSheet.create({
   },
   time: {
     alignSelf: 'flex-start',
-    color: 'grey',
+    color: color.grey,
     fontSize: 15,
     marginTop: 20
   },
@@ -468,7 +463,7 @@ const styles = StyleSheet.create({
   },
   navIcon: {
     fontSize: 20,
-    color: 'white'
+    color: color.white
   },
   bottomText: {
     marginLeft: 10

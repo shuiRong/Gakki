@@ -8,6 +8,7 @@ import { Spinner } from 'native-base'
 import { getHomeTimelines } from '../../utils/api'
 import TootBox from '../common/TootBox'
 import ListFooterComponent from '../common/ListFooterComponent'
+import {color} from '../../utils/color'
 
 export default class HomeScreen extends Component {
   constructor(props) {
@@ -109,7 +110,7 @@ export default class HomeScreen extends Component {
 
   render() {
     if (this.state.loading) {
-      return <Spinner style={{ marginTop: 250 }} color="#5067FF" />
+      return <Spinner style={{ marginTop: 250 }} color={color.headerBg} />
     }
     return (
       <View style={styles.container}>
@@ -141,10 +142,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 0,
-    backgroundColor: 'white'
+    backgroundColor: color.white
   },
   divider: {
-    borderColor: '#ddd',
+    borderColor: color.lightGrey,
     borderWidth: 1,
     borderBottomWidth: 0
   }

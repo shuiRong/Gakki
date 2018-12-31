@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { StyleSheet, View } from 'react-native'
 import { Header, Left, Body, Right, Button, Title } from 'native-base'
 import Icon from 'react-native-vector-icons/FontAwesome5'
+import { color } from '../utils/color'
 
 export default class HeaderItem extends Component {
   render() {
@@ -36,7 +37,7 @@ export default class HeaderItem extends Component {
 
 const styles = StyleSheet.create({
   icon: {
-    color: '#fff',
+    color: color.lightGrey,
     fontSize: 17
   }
 })

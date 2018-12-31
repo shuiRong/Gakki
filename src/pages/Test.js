@@ -85,7 +85,7 @@ const styles = StyleSheet.create({
     marginBottom: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    color: 'white'
+    color: '#ffffff'
   },
   header: {
     height: 50,
@@ -94,6 +94,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   text: {
-    color: 'white'
+    color: '#ffffff'
   }
 })

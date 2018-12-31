@@ -14,6 +14,7 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { getStatuses } from '../utils/api'
 import ReplyInput from './common/ReplyInput'
+import { color } from '../utils/color'
 
 /**
  * Toot详情页面
@@ -80,24 +81,13 @@ export default class SendToot extends Component {
   }
 }
 
-const tagsStyles = {
-  p: {
-    color: '#2b2e3d',
-    fontSize: 16,
-    lineHeight: 20
-  },
-  a: {
-    lineHeight: 20
-  }
-}
-
 const styles = StyleSheet.create({
   body: {
     flexDirection: 'column'
   },
   time: {
     alignSelf: 'flex-start',
-    color: 'grey',
+    color: color.grey,
     fontSize: 15,
     marginTop: 20
   },
@@ -110,7 +100,7 @@ const styles = StyleSheet.create({
   },
   navIcon: {
     fontSize: 20,
-    color: '#fff'
+    color: color.lightGrey
   },
   bottomText: {
     marginLeft: 10

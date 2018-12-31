@@ -3,6 +3,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5'
 import { View, Text, Image, StyleSheet, ImageBackground } from 'react-native'
 import { getCurrentUser } from '../utils/api'
 import globe from '../utils/mobx'
+import { color } from '../utils/color'
 
 export default class SideBar extends Component {
   constructor(props) {
@@ -99,7 +100,7 @@ export default class SideBar extends Component {
 
 const styles = StyleSheet.create({
   main: {
-    backgroundColor: '#fff',
+    backgroundColor: color.lightGrey,
     flex: 1
   },
   bg: {
@@ -131,20 +132,20 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   icon: {
-    color: '#686868',
+    color: color.lightBlack,
     fontSize: 23
   },
   text: {
-    color: '#3d3d3d',
+    color: color.moreBlack,
     fontWeight: 'bold',
     fontSize: 15
   },
   name: {
-    color: '#fff',
+    color: color.lightGrey,
     fontWeight: 'bold'
   },
   domain: {
-    color: '#fff'
+    color: color.lightGrey
   },
   image: {
     height: 50,

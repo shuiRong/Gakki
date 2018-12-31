@@ -31,11 +31,9 @@ import {
   blockAccount
 } from '../utils/api'
 import HTML from 'react-native-render-html'
-
-// import RNPopoverMenu from 'react-native-popover-menu'
+import { color } from '../utils/color'
 import Context from './common/Context'
 import ReplyInput from './common/ReplyInput'
-import { contextData, tootDetail } from '../mock'
 import globe from '../utils/mobx'
 import jstz from 'jstz'
 import momentTimezone from 'moment-timezone'
@@ -58,11 +56,6 @@ export default class TootDetail extends Component {
 
   componentDidMount() {
     this.fetchData()
-    // 使用模拟数据
-    // this.setState({
-    //   toot: tootDetail,
-    //   context: contextData
-    // })
   }
 
   fetchData = () => {
@@ -73,7 +66,6 @@ export default class TootDetail extends Component {
       }
     })
     const id = this.props.navigation.getParam('id')
-    // const id = '101273579009552513'
     getStatuses(id).then(res => {
       this.setState({
         toot: res,
@@ -163,25 +155,7 @@ export default class TootDetail extends Component {
     })
   }
 
-  renderMenu = ref => {
-    let menus = [
-      {
-        menus: [{ label: '隐藏' }, { label: '屏蔽' }]
-      }
-    ]
-
-    // RNPopoverMenu.Show(ref, {
-    //   menus: menus,
-    //   onDone: (sectionSelection, menuIndex) => {
-    //     if (menuIndex === 0) {
-    //       this.mute()
-    //     } else if (menuIndex === 1) {
-    //       this.block()
-    //     }
-    //   },
-    //   onCancel: () => {}
-    // })
-  }
+  renderMenu = ref => {}
 
   scrollToEnd = () => {
     this.contentRef._root.scrollToEnd({ animated: true })
@@ -214,7 +188,7 @@ export default class TootDetail extends Component {
       return (
         <Container>
           {headerElement}
-          <Spinner style={{ marginTop: 250 }} color="#5067FF" />
+          <Spinner style={{ marginTop: 250 }} color={color.headerBg} />
         </Container>
       )
     }
@@ -270,7 +244,7 @@ export default class TootDetail extends Component {
                 <Button transparent onPress={this.reblog}>
                   {this.state.toot.reblogged ? (
                     <Icon
-                      style={{ ...styles.icon, color: '#ca8f04' }}
+                      style={{ ...styles.icon, color: color.headerBg }}
                       name="retweet"
                     />
                   ) : (
@@ -283,7 +257,7 @@ export default class TootDetail extends Component {
                 <Button transparent onPress={this.favourite}>
                   {this.state.toot.favourited ? (
                     <Icon
-                      style={{ ...styles.icon, color: '#ca8f04' }}
+                      style={{ ...styles.icon, color: color.headerBg }}
                       name="star"
                       solid
                     />
@@ -327,7 +301,7 @@ export default class TootDetail extends Component {
 
 const tagsStyles = {
   p: {
-    color: '#2b2e3d',
+    color: color.pColor,
     fontSize: 16,
     lineHeight: 20
   },
@@ -342,7 +316,7 @@ const styles = StyleSheet.create({
   },
   time: {
     alignSelf: 'flex-start',
-    color: 'grey',
+    color: color.grey,
     fontSize: 15,
     marginTop: 20
   },
@@ -357,17 +331,17 @@ const styles = StyleSheet.create({
   },
   navIcon: {
     fontSize: 20,
-    color: '#fff'
+    color: color.white
   },
   bottomText: {
     marginLeft: 10
   },
   black: {
-    color: 'black'
+    color: color.black
   },
   tools: {
     height: 40,
-    borderTopColor: '#ddd',
+    borderTopColor: color.lightGrey,
     borderTopWidth: 1,
     marginTop: 10,
     alignItems: 'center'

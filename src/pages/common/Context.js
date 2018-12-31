@@ -17,6 +17,7 @@ import { RelativeTime } from 'relative-time-react-native-component'
 import { zh } from '../../utils/locale'
 import momentTimezone from 'moment-timezone'
 import globe from '../../utils/mobx'
+import { color } from '../../utils/color'
 
 /**
  * 评论组件
@@ -195,7 +196,7 @@ export default class Context extends Component {
                   >
                     {item.reblogged ? (
                       <Icon
-                        style={{ ...styles.icon, color: '#ca8f04' }}
+                        style={{ ...styles.icon, color: color.headerBg }}
                         name="retweet"
                       />
                     ) : (
@@ -209,7 +210,7 @@ export default class Context extends Component {
                   >
                     {item.favourited ? (
                       <Icon
-                        style={{ ...styles.icon, color: '#ca8f04' }}
+                        style={{ ...styles.icon, color: color.headerBg }}
                         name="star"
                         solid
                       />
@@ -244,7 +245,7 @@ export default class Context extends Component {
 
 const tagsStyles = {
   p: {
-    color: '#2b2e3d',
+    color: color.pColor,
     fontSize: 16,
     lineHeight: 20
   },
@@ -257,7 +258,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
-    borderTopColor: '#ddd',
+    borderTopColor: color.lightGrey,
     borderTopWidth: 1
   },
   listItem: {
@@ -283,7 +284,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between'
   },
   smallGrey: {
-    color: 'grey'
+    color: color.grey
   },
   titleWidth: {
     width: 170,
@@ -292,7 +293,7 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-start'
   },
   displayName: {
-    color: 'black'
+    color: color.black
   },
   iconBox: {
     flexDirection: 'row',
@@ -309,7 +310,7 @@ const styles = StyleSheet.create({
     marginLeft: 10
   },
   divider: {
-    borderColor: '#ddd',
+    borderColor: color.lightGrey,
     borderWidth: 1,
     borderBottomWidth: 0
   }

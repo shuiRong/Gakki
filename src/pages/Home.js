@@ -10,6 +10,7 @@ import Fab from './common/Fab'
 import ScrollableTabView, {
   DefaultTabBar
 } from 'react-native-scrollable-tab-view'
+import { color } from '../utils/color'
 
 /**
  * 主页
@@ -45,7 +46,7 @@ export default class Home extends Component {
 
   render() {
     return (
-      <View style={{ flex: 1, backgroundColor: 'white' }}>
+      <View style={{ flex: 1, backgroundColor: color.white }}>
         <Drawer
           ref={ref => {
             this.drawer = ref
@@ -71,9 +72,9 @@ export default class Home extends Component {
                 initialPage={1}
                 renderTabBar={() => (
                   <DefaultTabBar
-                    backgroundColor={'#3F51B5'}
-                    activeTextColor={'#ddd'}
-                    underlineStyle={{ backgroundColor: '#fff' }}
+                    backgroundColor={color.headerBg}
+                    activeTextColor={color.lightGrey}
+                    underlineStyle={{ backgroundColor: color.white }}
                   />
                 )}
               >

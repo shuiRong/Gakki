@@ -21,6 +21,7 @@ import globe from '../utils/mobx'
 import jstz from 'jstz'
 import { zh } from '../utils/locale'
 import momentTimezone from 'moment-timezone'
+import { color } from '../utils/color'
 
 /**
  * Toot详情页面
@@ -142,7 +143,7 @@ const styles = StyleSheet.create({
   },
   time: {
     alignSelf: 'flex-start',
-    color: 'grey',
+    color: color.grey,
     fontSize: 15,
     marginTop: 20
   },

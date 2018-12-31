@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { StyleSheet } from 'react-native'
 import { Fab } from 'native-base'
 import Icon from 'react-native-vector-icons/FontAwesome5'
+import { color } from '../../utils/color'
 
 export default class FabTool extends Component {
   render() {
@@ -19,5 +20,5 @@ export default class FabTool extends Component {
 }
 
 const styles = StyleSheet.create({
-  fab: { backgroundColor: '#5067FF' }
+  fab: { backgroundColor: color.lightHeaderBg }
 })

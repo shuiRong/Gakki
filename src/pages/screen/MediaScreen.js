@@ -14,6 +14,7 @@ import {
 import { getUserStatuses } from '../../utils/api'
 import { Spinner } from 'native-base'
 import ListFooterComponent from '../common/ListFooterComponent'
+import { color } from '../../utils/color'
 
 let deviceWidth = require('Dimensions').get('window').width
 export default class TootScreen extends Component {
@@ -138,7 +139,7 @@ export default class TootScreen extends Component {
 
   render() {
     if (this.state.loading) {
-      return <Spinner style={{ marginTop: 50 }} color="#5067FF" />
+      return <Spinner style={{ marginTop: 50 }} color={color.headerBg} />
     }
     return (
       <View style={styles.container}>

@@ -16,6 +16,7 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { getStatuses } from '../utils/api'
 import Test from './Test'
+import { color } from '../utils/color'
 
 /**
  * Toot详情页面
@@ -85,7 +86,7 @@ const styles = StyleSheet.create({
   },
   time: {
     alignSelf: 'flex-start',
-    color: 'grey',
+    color: color.grey,
     fontSize: 15,
     marginTop: 20
   },

@@ -5,6 +5,7 @@
 import React, { Component } from 'react'
 import { StyleSheet, View, Image, Text, TouchableOpacity } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
+import { color } from '../../utils/color'
 
 // 多媒体的黑色隐藏框
 class BlackMirror extends Component {
@@ -104,7 +105,7 @@ export default class MediaBox extends Component {
 
 const styles = StyleSheet.create({
   blackMirror: {
-    backgroundColor: 'black',
+    backgroundColor: color.black,
     justifyContent: 'center',
     alignItems: 'center',
     height: 180,
@@ -113,10 +114,10 @@ const styles = StyleSheet.create({
   },
   sensitiveText: {
     fontSize: 15,
-    color: '#9baec8'
+    color: color.lightBlack
   },
   sensitiveSubText: {
-    color: '#9baec8'
+    color: color.lightBlack
   },
   mediaBox: {
     width: '100%',
@@ -131,13 +132,13 @@ const styles = StyleSheet.create({
     height: 23,
     borderRadius: 5,
     opacity: 0.5,
-    backgroundColor: '#444',
+    backgroundColor: color.moreBlack,
     justifyContent: 'center',
     alignItems: 'center'
   },
   eyeSlashIcon: {
     fontSize: 14,
-    color: 'white'
+    color: color.white
   },
   mediaImage: {
     flex: 1,

@@ -8,6 +8,7 @@ import { Spinner } from 'native-base'
 import { getUserStatuses } from '../../utils/api'
 import ListFooterComponent from '../common/ListFooterComponent'
 import TootBox from '../common/TootBox'
+import { color } from '../../utils/color'
 
 export default class TootScreen extends Component {
   constructor(props) {
@@ -121,7 +122,7 @@ export default class TootScreen extends Component {
 
   render() {
     if (this.state.loading) {
-      return <Spinner style={{ marginTop: 50 }} color="#5067FF" />
+      return <Spinner style={{ marginTop: 50 }} color={color.headerBg} />
     }
     return (
       <View style={styles.container}>
@@ -153,10 +154,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 0,
-    backgroundColor: 'white'
+    backgroundColor: color.white
   },
   divider: {
-    borderColor: '#ddd',
+    borderColor: color.lightGrey,
     borderWidth: 1,
     borderBottomWidth: 0
   }
