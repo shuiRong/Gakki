@@ -319,6 +319,24 @@ export default class TootBox extends Component {
     )
   }
 
+  showTread = in_reply_to_id => {
+    if (!in_reply_to_id) {
+      return null
+    }
+    return (
+      <TouchableOpacity
+        style={styles.showTreadButton}
+        onPress={() =>
+          this.props.navigation.navigate('TootDetail', {
+            id: in_reply_to_id
+          })
+        }
+      >
+        <Text style={styles.showTreadText}>Show tread</Text>
+      </TouchableOpacity>
+    )
+  }
+
   getAdditionalInfo = () => {
     const toot = this.state.toot
     let type = undefined
@@ -396,6 +414,7 @@ export default class TootBox extends Component {
               data={data.media_attachments}
               sensitive={data.sensitive}
             />
+            {this.showTread(data.in_reply_to_id)}
             <View style={styles.iconBox}>
               <TouchableOpacity
                 style={styles.iconParent}
@@ -563,5 +582,14 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     padding: 10
+  },
+  showTreadText: {
+    color: color.grey,
+    fontSize: 15,
+    textAlign: 'left'
+  },
+  showTreadButton: {
+    marginTop: 5,
+    width: 100
   }
 })
