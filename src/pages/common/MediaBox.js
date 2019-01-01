@@ -3,9 +3,17 @@
  */
 
 import React, { Component } from 'react'
-import { StyleSheet, View, Image, Text, TouchableOpacity } from 'react-native'
+import {
+  StyleSheet,
+  View,
+  Image,
+  Text,
+  Dimensions,
+  TouchableOpacity
+} from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { color } from '../../utils/color'
+import { Overlay } from 'teaset'
 
 // 多媒体的黑色隐藏框
 class BlackMirror extends Component {
@@ -33,6 +41,8 @@ class ImageBox extends Component {
     this.setState({
       image: { ...this.props.data }
     })
+    this.width = Dimensions.get('window').width
+    this.height = Dimensions.get('window').height
   }
 
   /**
@@ -43,6 +53,29 @@ class ImageBox extends Component {
     this.setState({
       image: { ...this.state.image, hide: show }
     })
+  }
+
+  /**
+   * @description 预览图片模态框
+   * @param {url}: 图片url
+   */
+  enlargeImage = url => {
+    const overlayView = (
+      <Overlay.View
+        modal={false}
+        overlayOpacity={0}
+        ref={v => (this.overlayView = v)}
+      >
+        <View style={styles.enlargeImageBox}>
+          <Image
+            style={styles.enlargeImage}
+            resizeMode={'contain'}
+            source={{ uri: url }}
+          />
+        </View>
+      </Overlay.View>
+    )
+    Overlay.show(overlayView)
   }
 
   render() {
@@ -69,10 +102,15 @@ class ImageBox extends Component {
               <Icon name={'eye-slash'} style={styles.eyeSlashIcon} />
             </TouchableOpacity>
           </View>
-          <Image
-            source={{ uri: image.preview_url }}
-            style={styles.mediaImage}
-          />
+          <TouchableOpacity
+            style={{ flex: 1 }}
+            onPress={() => this.enlargeImage(image.preview_url)}
+          >
+            <Image
+              source={{ uri: image.preview_url }}
+              style={styles.mediaImage}
+            />
+          </TouchableOpacity>
         </View>
       )
     }
@@ -148,5 +186,16 @@ const styles = StyleSheet.create({
   mediaImage: {
     flex: 1,
     borderRadius: 5
+  },
+  enlargeImageBox: {
+    backgroundColor: color.moreBlack,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: this.width,
+    height: this.height
+  },
+  enlargeImage: {
+    width: this.width,
+    height: this.height
   }
 })

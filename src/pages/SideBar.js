@@ -100,7 +100,7 @@ export default class SideBar extends Component {
 
 const styles = StyleSheet.create({
   main: {
-    backgroundColor: color.lightGrey,
+    backgroundColor: color.white,
     flex: 1
   },
   bg: {

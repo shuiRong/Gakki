@@ -5,7 +5,8 @@ import {
   Dimensions,
   Image,
   Text,
-  TouchableOpacity
+  TouchableOpacity,
+  Clipboard
 } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { favourite, reblog, deleteStatuses, setPin } from '../../utils/api'
@@ -18,6 +19,72 @@ import MediaBox from './MediaBox'
 import { color } from '../../utils/color'
 import { Menu } from 'teaset'
 import mobx from '../../utils/mobx'
+
+class TootContent extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      hide: true // CW模式隐藏敏感内容
+    }
+  }
+
+  componentDidMount() {
+    this.setState({
+      hide: this.props.data.sensitive
+    })
+  }
+
+  getHTML = () => {
+    if (this.state.hide) {
+      return null
+    }
+    return (
+      <HTML
+        html={this.props.data.content}
+        tagsStyles={tagsStyles}
+        imagesMaxWidth={Dimensions.get('window').width}
+      />
+    )
+  }
+
+  render() {
+    const toot = this.props.data
+    const hide = this.state.hide
+    if (!toot.sensitive) return this.getHTML()
+    return (
+      <View>
+        <View>
+          <Text style={{ color: color.pColor, fontSize: 16 }}>
+            {toot.spoiler_text}
+          </Text>
+          <TouchableOpacity
+            style={{
+              backgroundColor: color.lightBlack,
+              width: 75,
+              borderRadius: 3,
+              padding: 5,
+              paddingTop: 3,
+              paddingBottom: 3,
+              margin: 3,
+              marginLeft: 0
+            }}
+            onPress={() => this.setState({ hide: !hide })}
+          >
+            <Text
+              style={{
+                color: color.white,
+                textAlign: 'center'
+              }}
+            >
+              {hide ? '显示内容' : '隐藏内容'}
+            </Text>
+          </TouchableOpacity>
+          {this.getHTML()}
+        </View>
+      </View>
+    )
+  }
+}
 
 export default class TootBox extends Component {
   constructor(props) {
@@ -97,12 +164,12 @@ export default class TootBox extends Component {
       {
         title: getTitle('分享'),
         icon: getIcon('share'),
-        onPress: () => alert('Search')
+        onPress: () => alert('分享功能正在实现哦～')
       },
       {
         title: getTitle('复制链接'),
         icon: getIcon('share-alt'),
-        onPress: () => alert('Search')
+        onPress: this.copyLink
       }
     ]
 
@@ -162,6 +229,10 @@ export default class TootBox extends Component {
         }
       )
     })
+  }
+
+  copyLink = () => {
+    Clipboard.setString(this.state.toot.url)
   }
 
   /**
@@ -319,11 +390,7 @@ export default class TootBox extends Component {
               </Text>
             </View>
             <View style={styles.htmlBox}>
-              <HTML
-                html={data.content}
-                tagsStyles={tagsStyles}
-                imagesMaxWidth={Dimensions.get('window').width}
-              />
+              <TootContent data={data} />
             </View>
             <MediaBox
               data={data.media_attachments}
@@ -464,7 +531,6 @@ const styles = StyleSheet.create({
   iconBox: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 10,
     flex: 1,
     width: '90%'
   },
@@ -481,7 +547,7 @@ const styles = StyleSheet.create({
     color: color.moreBlack
   },
   menuIcon: {
-    color: '#666666',
+    color: color.lightBlack,
     fontSize: 15,
     marginRight: 10
   },
@@ -495,6 +561,7 @@ const styles = StyleSheet.create({
   },
   iconParent: {
     flexDirection: 'row',
-    alignItems: 'center'
+    alignItems: 'center',
+    padding: 10
   }
 })
