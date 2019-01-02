@@ -9,7 +9,7 @@ import {
 } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { sendStatuses } from '../../utils/api'
-import globe from '../../utils/mobx'
+import mobx from '../../utils/mobx'
 import { color } from '../../utils/color'
 
 @observer
@@ -36,7 +36,7 @@ export default class ReplyInput extends Component {
     const props = this.props
 
     sendStatuses({
-      in_reply_to_id: globe.reply_to_id,
+      in_reply_to_id: mobx.reply_to_id,
       status: state.status,
       spoiler_text: state.cw ? state.spoiler_text : '',
       visibility: 'public',
@@ -125,7 +125,7 @@ export default class ReplyInput extends Component {
     return (
       <View style={boxStyle}>
         {!this.props.sendMode && (
-          <Text style={{ marginBottom: 5 }}>回复@{globe.reply_to}</Text>
+          <Text style={{ marginBottom: 5 }}>回复@{mobx.reply_to}</Text>
         )}
         {cwElement}
         <TextInput

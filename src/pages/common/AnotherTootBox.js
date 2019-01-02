@@ -86,7 +86,7 @@ class TootContent extends Component {
   }
 }
 
-export default class TootBox extends Component {
+export default class AnotherTootBox extends Component {
   static defaultProps = {
     showTread: true // 是否显示'显示前文字符'
   }
@@ -251,7 +251,6 @@ export default class TootBox extends Component {
    * @param {toot} 嘟文内容
    */
   goTootDetail = toot => {
-    console.log('toot', toot)
     if (!this.props) {
       return
     }
@@ -374,19 +373,19 @@ export default class TootBox extends Component {
 
     return (
       <View style={styles.body}>
-        <TouchableOpacity
-          activeOpacity={1}
-          onPress={() => this.goProfile(data.account.id)}
-        >
-          {this.getAvatar(toot)}
-        </TouchableOpacity>
         <View style={styles.list}>
           <TouchableOpacity
             activeOpacity={1}
             onPress={() => this.goTootDetail(toot)}
           >
             <View style={styles.row}>
-              <Text numberOfLines={1} style={styles.titleWidth}>
+              <TouchableOpacity
+                activeOpacity={1}
+                onPress={() => this.goProfile(data.account.id)}
+              >
+                {this.getAvatar(toot)}
+              </TouchableOpacity>
+              <Text style={styles.titleWidth}>
                 <Text style={styles.displayName}>
                   {data.account.display_name || data.account.username}
                 </Text>
@@ -413,7 +412,11 @@ export default class TootBox extends Component {
               data={data.media_attachments}
               sensitive={data.sensitive}
             />
-            {this.showTread(data)}
+            {this.showTread(
+              data.in_reply_to_id,
+              data.in_reply_to_account_id,
+              data.account.id
+            )}
             <View style={styles.iconBox}>
               <TouchableOpacity
                 style={styles.iconParent}
@@ -481,7 +484,7 @@ export default class TootBox extends Component {
 const tagsStyles = {
   p: {
     color: color.pColor,
-    fontSize: 16,
+    fontSize: 18,
     lineHeight: 20
   },
   a: {
@@ -539,9 +542,8 @@ const styles = StyleSheet.create({
   },
   titleWidth: {
     width: 170,
-    flexDirection: 'row',
     alignItems: 'flex-end',
-    justifyContent: 'flex-start'
+    justifyContent: 'space-between'
   },
   displayName: {
     color: color.moreBlack

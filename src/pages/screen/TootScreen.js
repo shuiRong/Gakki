@@ -9,6 +9,7 @@ import { getUserStatuses } from '../../utils/api'
 import ListFooterComponent from '../common/ListFooterComponent'
 import TootBox from '../common/TootBox'
 import { color } from '../../utils/color'
+import Divider from '../common/Divider'
 
 export default class TootScreen extends Component {
   constructor(props) {
@@ -156,7 +157,7 @@ export default class TootScreen extends Component {
     return (
       <View style={styles.container}>
         <FlatList
-          ItemSeparatorComponent={() => <View style={styles.divider} />}
+          ItemSeparatorComponent={() => <Divider />}
           showsVerticalScrollIndicator={false}
           data={this.state.list}
           onEndReachedThreshold={0.1}
@@ -189,10 +190,5 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 0,
     backgroundColor: color.white
-  },
-  divider: {
-    borderColor: color.lightGrey,
-    borderWidth: 1,
-    borderBottomWidth: 0
   }
 })

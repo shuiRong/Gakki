@@ -15,6 +15,9 @@ import Icon from 'react-native-vector-icons/FontAwesome5'
 import { color } from '../../utils/color'
 import { Overlay } from 'teaset'
 
+const width = Dimensions.get('window').width
+const height = Dimensions.get('window').height
+
 // 多媒体的黑色隐藏框
 class BlackMirror extends Component {
   render() {
@@ -41,8 +44,6 @@ class ImageBox extends Component {
     this.setState({
       image: { ...this.props.data }
     })
-    this.width = Dimensions.get('window').width
-    this.height = Dimensions.get('window').height
   }
 
   /**
@@ -61,11 +62,7 @@ class ImageBox extends Component {
    */
   enlargeImage = url => {
     const overlayView = (
-      <Overlay.View
-        modal={false}
-        overlayOpacity={0}
-        ref={v => (this.overlayView = v)}
-      >
+      <Overlay.View overlayOpacity={0.9} ref={v => (this.overlayView = v)}>
         <View style={styles.enlargeImageBox}>
           <Image
             style={styles.enlargeImage}
@@ -103,6 +100,7 @@ class ImageBox extends Component {
             </TouchableOpacity>
           </View>
           <TouchableOpacity
+            activeOpacity={0.9}
             style={{ flex: 1 }}
             onPress={() => this.enlargeImage(image.preview_url)}
           >
@@ -188,14 +186,13 @@ const styles = StyleSheet.create({
     borderRadius: 5
   },
   enlargeImageBox: {
-    backgroundColor: color.moreBlack,
     alignItems: 'center',
     justifyContent: 'center',
-    width: this.width,
-    height: this.height
+    width: width,
+    height: height
   },
   enlargeImage: {
-    width: this.width,
-    height: this.height
+    width: width,
+    height: height
   }
 })

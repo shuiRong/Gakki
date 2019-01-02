@@ -1,23 +1,11 @@
 import React, { Component } from 'react'
 import { View, StyleSheet, RefreshControl } from 'react-native'
-import {
-  Container,
-  Header,
-  Left,
-  Body,
-  Right,
-  Button,
-  Title,
-  Content,
-  Spinner
-} from 'native-base'
+import { Header, Left, Body, Right, Button, Title, Spinner } from 'native-base'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { getStatuses, context } from '../utils/api'
 import { color } from '../utils/color'
 import Context from './common/Context'
 import ReplyInput from './common/ReplyInput'
-import globe from '../utils/mobx'
-import TootBox from './common/TootBox'
 
 /**
  * Toot详情页面
@@ -26,39 +14,48 @@ export default class TootDetail extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      toot: {
-        account: {}
-      },
-      context: [],
+      toot: null,
+      context: null,
+      ancestors: [],
+      descendants: [],
       refreshing: false
     }
   }
 
   componentDidMount() {
-    this.fetchData()
+    const toot = this.props.navigation.getParam('data')
+    toot['isMaster'] = true
+    const id = toot.id
+
+    this.setState({
+      toot: toot,
+      refreshing: false
+    })
+    this.getContext(id)
   }
 
   fetchData = () => {
     this.setState({
       refreshing: true,
-      toot: {
-        account: {}
-      }
+      toot: null
     })
-    const id = this.props.navigation.getParam('id')
+
+    const toot = this.props.navigation.getParam('data')
+    const id = toot.id
+
     getStatuses(id).then(res => {
       this.setState({
         toot: res,
         refreshing: false
       })
-
-      globe.updateReply(res.account.id, res.account.username)
     })
 
+    this.getContext(id)
+  }
+
+  getContext = id => {
     context(id).then(res => {
-      this.setState({
-        context: res.descendants
-      })
+      this.setState(res)
     })
   }
 
@@ -80,15 +77,14 @@ export default class TootDetail extends Component {
     })
   }
 
-  renderMenu = ref => {}
-
   scrollToEnd = () => {
-    this.contentRef._root.scrollToEnd({ animated: true })
+    this.ViewRef._root.scrollToEnd({ animated: true })
   }
 
   render() {
     const toot = this.state.toot
-    const context = this.state.context
+    const ancestors = this.state.ancestors
+    const descendants = this.state.descendants
 
     const headerElement = (
       <Header>
@@ -112,37 +108,25 @@ export default class TootDetail extends Component {
       </Header>
     )
 
-    if (!toot.id) {
+    if (!toot) {
       return (
-        <Container>
+        <View style={styles.container}>
           {headerElement}
           <Spinner style={{ marginTop: 250 }} color={color.headerBg} />
-        </Container>
+        </View>
       )
     }
 
     return (
-      <Container>
+      <View style={styles.container}>
         {headerElement}
-        <Content
-          ref={ref => (this.contentRef = ref)}
-          refreshControl={
-            <RefreshControl
-              refreshing={this.state.refreshing}
-              onRefresh={this.fetchData}
-            />
-          }
-          padder
-        >
-          <TootBox
-            data={toot.reblog || toot}
+        <View style={{ flex: 1 }}>
+          <Context
+            data={[...ancestors, toot, ...descendants]}
             navigation={this.props.navigation}
+            scrollIndex={ancestors.length + 1}
           />
-          <View
-            style={{ borderTopColor: color.lightGrey, borderTopWidth: 1 }}
-          />
-          <Context data={context} />
-        </Content>
+        </View>
         <ReplyInput
           tootId={toot.id}
           appendReply={data =>
@@ -152,12 +136,16 @@ export default class TootDetail extends Component {
           }
           scrollToEnd={this.scrollToEnd}
         />
-      </Container>
+      </View>
     )
   }
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: color.white
+  },
   icon: {
     fontSize: 15
   },

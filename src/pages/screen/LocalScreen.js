@@ -9,6 +9,7 @@ import { getHomeTimelines } from '../../utils/api'
 import TootBox from '../common/TootBox'
 import ListFooterComponent from '../common/ListFooterComponent'
 import { color } from '../../utils/color'
+import Divider from '../common/Divider'
 
 export default class LocalScreen extends Component {
   constructor(props) {
@@ -115,7 +116,7 @@ export default class LocalScreen extends Component {
     return (
       <View style={styles.container}>
         <FlatList
-          ItemSeparatorComponent={() => <View style={styles.divider} />}
+          ItemSeparatorComponent={() => <Divider />}
           showsVerticalScrollIndicator={false}
           data={this.state.list}
           onEndReachedThreshold={0.1}
@@ -143,10 +144,5 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingTop: 0,
     backgroundColor: color.white
-  },
-  divider: {
-    borderColor: color.lightGrey,
-    borderWidth: 1,
-    borderBottomWidth: 0
   }
 })

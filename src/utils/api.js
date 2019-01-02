@@ -76,7 +76,7 @@ export const context = id => {
 
 export const favourite = (id, favourite) => {
   return request({
-    url: `/api/v1/statuses/${id}/${favourite ? 'unfavourite' : 'favourite'}`,
+    url: `/api/v1/statuses/${id}/${favourite ? 'favourite' : 'unfavourite'}`,
     method: 'post',
     headers
   })
@@ -84,7 +84,7 @@ export const favourite = (id, favourite) => {
 
 export const reblog = (id, reblog) => {
   return request({
-    url: `/api/v1/statuses/${id}/${reblog ? 'unreblog' : 'reblog'}`,
+    url: `/api/v1/statuses/${id}/${reblog ? 'reblog' : 'unreblog'}`,
     method: 'post',
     headers
   })
