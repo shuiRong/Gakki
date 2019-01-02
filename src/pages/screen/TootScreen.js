@@ -129,6 +129,20 @@ export default class TootScreen extends Component {
     })
   }
 
+  // 清空列表中刚被mute的人的所有消息
+  muteAccount = id => {
+    this.setState({
+      list: this.state.list.filter(toot => toot.account.id !== id)
+    })
+  }
+
+  // 清空列表中刚被mute的人的所有消息
+  blockAccount = id => {
+    this.setState({
+      list: this.state.list.filter(toot => toot.account.id !== id)
+    })
+  }
+
   // 修改嘟文的置顶状态
   setPin = (id, pinned) => {
     let newList = [...this.state.list]
@@ -177,6 +191,8 @@ export default class TootScreen extends Component {
               navigation={this.props.navigation}
               deleteToot={this.deleteToot}
               setPin={this.setPin}
+              muteAccount={this.muteAccount}
+              blockAccount={this.blockAccount}
             />
           )}
         />

@@ -6,7 +6,9 @@ import {
   Image,
   Text,
   TouchableOpacity,
-  Clipboard
+  Clipboard,
+  muteAccount,
+  blockAccount
 } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { favourite, reblog, deleteStatuses, setPin } from '../../utils/api'
@@ -189,12 +191,12 @@ export default class AnotherTootBox extends Component {
       {
         title: getTitle('隐藏'),
         icon: getIcon('volume-mute'),
-        onPress: () => alert('Search')
+        onPress: this.muteAccount
       },
       {
         title: getTitle('屏蔽'),
         icon: getIcon('lock'),
-        onPress: () => alert('Search')
+        onPress: this.blockAccount
       }
     ]
 
@@ -227,6 +229,20 @@ export default class AnotherTootBox extends Component {
           this.props.setPin && this.props.setPin(toot.id, toot.pinned)
         }
       )
+    })
+  }
+
+  muteAccount = () => {
+    const accountId = this.state.toot.account.id
+    muteAccount(accountId, true).then(() => {
+      this.props.muteAccount && this.props.muteAccount(accountId)
+    })
+  }
+
+  blockAccount = () => {
+    const accountId = this.state.toot.account.id
+    blockAccount(accountId, true).then(() => {
+      this.props.blockAccount && this.props.blockAccount(accountId)
     })
   }
 

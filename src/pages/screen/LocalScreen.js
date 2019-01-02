@@ -3,7 +3,7 @@
  */
 
 import React, { Component } from 'react'
-import { View, StyleSheet, Text, FlatList, RefreshControl } from 'react-native'
+import { View, StyleSheet, FlatList, RefreshControl } from 'react-native'
 import { Spinner } from 'native-base'
 import { getHomeTimelines } from '../../utils/api'
 import TootBox from '../common/TootBox'
@@ -76,6 +76,26 @@ export default class LocalScreen extends Component {
     }
   }
 
+  deleteToot = id => {
+    this.setState({
+      list: this.state.list.filter(toot => toot.id !== id)
+    })
+  }
+
+  // 清空列表中刚被mute的人的所有消息
+  muteAccount = id => {
+    this.setState({
+      list: this.state.list.filter(toot => toot.account.id !== id)
+    })
+  }
+
+  // 清空列表中刚被mute的人的所有消息
+  blockAccount = id => {
+    this.setState({
+      list: this.state.list.filter(toot => toot.account.id !== id)
+    })
+  }
+
   /**
    * @description 获取时间线数据
    * @param {cb}: 成功后的回调函数
@@ -131,7 +151,13 @@ export default class LocalScreen extends Component {
           }
           ListFooterComponent={() => <ListFooterComponent />}
           renderItem={({ item }) => (
-            <TootBox data={item} navigation={this.props.navigation} />
+            <TootBox
+              data={item}
+              navigation={this.props.navigation}
+              deleteToot={this.deleteToot}
+              muteAccount={this.muteAccount}
+              blockAccount={this.blockAccount}
+            />
           )}
         />
       </View>
