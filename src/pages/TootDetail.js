@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, RefreshControl } from 'react-native'
+import { View, StyleSheet } from 'react-native'
 import { Header, Left, Body, Right, Button, Title, Spinner } from 'native-base'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { getStatuses, context } from '../utils/api'
@@ -24,6 +24,7 @@ export default class TootDetail extends Component {
 
   componentDidMount() {
     const toot = this.props.navigation.getParam('data')
+    // 设置为主体内容，这样详情页面展示的时候就会使用主体组件而不是评论组件
     toot['isMaster'] = true
     const id = toot.id
 

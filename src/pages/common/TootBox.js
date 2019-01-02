@@ -9,7 +9,14 @@ import {
   Clipboard
 } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
-import { favourite, reblog, deleteStatuses, setPin } from '../../utils/api'
+import {
+  favourite,
+  reblog,
+  deleteStatuses,
+  setPin,
+  muteAccount,
+  blockAccount
+} from '../../utils/api'
 import momentTimezone from 'moment-timezone'
 import HTML from 'react-native-render-html'
 import jstz from 'jstz'
@@ -189,12 +196,12 @@ export default class TootBox extends Component {
       {
         title: getTitle('隐藏'),
         icon: getIcon('volume-mute'),
-        onPress: () => alert('Search')
+        onPress: this.muteAccount
       },
       {
         title: getTitle('屏蔽'),
         icon: getIcon('lock'),
-        onPress: () => alert('Search')
+        onPress: this.blockAccount
       }
     ]
 
@@ -230,6 +237,20 @@ export default class TootBox extends Component {
     })
   }
 
+  muteAccount = () => {
+    const accountId = this.state.toot.account.id
+    muteAccount(accountId, true).then(() => {
+      this.props.muteAccount && this.props.muteAccount(accountId)
+    })
+  }
+
+  blockAccount = () => {
+    const accountId = this.state.toot.account.id
+    blockAccount(accountId, true).then(() => {
+      this.props.blockAccount && this.props.blockAccount(accountId)
+    })
+  }
+
   copyLink = () => {
     Clipboard.setString(this.state.toot.url)
   }
@@ -251,7 +272,6 @@ export default class TootBox extends Component {
    * @param {toot} 嘟文内容
    */
   goTootDetail = toot => {
-    console.log('toot', toot)
     if (!this.props) {
       return
     }

@@ -82,6 +82,20 @@ export default class HomeScreen extends Component {
     })
   }
 
+  // 清空列表中刚被mute的人的所有消息
+  muteAccount = id => {
+    this.setState({
+      list: this.state.list.filter(toot => toot.account.id !== id)
+    })
+  }
+
+  // 清空列表中刚被mute的人的所有消息
+  blockAccount = id => {
+    this.setState({
+      list: this.state.list.filter(toot => toot.account.id !== id)
+    })
+  }
+
   /**
    * @description 获取时间线数据
    * @param {cb}: 成功后的回调函数
@@ -141,6 +155,8 @@ export default class HomeScreen extends Component {
               data={item}
               navigation={this.props.navigation}
               deleteToot={this.deleteToot}
+              muteAccount={this.muteAccount}
+              blockAccount={this.blockAccount}
             />
           )}
         />

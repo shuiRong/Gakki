@@ -123,9 +123,9 @@ export default class TootScreen extends Component {
   /**
    * 跳转入Toot详情页面
    */
-  goTootDetail = id => {
+  goTootDetail = toot => {
     this.props.navigation.navigate('TootDetail', {
-      id: id
+      data: toot
     })
   }
 
@@ -162,7 +162,7 @@ export default class TootScreen extends Component {
             <TouchableOpacity
               style={styles.imageBox}
               activeOpacity={1}
-              onPress={() => this.goTootDetail(item.id)}
+              onPress={() => this.goTootDetail(item)}
             >
               <Image style={styles.image} source={{ uri: item.preview_url }} />
             </TouchableOpacity>

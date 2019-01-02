@@ -99,20 +99,21 @@ export const muteAccount = (id, mute) => {
   })
 }
 
+// 屏蔽/取消屏蔽 某人
+export const blockAccount = (id, block) => {
+  console.log('block')
+  return request({
+    url: `/api/v1/accounts/${id}/${block ? 'block' : 'unblock'}`,
+    method: 'post',
+    headers
+  })
+}
+
 // 获取隐藏用户列表
 export const mutesList = () => {
   return request({
     url: '/api/v1/mutes',
     method: 'get',
-    headers
-  })
-}
-
-// 屏蔽/取消屏蔽 某人
-export const blockAccount = (id, block) => {
-  return request({
-    url: `/api/v1/accounts/${id}/${block ? 'block' : 'unblock'}`,
-    method: 'post',
     headers
   })
 }
