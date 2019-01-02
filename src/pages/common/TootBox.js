@@ -275,6 +275,8 @@ export default class TootBox extends Component {
     if (!this.props) {
       return
     }
+    // 重置被回复者username
+    mobx.updateReply(toot.account.username)
     this.props.navigation.navigate('TootDetail', {
       data: toot
     })
@@ -291,6 +293,17 @@ export default class TootBox extends Component {
     this.props.navigation.navigate('Profile', {
       id: id
     })
+  }
+
+  replyTo = data => {
+    const navigation = this.props.navigation
+
+    mobx.updateReply(data.account.username)
+    if (navigation.state.routeName !== 'TootDetail') {
+      navigation.navigate('TootDetail', {
+        data: data
+      })
+    }
   }
 
   getTimeValue = time => {
@@ -345,11 +358,7 @@ export default class TootBox extends Component {
     return (
       <TouchableOpacity
         style={styles.showTreadButton}
-        onPress={() =>
-          this.props.navigation.navigate('TootDetail', {
-            data
-          })
-        }
+        onPress={() => this.goTootDetail(data)}
       >
         <Text style={styles.showTreadText}>显示前文</Text>
       </TouchableOpacity>
@@ -437,11 +446,7 @@ export default class TootBox extends Component {
             <View style={styles.iconBox}>
               <TouchableOpacity
                 style={styles.iconParent}
-                onPress={() =>
-                  this.props.navigation.navigate('Reply', {
-                    id: data.id
-                  })
-                }
+                onPress={() => this.replyTo(data)}
               >
                 <Icon style={styles.icon} name="reply" />
                 <Text style={styles.bottomText}>{data.replies_count}</Text>

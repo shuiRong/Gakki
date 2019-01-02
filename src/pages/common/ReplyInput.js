@@ -125,7 +125,10 @@ export default class ReplyInput extends Component {
     return (
       <View style={boxStyle}>
         {!this.props.sendMode && (
-          <Text style={{ marginBottom: 5 }}>回复@{mobx.reply_to}</Text>
+          <Text style={{ marginBottom: 5 }}>
+            回复
+            {mobx.reply_to_username ? '@' + mobx.reply_to_username : ''}
+          </Text>
         )}
         {cwElement}
         <TextInput

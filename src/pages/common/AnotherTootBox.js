@@ -270,6 +270,9 @@ export default class AnotherTootBox extends Component {
     if (!this.props) {
       return
     }
+
+    // 重置被回复者username
+    mobx.updateReply(toot.account.username)
     this.props.navigation.navigate('TootDetail', {
       data: toot
     })
@@ -340,11 +343,7 @@ export default class AnotherTootBox extends Component {
     return (
       <TouchableOpacity
         style={styles.showTreadButton}
-        onPress={() =>
-          this.props.navigation.navigate('TootDetail', {
-            data
-          })
-        }
+        onPress={() => this.goTootDetail(data)}
       >
         <Text style={styles.showTreadText}>显示前文</Text>
       </TouchableOpacity>

@@ -4,13 +4,11 @@ class Globe {
   constructor() {}
 
   @observable tab = 1
-  @observable reply_to = '' // 回复对象的username
-  @observable reply_to_id = '' // 回复对象的id
+  @observable reply_to_username = '' // 回复对象的username
   @observable account = {} //当前用户的账户信息
 
-  updateReply(id, username) {
-    this.reply_to = username
-    this.reply_to_id = id
+  updateReply(username) {
+    this.reply_to_username = username
   }
 
   updateAccount(account) {

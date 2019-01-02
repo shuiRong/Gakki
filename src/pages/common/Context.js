@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { StyleSheet, FlatList, View } from 'react-native'
-import globe from '../../utils/mobx'
 import TootBox from './TootBox'
 import Divider from './Divider'
 import AnotherTootBox from './AnotherTootBox'
@@ -28,15 +27,6 @@ export default class data extends Component {
     })
   }
 
-  /**
-   * @description 回复某人
-   * @param {id}: id
-   * @param {username}: 用户名
-   */
-  replyTo = (id, username) => {
-    globe.updateReply(id, username)
-  }
-
   render() {
     const data = this.state.data
     if (!data.length) {
@@ -61,6 +51,7 @@ export default class data extends Component {
             return (
               <TootBox
                 data={item}
+                navigation={this.props.navigation}
                 sensitive={item.sensitive}
                 showTread={false}
               />

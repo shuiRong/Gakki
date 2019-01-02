@@ -15,6 +15,7 @@ import { getUserStatuses } from '../../utils/api'
 import { Spinner } from 'native-base'
 import ListFooterComponent from '../common/ListFooterComponent'
 import { color } from '../../utils/color'
+import mobx from '../../utils/mobx'
 
 let deviceWidth = require('Dimensions').get('window').width
 export default class TootScreen extends Component {
@@ -124,6 +125,7 @@ export default class TootScreen extends Component {
    * 跳转入Toot详情页面
    */
   goTootDetail = toot => {
+    mobx.updateReply(toot.account.username)
     this.props.navigation.navigate('TootDetail', {
       data: toot
     })
