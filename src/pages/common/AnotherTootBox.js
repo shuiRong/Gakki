@@ -275,7 +275,9 @@ export default class AnotherTootBox extends Component {
       reply_to_username: toot.account.username,
       in_reply_to_account_id: toot.account.id,
       in_reply_to_id: toot.id,
-      mentions: toot.mentions
+      mentions: toot.mentions,
+      spoiler_text: toot.spoiler_text,
+      cw: Boolean(toot.spoiler_text)
     })
     this.props.navigation.navigate('TootDetail', {
       data: toot
@@ -302,7 +304,9 @@ export default class AnotherTootBox extends Component {
       reply_to_username: toot.account.username,
       in_reply_to_account_id: toot.account.id,
       in_reply_to_id: toot.id,
-      mentions: toot.mentions
+      mentions: toot.mentions,
+      spoiler_text: toot.spoiler_text,
+      cw: Boolean(toot.spoiler_text)
     })
     if (navigation.state.routeName !== 'TootDetail') {
       navigation.navigate('TootDetail', {

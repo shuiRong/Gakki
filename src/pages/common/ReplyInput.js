@@ -17,28 +17,18 @@ export default class ReplyInput extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      status: '',
-      spoiler_text: '', // 警告消息，警告前方可能出现的特殊内容
       expand: false, // 输入框是否展开成多行？
-      cw: false, // Content Warning 模式是否开启
       whichIsFocused: '' // 当前哪个输入框被触发了
     }
   }
 
-  showCW = () => {
-    this.setState({
-      cw: !this.state.cw
-    })
-  }
-
   sendToot = () => {
-    const state = this.state
     const props = this.props
 
     sendStatuses({
       in_reply_to_id: mobx.in_reply_to_id,
       status: mobx.inputValue,
-      spoiler_text: state.cw ? state.spoiler_text : '',
+      spoiler_text: mobx.cw ? mobx.spoiler_text : '',
       visibility: 'public',
       sensitive: false
     }).then(res => {
@@ -53,10 +43,7 @@ export default class ReplyInput extends Component {
       }
       mobx.resetReply()
       this.setState({
-        cw: false,
-        expand: false,
-        status: '',
-        spoiler_text: ''
+        expand: false
       })
       this.refTextarea.blur()
     })
@@ -97,7 +84,7 @@ export default class ReplyInput extends Component {
       boxStyle.height += 100
       inputStyle.height += 100
     }
-    if (this.state.cw) {
+    if (mobx.cw) {
       if (this.props.sendMode) {
         inputStyle.height -= 45
       } else {
@@ -106,7 +93,7 @@ export default class ReplyInput extends Component {
     }
 
     let cwElement = null
-    if (this.state.cw) {
+    if (mobx.cw) {
       cwElement = (
         <TextInput
           ref={ref => (this.refCW = ref)}
@@ -115,8 +102,8 @@ export default class ReplyInput extends Component {
             height: 40,
             marginBottom: 5
           }}
-          onChangeText={text => this.setState({ spoiler_text: text })}
-          value={this.state.spoiler_text}
+          onChangeText={text => mobx.updateSpoilerText(text)}
+          value={mobx.spoiler_text}
           maxLength={80}
           placeholder={'折叠部分的警告信息～'}
           onBlur={this.blurHandler}
@@ -150,11 +137,11 @@ export default class ReplyInput extends Component {
         <View style={styles.inputTools}>
           <Icon name={'camera'} style={styles.icon} />
           <Icon name={'globe-americas'} style={styles.icon} />
-          <TouchableOpacity onPress={this.showCW}>
+          <TouchableOpacity onPress={() => mobx.exchangeCW()}>
             <Text style={styles.bold}>CW</Text>
           </TouchableOpacity>
           <Icon name={'grin-squint'} style={styles.icon} />
-          <Text style={styles.grey}>{500 - this.state.status.length}</Text>
+          <Text style={styles.grey}>{500 - mobx.inputValue.length}</Text>
           <TouchableOpacity style={styles.sendButton} onPress={this.sendToot}>
             <Text style={styles.sendText}>TOOT!</Text>
           </TouchableOpacity>
