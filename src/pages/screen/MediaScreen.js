@@ -125,7 +125,7 @@ export default class TootScreen extends Component {
    * 跳转入Toot详情页面
    */
   goTootDetail = toot => {
-    mobx.updateReply(toot.account.username)
+    mobx.updateReply(toot.account.username, toot.mentions)
     this.props.navigation.navigate('TootDetail', {
       data: toot
     })

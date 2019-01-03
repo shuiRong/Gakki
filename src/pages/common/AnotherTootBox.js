@@ -271,8 +271,12 @@ export default class AnotherTootBox extends Component {
       return
     }
 
-    // 重置被回复者username
-    mobx.updateReply(toot.account.username)
+    mobx.updateReply({
+      reply_to_username: toot.account.username,
+      in_reply_to_account_id: toot.account.id,
+      in_reply_to_id: toot.id,
+      mentions: toot.mentions
+    })
     this.props.navigation.navigate('TootDetail', {
       data: toot
     })
@@ -289,6 +293,22 @@ export default class AnotherTootBox extends Component {
     this.props.navigation.navigate('Profile', {
       id: id
     })
+  }
+
+  replyTo = toot => {
+    const navigation = this.props.navigation
+
+    mobx.updateReply({
+      reply_to_username: toot.account.username,
+      in_reply_to_account_id: toot.account.id,
+      in_reply_to_id: toot.id,
+      mentions: toot.mentions
+    })
+    if (navigation.state.routeName !== 'TootDetail') {
+      navigation.navigate('TootDetail', {
+        data: toot
+      })
+    }
   }
 
   getTimeValue = time => {
@@ -435,11 +455,7 @@ export default class AnotherTootBox extends Component {
             <View style={styles.iconBox}>
               <TouchableOpacity
                 style={styles.iconParent}
-                onPress={() =>
-                  this.props.navigation.navigate('Reply', {
-                    id: data.id
-                  })
-                }
+                onPress={() => this.replyTo(data)}
               >
                 <Icon style={styles.icon} name="reply" />
                 <Text style={styles.bottomText}>{data.replies_count}</Text>

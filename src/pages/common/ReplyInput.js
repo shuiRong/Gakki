@@ -36,8 +36,8 @@ export default class ReplyInput extends Component {
     const props = this.props
 
     sendStatuses({
-      in_reply_to_id: mobx.reply_to_id,
-      status: state.status,
+      in_reply_to_id: mobx.in_reply_to_id,
+      status: mobx.inputValue,
       spoiler_text: state.cw ? state.spoiler_text : '',
       visibility: 'public',
       sensitive: false
@@ -51,12 +51,14 @@ export default class ReplyInput extends Component {
       if (props.callback) {
         props.callback(res)
       }
+      mobx.resetReply()
       this.setState({
         cw: false,
         expand: false,
         status: '',
         spoiler_text: ''
       })
+      this.refTextarea.blur()
     })
   }
 
@@ -135,8 +137,8 @@ export default class ReplyInput extends Component {
           ref={ref => (this.refTextarea = ref)}
           autoFocus={this.props.autoFocus}
           style={inputStyle}
-          onChangeText={text => this.setState({ status: text })}
-          value={this.state.status}
+          onChangeText={text => mobx.updateInputValue(text)}
+          value={mobx.inputValue}
           multiline={true}
           textAlignVertical={'top'}
           placeholder={'-_-'}

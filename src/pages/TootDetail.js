@@ -78,10 +78,6 @@ export default class TootDetail extends Component {
     })
   }
 
-  scrollToEnd = () => {
-    this.ViewRef._root.scrollToEnd({ animated: true })
-  }
-
   render() {
     const toot = this.state.toot
     const ancestors = this.state.ancestors
@@ -125,17 +121,15 @@ export default class TootDetail extends Component {
           <Context
             data={[...ancestors, toot, ...descendants]}
             navigation={this.props.navigation}
-            scrollIndex={ancestors.length + 1}
           />
         </View>
         <ReplyInput
           tootId={toot.id}
           appendReply={data =>
             this.setState({
-              context: [...context, data]
+              descendants: [...descendants, data]
             })
           }
-          scrollToEnd={this.scrollToEnd}
         />
       </View>
     )

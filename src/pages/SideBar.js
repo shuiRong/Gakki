@@ -2,17 +2,17 @@ import React, { Component } from 'react'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { View, Text, Image, StyleSheet, ImageBackground } from 'react-native'
 import { getCurrentUser } from '../utils/api'
-import globe from '../utils/mobx'
+import mobx from '../utils/mobx'
 import { color } from '../utils/color'
 
 export default class SideBar extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      username: 'shuiRong',
+      username: '',
       avatar: '',
       header: '',
-      host: 'cmx.im'
+      host: ''
     }
   }
   componentDidMount() {
@@ -23,7 +23,7 @@ export default class SideBar extends Component {
           username: res.username,
           header: res.header
         })
-        globe.updateAccount(res)
+        mobx.updateAccount(res)
       })
       .catch(err => {
         alert(JSON.stringify(err.response))

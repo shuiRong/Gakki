@@ -275,8 +275,12 @@ export default class TootBox extends Component {
     if (!this.props) {
       return
     }
-    // 重置被回复者username
-    mobx.updateReply(toot.account.username)
+    mobx.updateReply({
+      reply_to_username: toot.account.username,
+      in_reply_to_account_id: toot.account.id,
+      in_reply_to_id: toot.id,
+      mentions: toot.mentions
+    })
     this.props.navigation.navigate('TootDetail', {
       data: toot
     })
@@ -295,13 +299,18 @@ export default class TootBox extends Component {
     })
   }
 
-  replyTo = data => {
+  replyTo = toot => {
     const navigation = this.props.navigation
 
-    mobx.updateReply(data.account.username)
+    mobx.updateReply({
+      reply_to_username: toot.account.username,
+      in_reply_to_account_id: toot.account.id,
+      in_reply_to_id: toot.id,
+      mentions: toot.mentions
+    })
     if (navigation.state.routeName !== 'TootDetail') {
       navigation.navigate('TootDetail', {
-        data: data
+        data: toot
       })
     }
   }
