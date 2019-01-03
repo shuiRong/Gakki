@@ -138,7 +138,11 @@ export default class ReplyInput extends Component {
           <Icon name={'camera'} style={styles.icon} />
           <Icon name={'globe-americas'} style={styles.icon} />
           <TouchableOpacity onPress={() => mobx.exchangeCW()}>
-            <Text style={styles.bold}>CW</Text>
+            {mobx.cw ? (
+              <Text style={styles.enableCW}>CW</Text>
+            ) : (
+              <Text style={styles.disenableCW}>CW</Text>
+            )}
           </TouchableOpacity>
           <Icon name={'grin-squint'} style={styles.icon} />
           <Text style={styles.grey}>{500 - mobx.inputValue.length}</Text>
@@ -166,8 +170,12 @@ const styles = StyleSheet.create({
   icon: {
     fontSize: 20
   },
-  bold: {
+  disenableCW: {
     fontWeight: 'bold'
+  },
+  enableCW: {
+    fontWeight: 'bold',
+    color: color.headerBg
   },
   sendButton: {
     alignItems: 'center',

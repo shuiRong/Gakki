@@ -277,7 +277,7 @@ export default class AnotherTootBox extends Component {
       in_reply_to_id: toot.id,
       mentions: toot.mentions,
       spoiler_text: toot.spoiler_text,
-      cw: Boolean(toot.spoiler_text)
+      cw: false
     })
     this.props.navigation.navigate('TootDetail', {
       data: toot
