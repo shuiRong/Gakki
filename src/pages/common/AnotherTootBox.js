@@ -205,7 +205,8 @@ export default class AnotherTootBox extends Component {
       Menu.show({ x: x - 20, y, width, height }, items, {
         popoverStyle: {
           backgroundColor: color.white,
-          justifyContent: 'center'
+          justifyContent: 'center',
+          elevation: 10
         }
       })
     })

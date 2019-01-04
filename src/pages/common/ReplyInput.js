@@ -11,6 +11,15 @@ import Icon from 'react-native-vector-icons/FontAwesome5'
 import { sendStatuses } from '../../utils/api'
 import mobx from '../../utils/mobx'
 import { color } from '../../utils/color'
+import { Menu } from 'teaset'
+
+// 嘟文可见范围的图标与实际字段的对应关系
+const visibilityDict = {
+  'globe-americas': 'public',
+  unlock: 'unlisted',
+  lock: 'private',
+  envelope: 'direct'
+}
 
 @observer
 export default class ReplyInput extends Component {
@@ -18,7 +27,8 @@ export default class ReplyInput extends Component {
     super(props)
     this.state = {
       expand: false, // 输入框是否展开成多行？
-      whichIsFocused: '' // 当前哪个输入框被触发了
+      whichIsFocused: '', // 当前哪个输入框被触发了
+      visibilityIcon: 'globe-americas' // 当前选择的嘟文公开选项的图标名称
     }
   }
 
@@ -29,7 +39,7 @@ export default class ReplyInput extends Component {
       in_reply_to_id: mobx.in_reply_to_id,
       status: mobx.inputValue,
       spoiler_text: mobx.cw ? mobx.spoiler_text : '',
-      visibility: 'public',
+      visibility: visibilityDict[this.state.visibilityIcon],
       sensitive: false
     }).then(res => {
       if (props.appendReply) {
@@ -46,6 +56,81 @@ export default class ReplyInput extends Component {
         expand: false
       })
       this.refTextarea.blur()
+    })
+  }
+
+  // 显示嘟文可见范围的选项菜单
+  showOptions = () => {
+    const getTitle = (title, subTitle, iconName) => {
+      if (this.state.visibilityIcon === iconName) {
+        return (
+          <View>
+            <Text style={[styles.title, styles.highlight]}>{title}</Text>
+            <Text style={[styles.subTitle, styles.highlight]}>{subTitle}</Text>
+          </View>
+        )
+      }
+
+      return (
+        <View>
+          <Text style={styles.title}>{title}</Text>
+          <Text style={styles.subTitle}>{subTitle}</Text>
+        </View>
+      )
+    }
+    const getIcon = name => {
+      if (this.state.visibilityIcon === name) {
+        return <Icon name={name} style={[styles.menuIcon, styles.highlight]} />
+      }
+      return <Icon name={name} style={styles.menuIcon} />
+    }
+
+    const items = [
+      {
+        title: getTitle(
+          '公开',
+          '所有人可见，并会出现在公共时间轴上',
+          'globe-americas'
+        ),
+        icon: getIcon('globe-americas'),
+        onPress: () => this.changeOption('globe-americas')
+      },
+      {
+        title: getTitle(
+          '不公开',
+          '所有人可见，但不会出现在公共时间轴上',
+          'unlock'
+        ),
+        icon: getIcon('unlock'),
+        onPress: () => this.changeOption('unlock')
+      },
+      {
+        title: getTitle('仅关注者', '只有关注你的用户能看到', 'lock'),
+        icon: getIcon('lock'),
+        onPress: () => this.changeOption('lock')
+      },
+      {
+        title: getTitle('私信', '只有被提及的用户能看到', 'envelope'),
+        icon: getIcon('envelope'),
+        onPress: () => this.changeOption('envelope')
+      }
+    ]
+
+    this.refOption.measureInWindow((x, y, width, height) => {
+      Menu.show({ x: x + 10, y, width, height }, items, {
+        popoverStyle: {
+          backgroundColor: color.white,
+          justifyContent: 'center',
+          elevation: 10
+        },
+        direction: 'up'
+      })
+    })
+  }
+
+  changeOption = visibilityIcon => {
+    this.setState({
+      visibilityIcon
     })
   }
 
@@ -136,8 +221,13 @@ export default class ReplyInput extends Component {
         />
         <View style={styles.inputTools}>
           <Icon name={'camera'} style={styles.icon} />
-          <Icon name={'globe-americas'} style={styles.icon} />
-          <TouchableOpacity onPress={() => mobx.exchangeCW()}>
+          <TouchableOpacity onPress={this.showOptions}>
+            <Icon name={this.state.visibilityIcon} style={styles.icon} />
+          </TouchableOpacity>
+          <TouchableOpacity
+            ref={ref => (this.refOption = ref)}
+            onPress={() => mobx.exchangeCW()}
+          >
             {mobx.cw ? (
               <Text style={styles.enableCW}>CW</Text>
             ) : (
@@ -196,5 +286,20 @@ const styles = StyleSheet.create({
   sendText: {
     fontWeight: 'bold',
     color: color.white
+  },
+  title: {
+    color: color.moreBlack,
+    fontWeight: 'bold'
+  },
+  subTitle: {
+    color: color.grey,
+    fontSize: 10
+  },
+  menuIcon: {
+    fontSize: 15,
+    marginRight: 10
+  },
+  highlight: {
+    color: color.headerBg
   }
 })
