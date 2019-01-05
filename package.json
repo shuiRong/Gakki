@@ -17,6 +17,7 @@
     "react": "16.6.3",
     "react-native": "0.57.1",
     "react-native-gesture-handler": "^1.0.12",
+    "react-native-image-picker": "^0.27.2",
     "react-native-material-ripple": "^0.8.0",
     "react-native-render-html": "^3.10.0",
     "react-native-scrollable-tab-view": "^0.10.0",

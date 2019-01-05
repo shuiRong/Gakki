@@ -154,3 +154,26 @@ export const setPin = (id, pinned) => {
     headers
   })
 }
+
+// 上传媒体文件：图片/视频
+export const upload = ({ response, description, focus }) => {
+  const data = new FormData()
+
+  data.append('file', {
+    uri: response.uri,
+    type: response.type,
+    name: response.fileName
+  })
+  data.append('description', description)
+  data.append('focus', focus)
+
+  return request({
+    url: '/api/v1/media',
+    method: 'post',
+    data: data,
+    headers: {
+      ...headers,
+      'Content-Type': 'multipart/form-data'
+    }
+  })
+}

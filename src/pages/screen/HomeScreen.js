@@ -3,7 +3,7 @@
  */
 
 import React, { Component } from 'react'
-import { View, StyleSheet, Text, FlatList, RefreshControl } from 'react-native'
+import { View, StyleSheet, FlatList, RefreshControl } from 'react-native'
 import { Spinner } from 'native-base'
 import { getHomeTimelines } from '../../utils/api'
 import TootBox from '../common/TootBox'
