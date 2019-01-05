@@ -186,3 +186,12 @@ export const updateMedia = (id, data) => {
     headers
   })
 }
+
+// 获取当前实例的emoji
+export const getCustomEmojis = () => {
+  return request({
+    url: '/api/v1/custom_emojis',
+    method: 'get',
+    headers
+  })
+}

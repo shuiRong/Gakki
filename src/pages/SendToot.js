@@ -1,20 +1,11 @@
 import React, { Component } from 'react'
-import { StyleSheet } from 'react-native'
-import {
-  Container,
-  Header,
-  Left,
-  Body,
-  Right,
-  Button,
-  Title,
-  Content,
-  Card
-} from 'native-base'
+import { StyleSheet, View, Dimensions } from 'react-native'
+import { Header, Left, Body, Right, Button, Title } from 'native-base'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import ReplyInput from './common/ReplyInput'
 import { color } from '../utils/color'
 
+const width = Dimensions.get('window').width
 /**
  * Toot详情页面
  */
@@ -32,12 +23,12 @@ export default class SendToot extends Component {
 
   render() {
     return (
-      <Container>
+      <View>
         <Header>
           <Left>
             <Button transparent>
               <Icon
-                style={[styles.icon, styles.navIcon]}
+                style={styles.navIcon}
                 name="arrow-left"
                 onPress={() => this.navigateToHome()}
               />
@@ -48,47 +39,35 @@ export default class SendToot extends Component {
           </Body>
           <Right>
             <Button transparent>
-              <Icon style={[styles.icon, styles.navIcon]} name="ellipsis-h" />
+              <Icon style={styles.navIcon} name="ellipsis-h" />
             </Button>
           </Right>
         </Header>
-        <Content padder>
-          <Card style={{ borderRadius: 5 }}>
-            <ReplyInput
-              autoFocus={true}
-              tootId={this.props.navigation.getParam('id')}
-              sendMode={true}
-              callback={this.navigateToHome}
-            />
-          </Card>
-        </Content>
-      </Container>
+        <View
+          style={{
+            width: width - 30,
+            alignSelf: 'center',
+            marginTop: 15,
+            backgroundColor: color.white,
+            elevation: 5,
+            borderRadius: 5
+          }}
+        >
+          <ReplyInput
+            autoFocus={true}
+            tootId={this.props.navigation.getParam('id')}
+            sendMode={true}
+            callback={this.navigateToHome}
+          />
+        </View>
+      </View>
     )
   }
 }
 
 const styles = StyleSheet.create({
-  body: {
-    flexDirection: 'column'
-  },
-  time: {
-    alignSelf: 'flex-start',
-    color: color.grey,
-    fontSize: 15,
-    marginTop: 20
-  },
-  leftBody: {
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
-  icon: {
-    fontSize: 17
-  },
   navIcon: {
     fontSize: 20,
     color: color.lightGrey
-  },
-  bottomText: {
-    marginLeft: 10
   }
 })

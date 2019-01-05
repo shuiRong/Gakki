@@ -72,6 +72,10 @@ class Globe {
     this.inputValue = text
   }
 
+  addInputValue(text) {
+    this.inputValue += text
+  }
+
   updateAccount(account) {
     this.account = account
   }

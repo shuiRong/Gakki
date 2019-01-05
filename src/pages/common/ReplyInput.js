@@ -9,10 +9,16 @@ import {
   Dimensions,
   Image,
   Animated,
-  Easing
+  Easing,
+  FlatList
 } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
-import { sendStatuses, upload, updateMedia } from '../../utils/api'
+import {
+  sendStatuses,
+  upload,
+  updateMedia,
+  getCustomEmojis
+} from '../../utils/api'
 import mobx from '../../utils/mobx'
 import { color } from '../../utils/color'
 import { Menu, Overlay, Input } from 'teaset'
@@ -25,6 +31,55 @@ const visibilityDict = {
   unlock: 'unlisted',
   lock: 'private',
   envelope: 'direct'
+}
+
+class EmojiBox extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      list: []
+    }
+  }
+
+  componentDidMount() {
+    this.setState({
+      list: this.props.data
+    })
+  }
+
+  componentWillReceiveProps({ data }) {
+    this.setState({
+      list: data
+    })
+  }
+
+  render() {
+    const state = this.state
+    if (!state.list.length) {
+      return null
+    }
+    return (
+      <FlatList
+        style={styles.emojiFlatList}
+        numColumns={8}
+        showsVerticalScrollIndicator={false}
+        data={state.list}
+        keyExtractor={item => item.id}
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            activeOpacity={0.8}
+            style={{ margin: 3 }}
+            onPress={() => mobx.addInputValue(`:${item.shortcode}: `)}
+          >
+            <Image
+              style={styles.emojiImage}
+              source={{ uri: item.static_url }}
+            />
+          </TouchableOpacity>
+        )}
+      />
+    )
+  }
 }
 
 class UploadMedia extends Component {
@@ -79,6 +134,7 @@ class UploadMedia extends Component {
             autoFocus={true}
             placeholder={'为视觉障碍人士添加文字说明...'}
             multiline={true}
+            maxLength={20}
             numberOfLines={3}
             textAlignVertical={'top'}
             style={styles.descriptionInput}
@@ -182,7 +238,9 @@ export default class ReplyInput extends Component {
       visibilityIcon: 'globe-americas', // 当前选择的嘟文公开选项的图标名称
       mediaList: [],
       rotateValue: new Animated.Value(0),
-      stopRotate: true
+      stopRotate: true,
+      customEmojis: [],
+      emojiBoxIsShown: false // 显示emojiBox吗？
     }
   }
 
@@ -190,6 +248,14 @@ export default class ReplyInput extends Component {
     this.spin = this.state.rotateValue.interpolate({
       inputRange: [0, 1],
       outputRange: ['0deg', '360deg']
+    })
+  }
+
+  componentDidMount() {
+    getCustomEmojis().then(res => {
+      this.setState({
+        customEmojis: res
+      })
     })
   }
 
@@ -370,16 +436,30 @@ export default class ReplyInput extends Component {
 
   /**
    * @description 如果组件没有被在单独页面使用的话，失去焦点的反应就是切换expand
-   * 反之说明在单独页面中使用，则重新触发聚焦
    */
   blurHandler = () => {
     if (!this.props.sendMode) {
       this.setState({ expand: false })
       return
     }
-    if (this.refCW && !this.refCW.isFocused()) {
-      this.refTextarea.focus()
+  }
+
+  /**
+   * @description blur输入框，隐藏软键盘，显示emoji
+   */
+  showEmojiBox = () => {
+    this.refTextarea && this.refTextarea.blur()
+    this.refCW && this.refCW.blur()
+    this.setState({
+      emojiBoxIsShown: !this.state.emojiBoxIsShown
+    })
+  }
+
+  emojiBoxIsShown = () => {
+    if (!this.state.emojiBoxIsShown) {
+      return null
     }
+    return <EmojiBox data={this.state.customEmojis} />
   }
 
   /**
@@ -413,10 +493,7 @@ export default class ReplyInput extends Component {
               ]
             }}
           >
-            <Icon
-              name={'sync-alt'}
-              style={[styles.icon, { color: color.headerBg }]}
-            />
+            <Icon name={'sync-alt'} style={styles.syncIcon} />
           </Animated.View>
         )}
       </TouchableOpacity>
@@ -453,10 +530,23 @@ export default class ReplyInput extends Component {
       boxStyle['borderRadius'] = 5
     }
 
-    if (!this.props.sendMode && state.expand) {
-      boxStyle.height += 60
-      inputStyle.height += 60
+    if (!this.props.sendMode) {
+      boxStyle['borderTopWidth'] = 0.5
+      if (state.expand) {
+        boxStyle.height += 60
+        inputStyle.height += 60
+      }
+      // 如果不是发嘟页面并且显示emoji
+      if (state.emojiBoxIsShown) {
+        boxStyle.height += 120
+      }
+    } else {
+      // 如果是发嘟页面，且显示emoji
+      if (state.emojiBoxIsShown) {
+        boxStyle.height += 240
+      }
     }
+
     if (mobx.cw) {
       if (this.props.sendMode) {
         inputStyle.height -= 45
@@ -480,6 +570,11 @@ export default class ReplyInput extends Component {
           maxLength={80}
           placeholder={'折叠部分的警告信息～'}
           onBlur={this.blurHandler}
+          onFocus={() =>
+            this.setState({
+              emojiBoxIsShown: false
+            })
+          }
         />
       )
     }
@@ -502,10 +597,12 @@ export default class ReplyInput extends Component {
             value={mobx.inputValue}
             multiline={true}
             textAlignVertical={'top'}
-            placeholder={'-_-'}
-            maxLength={400}
+            placeholder={'在想啥？'}
+            maxLength={500}
             numberOfLines={3}
-            onFocus={() => this.setState({ expand: true })}
+            onFocus={() =>
+              this.setState({ expand: true, emojiBoxIsShown: false })
+            }
             onBlur={this.blurHandler}
           />
           <UploadMedia
@@ -529,19 +626,28 @@ export default class ReplyInput extends Component {
               <Text style={styles.disenableCW}>CW</Text>
             )}
           </TouchableOpacity>
-          <Icon name={'grin-squint'} style={styles.icon} />
+          <TouchableOpacity onPress={this.showEmojiBox}>
+            {state.emojiBoxIsShown ? (
+              <Icon
+                name={'grin-squint'}
+                style={[styles.icon, styles.highlight]}
+              />
+            ) : (
+              <Icon name={'grin-squint'} style={styles.icon} />
+            )}
+          </TouchableOpacity>
           <Text style={styles.grey}>{500 - mobx.inputValue.length}</Text>
           <TouchableOpacity style={styles.sendButton} onPress={this.sendToot}>
             <Text style={styles.sendText}>TOOT!</Text>
           </TouchableOpacity>
         </View>
+        {this.emojiBoxIsShown()}
       </View>
     )
   }
 }
 
 const boxCommonStyle = {
-  borderWidth: 1,
   borderColor: color.lightGrey,
   padding: 10
 }
@@ -643,5 +749,17 @@ const styles = StyleSheet.create({
     width: width / 6,
     height: width / 6,
     marginRight: 15
+  },
+  syncIcon: {
+    color: color.headerBg,
+    fontSize: 18
+  },
+  emojiFlatList: {
+    flex: 1,
+    alignSelf: 'center'
+  },
+  emojiImage: {
+    width: (width - 50) / 9.5,
+    height: (width - 50) / 9.5
   }
 })
