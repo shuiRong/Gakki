@@ -7,7 +7,9 @@ import {
   TextInput,
   TouchableOpacity,
   Dimensions,
-  Image
+  Image,
+  Animated,
+  Easing
 } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { sendStatuses, upload, updateMedia } from '../../utils/api'
@@ -178,8 +180,17 @@ export default class ReplyInput extends Component {
       expand: false, // 输入框是否展开成多行？
       whichIsFocused: '', // 当前哪个输入框被触发了
       visibilityIcon: 'globe-americas', // 当前选择的嘟文公开选项的图标名称
-      mediaList: []
+      mediaList: [],
+      rotateValue: new Animated.Value(0),
+      stopRotate: true
     }
+  }
+
+  componentWillMount() {
+    this.spin = this.state.rotateValue.interpolate({
+      inputRange: [0, 1],
+      outputRange: ['0deg', '360deg']
+    })
   }
 
   pickImage = () => {
@@ -195,6 +206,12 @@ export default class ReplyInput extends Component {
     }
 
     ImagePicker.showImagePicker(options, response => {
+      // 开始旋转～
+      this.setState({
+        stopRotate: false
+      })
+      this.startRotate()
+
       if (response.didCancel) {
         console.log('User cancelled image picker')
       } else if (response.error) {
@@ -204,14 +221,21 @@ export default class ReplyInput extends Component {
           response: response,
           description: 'description',
           focus: 'focus'
-        }).then(res => {
-          this.setState({
-            mediaList: [...this.state.mediaList].concat({
-              uri: res.preview_url,
-              id: res.id
+        })
+          .then(res => {
+            this.setState({
+              mediaList: [...this.state.mediaList].concat({
+                uri: res.preview_url,
+                id: res.id
+              }),
+              stopRotate: true
             })
           })
-        })
+          .catch(() => {
+            this.setState({
+              stopRotate: true
+            })
+          })
       }
     })
   }
@@ -358,6 +382,47 @@ export default class ReplyInput extends Component {
     }
   }
 
+  /**
+   * @description 旋转相机图标，表示正在上传文件
+   */
+  startRotate = () => {
+    this.state.rotateValue.setValue(0)
+    const rotate = Animated.timing(this.state.rotateValue, {
+      toValue: 1,
+      duration: 2000,
+      easing: Easing.linear
+    })
+    if (!this.state.stopRotate) {
+      rotate.start(() => this.startRotate())
+    }
+  }
+
+  // 根据文件是否在上传返回不同的图标
+  getMediaIcon = () => {
+    return (
+      <TouchableOpacity onPress={this.pickImage}>
+        {this.state.stopRotate ? (
+          <Icon name={'camera'} style={styles.icon} />
+        ) : (
+          <Animated.View
+            style={{
+              transform: [
+                {
+                  rotate: this.spin
+                }
+              ]
+            }}
+          >
+            <Icon
+              name={'sync-alt'}
+              style={[styles.icon, { color: color.headerBg }]}
+            />
+          </Animated.View>
+        )}
+      </TouchableOpacity>
+    )
+  }
+
   render() {
     const state = this.state
 
@@ -450,9 +515,7 @@ export default class ReplyInput extends Component {
           />
         </View>
         <View style={styles.inputTools}>
-          <TouchableOpacity onPress={this.pickImage}>
-            <Icon name={'camera'} style={styles.icon} />
-          </TouchableOpacity>
+          {this.getMediaIcon()}
           <TouchableOpacity onPress={this.showOptions}>
             <Icon name={this.state.visibilityIcon} style={styles.icon} />
           </TouchableOpacity>
