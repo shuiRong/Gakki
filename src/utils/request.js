@@ -2,7 +2,7 @@ import axios from 'axios'
 
 const service = axios.create({
   baseURL: 'https://cmx.im',
-  timeout: 5000 // 请求超时时间限制
+  timeout: 10000 // 请求超时时间限制
 })
 
 // 请求拦截器
@@ -21,6 +21,7 @@ service.interceptors.response.use(
     return response.data
   },
   err => {
+    console.log('拦截器err:', err)
     return Promise.reject(err)
   }
 )

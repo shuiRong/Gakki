@@ -166,14 +166,23 @@ export const upload = ({ response, description, focus }) => {
   })
   data.append('description', description)
   data.append('focus', focus)
-
   return request({
     url: '/api/v1/media',
     method: 'post',
     data: data,
     headers: {
       ...headers,
-      'Content-Type': 'multipart/form-data'
+      'content-type': 'multipart/form-data'
     }
+  })
+}
+
+// 更新媒体文件参数
+export const updateMedia = (id, data) => {
+  return request({
+    url: `/api/v1/media/${id}`,
+    method: 'put',
+    data,
+    headers
   })
 }

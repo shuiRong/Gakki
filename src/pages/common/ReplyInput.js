@@ -7,11 +7,10 @@ import {
   TextInput,
   TouchableOpacity,
   Dimensions,
-  Image,
-  Button
+  Image
 } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
-import { sendStatuses, upload } from '../../utils/api'
+import { sendStatuses, upload, updateMedia } from '../../utils/api'
 import mobx from '../../utils/mobx'
 import { color } from '../../utils/color'
 import { Menu, Overlay, Input } from 'teaset'
@@ -31,7 +30,7 @@ class UploadMedia extends Component {
     super(props)
     this.state = {
       list: null,
-      description: '123'
+      description: ''
     }
     this.refMedia = {} // 存储几个媒体文件的ref引用
   }
@@ -60,7 +59,6 @@ class UploadMedia extends Component {
         description: this.state.list[index].description
       },
       () => {
-        console.log(222, this.state)
         this.showDescriptionInput(index)
       }
     )
@@ -81,41 +79,21 @@ class UploadMedia extends Component {
             multiline={true}
             numberOfLines={3}
             textAlignVertical={'top'}
-            style={{
-              width: '100%',
-              height: 80,
-              textAlign: 'left',
-              borderWidth: 0,
-              borderBottomWidth: 1,
-              borderBottomColor: color.headerBg
-            }}
+            style={styles.descriptionInput}
             // value={this.state.description}
             onChangeText={text => this.setState({ description: text })}
           />
-          <View
-            style={{
-              flexDirection: 'row',
-              justifyContent: 'space-around',
-              marginTop: 20,
-              alignSelf: 'flex-end',
-              width: '50%'
-            }}
-          >
+          <View style={styles.descriptionButtonBox}>
             <TouchableOpacity
               onPress={() => this.overlayView && this.overlayView.close()}
             >
-              <Text
-                style={{ color: color.grey, fontSize: 15, fontWeight: 'bold' }}
-              >
-                取消
-              </Text>
+              <Text style={styles.descriptionText}>取消</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => this.setDescription(index)}>
               <Text
                 style={{
-                  color: color.headerBg,
-                  fontSize: 15,
-                  fontWeight: 'bold'
+                  ...styles.descriptionText,
+                  color: color.headerBg
                 }}
               >
                 确定
@@ -167,20 +145,11 @@ class UploadMedia extends Component {
 
   render() {
     const state = this.state
-    if (!state.list) {
+    if (!state.list || !state.list.length) {
       return null
     }
     return (
-      <View
-        style={{
-          position: 'absolute',
-          left: 15,
-          bottom: 8,
-          width: '100%',
-          flexDirection: 'row',
-          justifyContent: 'flex-start'
-        }}
-      >
+      <View style={styles.mediaBox}>
         {state.list.map((image, index) => (
           <TouchableOpacity
             key={image.uri}
@@ -189,7 +158,7 @@ class UploadMedia extends Component {
             onPress={() => this.showMediaOption(index)}
           >
             <Image
-              style={{ width: width / 6, height: width / 6, marginRight: 15 }}
+              style={styles.mediaFile}
               resizeMode={'contain'}
               key={image.uri}
               source={image}
@@ -209,72 +178,39 @@ export default class ReplyInput extends Component {
       expand: false, // 输入框是否展开成多行？
       whichIsFocused: '', // 当前哪个输入框被触发了
       visibilityIcon: 'globe-americas', // 当前选择的嘟文公开选项的图标名称
-      avatarSource: {
-        uri: ''
-      },
-      mediaList: [
-        {
-          uri:
-            'https://avatar-static.segmentfault.com/192/301/1923018619-58ca23464841a_huge256'
-        },
-        {
-          uri:
-            'https://avatar-static.segmentfault.com/170/179/1701793266-5b5586b258f8b_big64'
-        },
-        {
-          uri:
-            'https://avatar-static.segmentfault.com/192/301/1923018619-58ca23464841a_huge256'
-        },
-        {
-          uri:
-            'https://avatar-static.segmentfault.com/170/179/1701793266-5b5586b258f8b_big64'
-        }
-      ]
+      mediaList: []
     }
   }
 
-  componentDidMount() {
-    // this.pickImage()
-  }
-
   pickImage = () => {
-    // More info on all the options is below in the API Reference... just some common use cases shown here
     const options = {
       title: '选择图片',
       takePhotoButtonTitle: '拍照',
       chooseFromLibraryButtonTitle: '从相册中选择',
+      cancelButtonTitle: '取消',
       storageOptions: {
         skipBackup: true,
         path: 'images'
       }
     }
 
-    /**
-     * The first arg is the options object for customization (it can also be null or omitted for default options),
-     * The second arg is the callback which sends object: response (more info in the API Reference)
-     */
     ImagePicker.showImagePicker(options, response => {
-      console.log('Response = ', response)
-
       if (response.didCancel) {
         console.log('User cancelled image picker')
       } else if (response.error) {
         console.log('ImagePicker Error: ', response.error)
       } else {
-        const source = { uri: response.uri }
-
-        // You can also display the image using data:
-        // const source = { uri: 'data:image/jpeg;base64,' + response.data };
-
-        this.setState({
-          avatarSource: source
-        })
         upload({
           response: response,
           description: 'description',
           focus: 'focus'
         }).then(res => {
-          console.log('upload res', res)
+          this.setState({
+            mediaList: [...this.state.mediaList].concat({
+              uri: res.preview_url,
+              id: res.id
+            })
+          })
         })
       }
     })
@@ -288,7 +224,8 @@ export default class ReplyInput extends Component {
       status: mobx.inputValue,
       spoiler_text: mobx.cw ? mobx.spoiler_text : '',
       visibility: visibilityDict[this.state.visibilityIcon],
-      sensitive: false
+      sensitive: false,
+      media_ids: this.state.mediaList.map(media => media.id)
     }).then(res => {
       if (props.appendReply) {
         props.appendReply(res)
@@ -301,7 +238,8 @@ export default class ReplyInput extends Component {
       }
       mobx.resetReply()
       this.setState({
-        expand: false
+        expand: false,
+        mediaList: []
       })
       this.refTextarea.blur()
     })
@@ -393,6 +331,11 @@ export default class ReplyInput extends Component {
     newList.forEach((media, index) => {
       if (index === mediaIndex) {
         media['description'] = description
+        updateMedia(media.id, {
+          description
+        }).then(() => {
+          // 更新媒体文件辅助标题参数
+        })
       }
       return media
     })
@@ -420,12 +363,22 @@ export default class ReplyInput extends Component {
 
     let inputStyle = {
       ...inputCommonStyle,
-      height: 40,
-      paddingBottom: width / 5
+      height: 40
     }
     let boxStyle = {
       ...boxCommonStyle,
       height: 140
+    }
+
+    // 如果存在媒体文件才增加paddingBottom
+    if (state.mediaList.length) {
+      inputStyle['paddingBottom'] = width / 5
+
+      // 如果非发嘟页面且用户上传了媒体文件，那么input和box都增高些
+      if (!this.props.sendMode) {
+        inputStyle.height += 70
+        boxStyle.height += 70
+      }
     }
 
     if (this.props.sendMode) {
@@ -435,9 +388,9 @@ export default class ReplyInput extends Component {
       boxStyle['borderRadius'] = 5
     }
 
-    if (!this.props.sendMode && this.state.expand) {
-      boxStyle.height += 100
-      inputStyle.height += 100
+    if (!this.props.sendMode && state.expand) {
+      boxStyle.height += 60
+      inputStyle.height += 60
     }
     if (mobx.cw) {
       if (this.props.sendMode) {
@@ -496,9 +449,10 @@ export default class ReplyInput extends Component {
             setDescription={this.setDescription}
           />
         </View>
-
         <View style={styles.inputTools}>
-          <Icon name={'camera'} style={styles.icon} />
+          <TouchableOpacity onPress={this.pickImage}>
+            <Icon name={'camera'} style={styles.icon} />
+          </TouchableOpacity>
           <TouchableOpacity onPress={this.showOptions}>
             <Icon name={this.state.visibilityIcon} style={styles.icon} />
           </TouchableOpacity>
@@ -593,5 +547,38 @@ const styles = StyleSheet.create({
   descriptionOverlay: {
     alignItems: 'center',
     justifyContent: 'center'
+  },
+  descriptionInput: {
+    width: '100%',
+    height: 80,
+    textAlign: 'left',
+    borderWidth: 0,
+    borderBottomWidth: 1,
+    borderBottomColor: color.headerBg
+  },
+  descriptionButtonBox: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    marginTop: 20,
+    alignSelf: 'flex-end',
+    width: '50%'
+  },
+  descriptionText: {
+    color: color.grey,
+    fontSize: 15,
+    fontWeight: 'bold'
+  },
+  mediaBox: {
+    position: 'absolute',
+    left: 15,
+    bottom: 8,
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'flex-start'
+  },
+  mediaFile: {
+    width: width / 6,
+    height: width / 6,
+    marginRight: 15
   }
 })

@@ -12,7 +12,6 @@ import {
   Card
 } from 'native-base'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import { getStatuses } from '../utils/api'
 import ReplyInput from './common/ReplyInput'
 import { color } from '../utils/color'
 
@@ -22,19 +21,6 @@ import { color } from '../utils/color'
 export default class SendToot extends Component {
   constructor(props) {
     super(props)
-    this.state = {
-      toot: {
-        account: {}
-      }
-    }
-  }
-
-  componentDidMount() {
-    getStatuses(this.props.navigation.getParam('id')).then(res => {
-      this.setState({
-        toot: res
-      })
-    })
   }
 
   // 发完toot，跳转回首页，并且将着返回的toot数据
@@ -70,7 +56,7 @@ export default class SendToot extends Component {
           <Card style={{ borderRadius: 5 }}>
             <ReplyInput
               autoFocus={true}
-              tootId={this.state.toot.id}
+              tootId={this.props.navigation.getParam('id')}
               sendMode={true}
               callback={this.navigateToHome}
             />
