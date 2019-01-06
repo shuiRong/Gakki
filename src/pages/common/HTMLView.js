@@ -47,7 +47,8 @@ export default class HTMLView extends Component {
     }
     let content = state.content
 
-    if (/:.*?:/.test(content)) {
+    // 首个字符必须是字母数组
+    if (/:[A-Za-z0-9].*?:/.test(content)) {
       if (/<br \/>/.test(content)) {
         contentArray = content
           .replace(/^<p>/, '')
@@ -62,14 +63,20 @@ export default class HTMLView extends Component {
         content = content.replace(/^<p>(.*)<\/p>$/, '<p><div>$1</div></p>')
       }
 
-      const match = content.match(/:.*?:/g)
-      match.forEach(item => {
-        if (item.length > 10) {
-          return
-        }
-        const reg = new RegExp(item, 'g')
-        content = content.replace(reg, `<img src="${state.emojiObj[item]}" />`)
-      })
+      const match = content.match(/:[A-Za-z0-9].*?:/g)
+      // 如果的确匹配到了任何表情包的shortcode
+      if (match) {
+        match.forEach(item => {
+          if (item.length > 10) {
+            return
+          }
+          const reg = new RegExp(item, 'g')
+          content = content.replace(
+            reg,
+            `<img src="${state.emojiObj[item]}" />`
+          )
+        })
+      }
     }
 
     return (
