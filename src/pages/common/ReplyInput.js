@@ -23,6 +23,7 @@ import mobx from '../../utils/mobx'
 import { color } from '../../utils/color'
 import { Menu, Overlay, Input } from 'teaset'
 import ImagePicker from 'react-native-image-picker'
+import { save, fetch } from '../../utils/store'
 
 const width = Dimensions.get('window').width
 // 嘟文可见范围的图标与实际字段的对应关系
@@ -64,7 +65,7 @@ class EmojiBox extends Component {
         numColumns={8}
         showsVerticalScrollIndicator={false}
         data={state.list}
-        keyExtractor={item => item.id}
+        keyExtractor={item => item.shortcode}
         renderItem={({ item }) => (
           <TouchableOpacity
             activeOpacity={0.8}
@@ -252,10 +253,28 @@ export default class ReplyInput extends Component {
   }
 
   componentDidMount() {
+    fetch('emojis').then(res => {
+      if (res && res.length) {
+        this.setState({
+          customEmojis: res
+        })
+        return
+      }
+
+      // 如果之前没有存储，从网络获取
+      this.getCustomEmojis()
+    })
+  }
+
+  /**
+   * @description 从网络重新获取emojis数据
+   */
+  getCustomEmojis = () => {
     getCustomEmojis().then(res => {
       this.setState({
         customEmojis: res
       })
+      save('emojis', res)
     })
   }
 

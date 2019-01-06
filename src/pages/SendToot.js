@@ -23,7 +23,7 @@ export default class SendToot extends Component {
 
   render() {
     return (
-      <View>
+      <View style={styles.container}>
         <Header>
           <Left>
             <Button transparent>
@@ -43,16 +43,7 @@ export default class SendToot extends Component {
             </Button>
           </Right>
         </Header>
-        <View
-          style={{
-            width: width - 30,
-            alignSelf: 'center',
-            marginTop: 15,
-            backgroundColor: color.white,
-            elevation: 5,
-            borderRadius: 5
-          }}
-        >
+        <View style={styles.inputBox}>
           <ReplyInput
             autoFocus={true}
             tootId={this.props.navigation.getParam('id')}
@@ -66,6 +57,18 @@ export default class SendToot extends Component {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    backgroundColor: color.white,
+    flex: 1
+  },
+  inputBox: {
+    width: width - 30,
+    alignSelf: 'center',
+    marginTop: 15,
+    backgroundColor: color.white,
+    elevation: 5,
+    borderRadius: 5
+  },
   navIcon: {
     fontSize: 20,
     color: color.lightGrey

@@ -5,7 +5,7 @@ export const save = (key, value) => {
 }
 
 export const fetch = key => {
-  return AsyncStorage.getItem(key)
+  return AsyncStorage.getItem(key).then(res => JSON.parse(res))
 }
 
 export const merge = (key, value, cb) => {
