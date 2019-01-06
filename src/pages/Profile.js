@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import {
   Text,
-  Dimensions,
   View,
   StyleSheet,
   Image,
@@ -17,7 +16,6 @@ import {
   getAccountData,
   getRelationship
 } from '../utils/api'
-import HTML from 'react-native-render-html'
 import ScrollableTabView, {
   DefaultTabBar
 } from 'react-native-scrollable-tab-view'
@@ -25,6 +23,8 @@ import TootScreen from './screen/TootScreen'
 import MediaScreen from './screen/MediaScreen'
 import Fab from './common/Fab'
 import { color } from '../utils/color'
+import { fetch } from '../utils/store'
+import HTMLView from './common/HTMLView'
 
 /**
  * Toot详情页面
@@ -36,7 +36,8 @@ export default class Profile extends Component {
     this.state = {
       profile: {},
       relationship: {},
-      headerTop: new Animated.Value(0)
+      headerTop: new Animated.Value(0),
+      emojiObj: {}
     }
   }
 
@@ -66,6 +67,14 @@ export default class Profile extends Component {
     const id = this.props.navigation.getParam('id')
     this.getAccountData(id)
     this.getRelationship(id)
+    fetch('emojiObj').then(res => {
+      if (!res) {
+        return
+      }
+      this.setState({
+        emojiObj: res
+      })
+    })
   }
 
   /**
@@ -197,58 +206,30 @@ export default class Profile extends Component {
   }
 
   render() {
-    const profile = this.state.profile
+    const state = this.state
+    const profile = state.profile
 
     return (
       <View style={styles.contianer}>
         <View style={styles.header}>
           <Animated.View
             style={{
-              backgroundColor: color.headerBg,
-              opacity: this.opacity,
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              width: '100%',
-              height: 50,
-              zIndex: -1,
-              justifyContent: 'center'
+              ...styles.headerStyle,
+              opacity: this.opacity
             }}
           >
-            <View
-              style={{
-                marginLeft: 50,
-                flexDirection: 'row',
-                alignItems: 'center',
-                width: '75%',
-                overflow: 'hidden'
-              }}
-            >
-              <Text
-                numberOfLines={1}
-                style={{
-                  fontWeight: 'bold',
-                  fontSize: 17,
-                  color: color.white,
-                  marginRight: 5
-                }}
-              >
+            <View style={styles.headerView}>
+              <Text numberOfLines={1} style={styles.headerDisplayName}>
                 {profile.display_name}
               </Text>
-              <Text
-                numberOfLines={1}
-                style={{
-                  color: color.lightGrey,
-                  fontSize: 14
-                }}
-              >
+              <Text numberOfLines={1} style={styles.headerUserName}>
                 @{profile.username}
               </Text>
             </View>
           </Animated.View>
           <TouchableOpacity
             style={{ marginLeft: 20 }}
-            onPress={this.props.navigation.goBack}
+            onPress={() => this.props.navigation.goBack()}
           >
             <Icon style={styles.navIcon} name="arrow-left" />
           </TouchableOpacity>
@@ -262,108 +243,32 @@ export default class Profile extends Component {
           }}
         >
           <ImageBackground source={{ uri: profile.header }} style={styles.bg}>
-            <View
-              style={{
-                flex: 1,
-                margin: 10,
-                marginTop: 30,
-                alignItems: 'center',
-                justifyContent: 'space-between'
-              }}
-            >
-              <View
-                style={{
-                  alignItems: 'center',
-                  justifyContent: 'space-between'
-                }}
-              >
+            <View style={styles.bgBox}>
+              <View style={styles.avatarBox}>
                 <Image source={{ uri: profile.avatar }} style={styles.image} />
-                <Text
-                  style={{
-                    fontWeight: 'bold',
-                    fontSize: 17,
-                    color: color.white
-                  }}
-                >
-                  {profile.display_name}
-                </Text>
-                <Text
-                  style={{
-                    color: color.lightGrey,
-                    fontSize: 14,
-                    marginBottom: 5
-                  }}
-                >
-                  @{profile.username}
-                </Text>
+                <Text style={styles.displayName}>{profile.display_name}</Text>
+                <Text style={styles.userName}>@{profile.username}</Text>
                 <TouchableOpacity>{this.getRelationshop()}</TouchableOpacity>
               </View>
-              <HTML
-                html={profile.note}
-                tagsStyles={tagsStyles}
-                imagesMaxWidth={Dimensions.get('window').width}
-              />
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  width: '70%',
-                  justifyContent: 'space-around'
-                }}
-              >
-                <View
-                  style={{
-                    justifyContent: 'space-between',
-                    alignItems: 'center'
-                  }}
-                >
-                  <Text
-                    style={{
-                      color: color.white,
-                      fontWeight: 'bold',
-                      fontSize: 15,
-                      textAlign: 'center'
-                    }}
-                  >
+              <HTMLView data={profile.note} emojiObj={state.emojiObj} />
+              <View style={styles.followInfoBox}>
+                <View style={styles.sideInfoBox}>
+                  <Text style={styles.followCount}>
                     {profile.followers_count}
                   </Text>
                   <Text style={{ color: color.white }}>关注者</Text>
                 </View>
-                <View
-                  style={{
-                    justifyContent: 'space-between',
-                    alignItems: 'center'
-                  }}
-                >
-                  <Text
-                    style={{
-                      color: color.white,
-                      fontWeight: 'bold',
-                      fontSize: 15,
-                      textAlign: 'center'
-                    }}
-                  >
+                <View style={styles.insideInfoBox}>
+                  <Text style={styles.followCount}>
                     {profile.following_count}
                   </Text>
                   <Text style={{ color: color.white }}>正在关注</Text>
                 </View>
-                <View
-                  style={{
-                    justifyContent: 'space-between',
-                    alignItems: 'center'
-                  }}
-                >
-                  <Text
-                    style={{
-                      color: color.white,
-                      fontWeight: 'bold',
-                      fontSize: 15,
-                      textAlign: 'center'
-                    }}
-                  >
+                <View style={styles.insideInfoBox}>
+                  <Text style={styles.followCount}>
                     {profile.statuses_count}
                   </Text>
-                  <Text style={{ color: color.white }}>嘟文</Text>
+                  <Text style={styles.white}>嘟文</Text>
                 </View>
               </View>
             </View>
@@ -403,20 +308,11 @@ export default class Profile extends Component {
   }
 }
 
-const tagsStyles = {
-  p: {
-    color: color.white,
-    fontSize: 11,
-    letterSpacing: 1,
-    lineHeight: 20
-  },
-  a: {
-    lineHeight: 20
-  }
-}
-
 const styles = StyleSheet.create({
-  contianer: { flex: 1, backgroundColor: color.white },
+  contianer: {
+    flex: 1,
+    backgroundColor: color.white
+  },
   body: {
     flexDirection: 'column'
   },
@@ -467,5 +363,72 @@ const styles = StyleSheet.create({
   },
   bottomText: {
     marginLeft: 10
+  },
+  headerStyle: {
+    backgroundColor: color.headerBg,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: 50,
+    zIndex: -1,
+    justifyContent: 'center'
+  },
+  headerView: {
+    marginLeft: 50,
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '75%',
+    overflow: 'hidden'
+  },
+  headerDisplayName: {
+    fontWeight: 'bold',
+    fontSize: 17,
+    color: color.white,
+    marginRight: 5
+  },
+  headerUserName: {
+    color: color.lightGrey,
+    fontSize: 14
+  },
+  bgBox: {
+    flex: 1,
+    margin: 10,
+    marginTop: 30,
+    alignItems: 'center',
+    justifyContent: 'space-between'
+  },
+  avatarBox: {
+    alignItems: 'center',
+    justifyContent: 'space-between'
+  },
+  displayName: {
+    fontWeight: 'bold',
+    fontSize: 17,
+    color: color.white
+  },
+  userName: {
+    color: color.lightGrey,
+    fontSize: 14,
+    marginBottom: 5
+  },
+  followInfoBox: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '70%',
+    justifyContent: 'space-around'
+  },
+  insideInfoBox: {
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  followCount: {
+    color: color.white,
+    fontWeight: 'bold',
+    fontSize: 15,
+    textAlign: 'center'
+  },
+  white: {
+    color: color.white
   }
 })

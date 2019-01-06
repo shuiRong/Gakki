@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import {
   View,
   StyleSheet,
-  Dimensions,
   Image,
   Text,
   TouchableOpacity,
@@ -13,7 +12,6 @@ import {
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { favourite, reblog, deleteStatuses, setPin } from '../../utils/api'
 import momentTimezone from 'moment-timezone'
-import HTML from 'react-native-render-html'
 import jstz from 'jstz'
 import { RelativeTime } from 'relative-time-react-native-component'
 import { zh } from '../../utils/locale'
@@ -21,38 +19,51 @@ import MediaBox from './MediaBox'
 import { color } from '../../utils/color'
 import { Menu } from 'teaset'
 import mobx from '../../utils/mobx'
+import { fetch } from '../../utils/store'
+import HTMLView from './HTMLView'
 
 class TootContent extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      hide: true // CW模式隐藏敏感内容
+      hide: true, // CW模式隐藏敏感内容
+      emojiObj: {},
+      toot: {}
     }
   }
 
   componentDidMount() {
+    const props = this.props
     this.setState({
-      hide: this.props.data.sensitive
+      hide: props.sensitive,
+      toot: props.data
+    })
+    fetch('emojiObj').then(res => {
+      if (!res) {
+        return
+      }
+      this.setState({
+        emojiObj: res
+      })
     })
   }
 
-  getHTML = () => {
-    if (this.state.hide) {
-      return null
-    }
-    return (
-      <HTML
-        html={this.props.data.content}
-        tagsStyles={tagsStyles}
-        imagesMaxWidth={Dimensions.get('window').width}
-      />
-    )
-  }
-
   render() {
-    const toot = this.props.data
-    const hide = this.state.hide
-    if (!toot.sensitive) return this.getHTML()
+    const state = this.state
+    const toot = state.toot
+    const hide = state.hide
+    const emojiObj = state.emojiObj
+
+    if (!toot.sensitive) {
+      return (
+        <HTMLView
+          data={this.props.data.content}
+          hide={hide}
+          emojiObj={emojiObj}
+        />
+      )
+    }
+
     return (
       <View>
         <View>
@@ -81,7 +92,7 @@ class TootContent extends Component {
               {hide ? '显示内容' : '隐藏内容'}
             </Text>
           </TouchableOpacity>
-          {this.getHTML()}
+          <HTMLView data={toot.content} hide={hide} emojiObj={emojiObj} />
         </View>
       </View>
     )
@@ -446,7 +457,7 @@ export default class AnotherTootBox extends Component {
               </Text>
             </View>
             <View style={styles.htmlBox}>
-              <TootContent data={data} />
+              <TootContent data={data} sensitive={data.sensitive} />
             </View>
             <MediaBox
               data={data.media_attachments}
@@ -514,17 +525,6 @@ export default class AnotherTootBox extends Component {
         {this.getBody(toot)}
       </View>
     )
-  }
-}
-
-const tagsStyles = {
-  p: {
-    color: color.pColor,
-    fontSize: 18,
-    lineHeight: 20
-  },
-  a: {
-    lineHeight: 20
   }
 }
 

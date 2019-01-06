@@ -275,7 +275,18 @@ export default class ReplyInput extends Component {
         customEmojis: res
       })
       save('emojis', res)
+      // 另外，转换emojis Array数据为Object数据，留作后面HTML渲染时用
+      this.translateEmoji()
     })
+  }
+
+  translateEmoji = emojis => {
+    const emojiObj = {}
+    emojis.forEach(item => {
+      emojiObj[item.shortcode] = item.static_url
+    })
+
+    save('emojiObj', emojiObj)
   }
 
   pickImage = () => {

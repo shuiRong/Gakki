@@ -10,7 +10,9 @@ import Fab from './common/Fab'
 import ScrollableTabView, {
   DefaultTabBar
 } from 'react-native-scrollable-tab-view'
+import { getCustomEmojis } from '../utils/api'
 import { color } from '../utils/color'
+import { save, fetch } from '../utils/store'
 
 /**
  * 主页
@@ -35,6 +37,66 @@ export default class Home extends Component {
         }
       }
     ])
+  }
+
+  componentDidMount() {
+    fetch('emojis').then(res => {
+      // 检测是否保存有emoji数据，如果没有的话，从网络获取
+      if (!res || !res.length) {
+        // 如果之前没有存储，从网络获取
+        this.getCustomEmojis()
+        return
+      }
+      // 如果存在，则接着检测emoji 对象是否存在
+      this.detectEmojiObj()
+    })
+  }
+
+  /**
+   * @description 检测emoji对象是否存在
+   */
+  detectEmojiObj = () => {
+    fetch('emojiObj').then(res => {
+      // 如果不存在，重新根据emoji数据生成字典
+      if (!res || Object.keys(res).length) {
+        this.translateEmoji()
+      }
+    })
+  }
+
+  /**
+   * @description 从网络重新获取emojis数据
+   */
+  getCustomEmojis = () => {
+    getCustomEmojis().then(res => {
+      save('emojis', res)
+
+      this.translateEmoji(res)
+    })
+  }
+
+  /**
+   * @description 转换emojis Array数据为Object数据，留作后面HTML渲染时用
+   */
+
+  translateEmoji = emojis => {
+    const start = data => {
+      const emojiObj = {}
+      data.forEach(item => {
+        emojiObj[':' + item.shortcode + ':'] = item.static_url
+      })
+
+      save('emojiObj', emojiObj)
+    }
+
+    if (!emojis) {
+      fetch('emojis').then(res => {
+        start(res)
+      })
+      return
+    }
+
+    start(emojis)
   }
 
   closeDrawer = () => {

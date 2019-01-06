@@ -7,7 +7,7 @@ import AnotherTootBox from './AnotherTootBox'
 /**
  * 评论组件
  */
-export default class data extends Component {
+export default class Context extends Component {
   constructor(props) {
     super(props)
     this.state = {
