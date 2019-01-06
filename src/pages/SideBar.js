@@ -4,6 +4,8 @@ import { View, Text, Image, StyleSheet, ImageBackground } from 'react-native'
 import { getCurrentUser } from '../utils/api'
 import mobx from '../utils/mobx'
 import { color } from '../utils/color'
+import HTMLView from './common/HTMLView'
+import { fetch } from '../utils/store'
 
 export default class SideBar extends Component {
   constructor(props) {
@@ -12,7 +14,9 @@ export default class SideBar extends Component {
       username: '',
       avatar: '',
       header: '',
-      host: ''
+      host: '',
+      display_name: '',
+      emojiObj: {}
     }
   }
   componentDidMount() {
@@ -21,22 +25,33 @@ export default class SideBar extends Component {
         this.setState({
           avatar: res.avatar,
           username: res.username,
-          header: res.header
+          header: res.header,
+          display_name: res.display_name
         })
         mobx.updateAccount(res)
       })
       .catch(err => {
         alert(JSON.stringify(err.response))
       })
+
+    fetch('emojiObj').then(res => {
+      if (!res) {
+        return
+      }
+      this.setState({
+        emojiObj: res
+      })
+    })
   }
   render() {
+    const state = this.state
     return (
       <View style={styles.main}>
         <ImageBackground source={{ uri: this.state.header }} style={styles.bg}>
           <View style={styles.infoBox}>
             <Image source={{ uri: this.state.avatar }} style={styles.image} />
             <View style={styles.info}>
-              <Text style={styles.name}>{this.state.username}</Text>
+              <HTMLView data={state.display_name} emojiObj={state.emojiObj} />
               <Text style={styles.domain}>
                 @{this.state.username}@{this.state.host}
               </Text>

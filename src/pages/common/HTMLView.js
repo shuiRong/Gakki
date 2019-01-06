@@ -5,7 +5,8 @@ import HTML from 'react-native-render-html'
 
 export default class HTMLView extends Component {
   static defaultProps = {
-    hide: false
+    hide: false,
+    emojiObj: {}
   }
   constructor(props) {
     super(props)
@@ -77,6 +78,11 @@ export default class HTMLView extends Component {
           )
         })
       }
+    }
+
+    // 如果开头没有<p>，说明是用户的displayName，内容没有包裹在p标签内，手动加上
+    if (!/^<p>/.test(content)) {
+      content = `<p><div>${content}</div></p>`
     }
 
     return (

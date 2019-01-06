@@ -219,11 +219,9 @@ export default class Profile extends Component {
             }}
           >
             <View style={styles.headerView}>
-              <Text numberOfLines={1} style={styles.headerDisplayName}>
-                {profile.display_name}
-              </Text>
+              <HTMLView data={profile.display_name} emojiObj={state.emojiObj} />
               <Text numberOfLines={1} style={styles.headerUserName}>
-                @{profile.username}
+                &nbsp;@{profile.username}
               </Text>
             </View>
           </Animated.View>
@@ -246,7 +244,10 @@ export default class Profile extends Component {
             <View style={styles.bgBox}>
               <View style={styles.avatarBox}>
                 <Image source={{ uri: profile.avatar }} style={styles.image} />
-                <Text style={styles.displayName}>{profile.display_name}</Text>
+                <HTMLView
+                  data={profile.display_name}
+                  emojiObj={state.emojiObj}
+                />
                 <Text style={styles.userName}>@{profile.username}</Text>
                 <TouchableOpacity>{this.getRelationshop()}</TouchableOpacity>
               </View>
@@ -381,12 +382,6 @@ const styles = StyleSheet.create({
     width: '75%',
     overflow: 'hidden'
   },
-  headerDisplayName: {
-    fontWeight: 'bold',
-    fontSize: 17,
-    color: color.white,
-    marginRight: 5
-  },
   headerUserName: {
     color: color.lightGrey,
     fontSize: 14
@@ -401,11 +396,6 @@ const styles = StyleSheet.create({
   avatarBox: {
     alignItems: 'center',
     justifyContent: 'space-between'
-  },
-  displayName: {
-    fontWeight: 'bold',
-    fontSize: 17,
-    color: color.white
   },
   userName: {
     color: color.lightGrey,

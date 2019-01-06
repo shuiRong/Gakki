@@ -41,22 +41,16 @@ class TootContent extends Component {
     const props = this.props
     this.setState({
       hide: props.sensitive,
-      toot: props.data
-    })
-    fetch('emojiObj').then(res => {
-      if (!res) {
-        return
-      }
-      this.setState({
-        emojiObj: res
-      })
+      toot: props.data,
+      emojiObj: props.emojiObj
     })
   }
 
-  componentWillReceiveProps({ data, sensitive }) {
+  componentWillReceiveProps({ data, sensitive, emojiObj }) {
     this.setState({
       toot: data,
-      hide: sensitive
+      hide: sensitive,
+      emojiObj
     })
   }
 
@@ -122,13 +116,23 @@ export default class TootBox extends Component {
     this.state = {
       timezone: jstz.determine().name(), // 获得当前用户所在的时区
       locale: zh,
-      toot: null
+      toot: null,
+      emojiObj: {}
     }
   }
 
   componentDidMount() {
     this.setState({
       toot: this.props.data
+    })
+
+    fetch('emojiObj').then(res => {
+      if (!res) {
+        return
+      }
+      this.setState({
+        emojiObj: res
+      })
     })
   }
 
@@ -399,7 +403,8 @@ export default class TootBox extends Component {
   }
 
   getAdditionalInfo = () => {
-    const toot = this.state.toot
+    const state = this.state
+    const toot = state.toot
     let type = undefined
     const info = {
       reblog: '转嘟了',
@@ -423,16 +428,18 @@ export default class TootBox extends Component {
     return (
       <View style={styles.additional}>
         <Icon name={icon[type]} style={[styles.additionalIcon]} />
-        <Text style={styles.additionalName}>
-          {toot.account.display_name || toot.account.username}
-        </Text>
-        <Text style={styles.additionalTypeInfo}>{info[type]}</Text>
+        <HTMLView
+          data={toot.account.display_name || toot.account.username}
+          emojiObj={state.emojiObj}
+        />
+        <Text style={styles.additionalTypeInfo}>&nbsp;{info[type]}</Text>
       </View>
     )
   }
 
   getBody = toot => {
     const data = toot.reblog || toot
+    const state = this.state
 
     return (
       <View style={styles.body}>
@@ -448,14 +455,15 @@ export default class TootBox extends Component {
             onPress={() => this.goTootDetail(toot)}
           >
             <View style={styles.row}>
-              <Text numberOfLines={1} style={styles.titleWidth}>
-                <Text style={styles.displayName}>
-                  {data.account.display_name || data.account.username}
-                </Text>
+              <View style={styles.titleWidth}>
+                <HTMLView
+                  data={data.account.display_name || data.account.username}
+                  emojiObj={state.emojiObj}
+                />
                 <Text style={styles.smallGrey}>
                   &nbsp;@{data.account.username}
                 </Text>
-              </Text>
+              </View>
               <Text
                 style={{
                   flex: 1,
@@ -589,9 +597,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'flex-end',
     justifyContent: 'flex-start'
-  },
-  displayName: {
-    color: color.moreBlack
   },
   iconBox: {
     flexDirection: 'row',
