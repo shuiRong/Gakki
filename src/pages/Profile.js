@@ -42,13 +42,19 @@ export default class Profile extends Component {
   }
 
   componentWillMount() {
-    this.animatedEvent = Animated.event([
-      {
-        nativeEvent: {
-          contentOffset: { y: this.state.headerTop }
+    this.animatedEvent = Animated.event(
+      [
+        {
+          nativeEvent: {
+            contentOffset: { y: this.state.headerTop }
+          }
         }
+      ],
+      {
+        listener: (event, gestureState) =>
+          console.log(event, gestureState, event.nativeEvent.contentOffset.y)
       }
-    ])
+    )
 
     const headerTop = this.state.headerTop
 
@@ -213,13 +219,18 @@ export default class Profile extends Component {
       <View style={styles.contianer}>
         <View style={styles.header}>
           <Animated.View
+            scrollEventThrottle={20}
             style={{
               ...styles.headerStyle,
               opacity: this.opacity
             }}
           >
             <View style={styles.headerView}>
-              <HTMLView data={profile.display_name} emojiObj={state.emojiObj} />
+              <HTMLView
+                data={profile.display_name}
+                emojiObj={state.emojiObj}
+                pTagStyle={{ color: color.white, fontWeight: 'bold' }}
+              />
               <Text numberOfLines={1} style={styles.headerUserName}>
                 &nbsp;@{profile.username}
               </Text>
@@ -236,6 +247,7 @@ export default class Profile extends Component {
           </TouchableOpacity>
         </View>
         <Animated.View
+          scrollEventThrottle={20}
           style={{
             top: this.distanceFromTop
           }}
@@ -247,11 +259,21 @@ export default class Profile extends Component {
                 <HTMLView
                   data={profile.display_name}
                   emojiObj={state.emojiObj}
+                  pTagStyle={{ color: color.white }}
                 />
                 <Text style={styles.userName}>@{profile.username}</Text>
                 <TouchableOpacity>{this.getRelationshop()}</TouchableOpacity>
               </View>
-              <HTMLView data={profile.note} emojiObj={state.emojiObj} />
+              <HTMLView
+                data={profile.note}
+                emojiObj={state.emojiObj}
+                pTagStyle={{
+                  color: color.white,
+                  fontSize: 11,
+                  textAlign: 'center',
+                  lineHeight: 13
+                }}
+              />
               <View style={styles.followInfoBox}>
                 <View style={styles.sideInfoBox}>
                   <Text style={styles.followCount}>
@@ -276,6 +298,7 @@ export default class Profile extends Component {
           </ImageBackground>
         </Animated.View>
         <Animated.View
+          scrollEventThrottle={20}
           style={{
             height: deviceHeight,
             top: this.distanceFromTop

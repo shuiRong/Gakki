@@ -43,6 +43,7 @@ export default class HTMLView extends Component {
    */
   render() {
     const state = this.state
+    const props = this.props
     if (state.hide) {
       return null
     }
@@ -84,11 +85,16 @@ export default class HTMLView extends Component {
     if (!/^<p>/.test(content)) {
       content = `<p><div>${content}</div></p>`
     }
-
     return (
       <HTML
         html={content}
-        tagsStyles={tagsStyles}
+        tagsStyles={{
+          ...tagsStyles,
+          p: {
+            ...tagsStyles.p,
+            ...props.pTagStyle
+          }
+        }}
         imagesMaxWidth={Dimensions.get('window').width}
       />
     )

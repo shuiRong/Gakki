@@ -29,9 +29,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-               BuildableName = "Gakki2-tvOS.app"
-               BlueprintName = "Gakki2-tvOS"
-               ReferencedContainer = "container:Gakki2.xcodeproj">
+               BuildableName = "gakki-tvOS.app"
+               BlueprintName = "gakki-tvOS"
+               ReferencedContainer = "container:gakki.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
@@ -43,9 +43,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2D02E48F1E0B4A5D006451C7"
-               BuildableName = "Gakki2-tvOSTests.xctest"
-               BlueprintName = "Gakki2-tvOSTests"
-               ReferencedContainer = "container:Gakki2.xcodeproj">
+               BuildableName = "gakki-tvOSTests.xctest"
+               BlueprintName = "gakki-tvOSTests"
+               ReferencedContainer = "container:gakki.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -61,9 +61,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "2D02E48F1E0B4A5D006451C7"
-               BuildableName = "Gakki2-tvOSTests.xctest"
-               BlueprintName = "Gakki2-tvOSTests"
-               ReferencedContainer = "container:Gakki2.xcodeproj">
+               BuildableName = "gakki-tvOSTests.xctest"
+               BlueprintName = "gakki-tvOSTests"
+               ReferencedContainer = "container:gakki.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -71,9 +71,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-            BuildableName = "Gakki2-tvOS.app"
-            BlueprintName = "Gakki2-tvOS"
-            ReferencedContainer = "container:Gakki2.xcodeproj">
+            BuildableName = "gakki-tvOS.app"
+            BlueprintName = "gakki-tvOS"
+            ReferencedContainer = "container:gakki.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -94,9 +94,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-            BuildableName = "Gakki2-tvOS.app"
-            BlueprintName = "Gakki2-tvOS"
-            ReferencedContainer = "container:Gakki2.xcodeproj">
+            BuildableName = "gakki-tvOS.app"
+            BlueprintName = "gakki-tvOS"
+            ReferencedContainer = "container:gakki.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -113,9 +113,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "2D02E47A1E0B4A5D006451C7"
-            BuildableName = "Gakki2-tvOS.app"
-            BlueprintName = "Gakki2-tvOS"
-            ReferencedContainer = "container:Gakki2.xcodeproj">
+            BuildableName = "gakki-tvOS.app"
+            BlueprintName = "gakki-tvOS"
+            ReferencedContainer = "container:gakki.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

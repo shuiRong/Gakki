@@ -195,3 +195,13 @@ export const getCustomEmojis = () => {
     headers
   })
 }
+
+// 获取通知消息
+export const getNotifications = params => {
+  return request({
+    url: '/api/v1/notifications',
+    method: 'get',
+    params,
+    headers
+  })
+}

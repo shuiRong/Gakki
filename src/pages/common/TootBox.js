@@ -78,16 +78,7 @@ class TootContent extends Component {
             {toot.spoiler_text}
           </Text>
           <TouchableOpacity
-            style={{
-              backgroundColor: color.lightBlack,
-              width: 75,
-              borderRadius: 3,
-              padding: 5,
-              paddingTop: 3,
-              paddingBottom: 3,
-              margin: 3,
-              marginLeft: 0
-            }}
+            style={styles.sensitiveSwitch}
             onPress={() => this.setState({ hide: !hide })}
           >
             <Text
@@ -459,6 +450,11 @@ export default class TootBox extends Component {
                 <HTMLView
                   data={data.account.display_name || data.account.username}
                   emojiObj={state.emojiObj}
+                  pTagStyle={{
+                    color: color.lightBlack,
+                    fontWeight: 'bold',
+                    fontSize: 14
+                  }}
                 />
                 <Text style={styles.smallGrey}>
                   &nbsp;@{data.account.username}
@@ -653,5 +649,15 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 0,
     bottom: 0
+  },
+  sensitiveSwitch: {
+    backgroundColor: color.lightBlack,
+    width: 75,
+    borderRadius: 3,
+    padding: 5,
+    paddingTop: 3,
+    paddingBottom: 3,
+    margin: 3,
+    marginLeft: 0
   }
 })

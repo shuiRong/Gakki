@@ -1,164 +1,195 @@
-import React, { Component } from 'react'
-import { Text, Dimensions, StyleSheet } from 'react-native'
-import {
-  Container,
-  Header,
-  Left,
-  Body,
-  Right,
-  Button,
-  Title,
-  Content,
-  Card,
-  CardItem,
-  Thumbnail
-} from 'native-base'
-import Ripple from 'react-native-material-ripple'
-import Icon from 'react-native-vector-icons/FontAwesome'
-import { getStatuses } from '../utils/api'
-import HTML from 'react-native-render-html'
-import globe from '../utils/mobx'
-import jstz from 'jstz'
-import { zh } from '../utils/locale'
-import momentTimezone from 'moment-timezone'
-import { color } from '../utils/color'
-
 /**
- * Toot详情页面
+ * 主页信息流
  */
-export default class TootDetail extends Component {
+
+import React, { Component } from 'react'
+import { View, StyleSheet, FlatList, RefreshControl } from 'react-native'
+import { Spinner, Header, Left, Body, Right, Button, Title } from 'native-base'
+import { getNotifications } from '../utils/api'
+import Icon from 'react-native-vector-icons/FontAwesome5'
+import TootBox from './common/TootBox'
+import ListFooterComponent from './common/ListFooterComponent'
+import { color } from '../utils/color'
+import Divider from './common/Divider'
+
+export default class HomeScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      toot: {
-        account: {}
+      list: [],
+      loading: true
+    }
+  }
+  componentDidMount() {
+    this.getNotifications()
+  }
+
+  /**
+   * @description 检测其他页面跳转过来的动作，比如发嘟页面跳转过来时可能带有toot数据，塞入数据流中
+   * 如果带有一些参数；根据参数更新数据状态
+   */
+  componentWillReceiveProps({ navigation }) {
+    if (!navigation) {
+      return
+    }
+    const params = navigation.getParam('data')
+
+    if (params && params.id) {
+      let newList = this.state.list
+      if (params.mute) {
+        // 如果某人被‘隐藏’，那么首页去除所有该用户的消息
+        newList = newList.filter(item => item.account.id !== params.accountId)
+        this.setState({
+          list: newList
+        })
+        return
       }
+      // 改变某条toot的点赞等状态
+      newList = newList.map(item => {
+        if (item.id !== params.id) {
+          return item
+        }
+        return {
+          ...item,
+          reblogs_count: params.reblogs_count,
+          favourites_count: params.favourites_count,
+          favourited: params.favourited,
+          reblogged: params.reblogged
+        }
+      })
+
+      this.setState({
+        list: newList
+      })
+    }
+
+    const toot = navigation.getParam('newToot')
+    if (toot) {
+      // 将新toot塞入数据最上方
+      const newList = [...this.state.list]
+      newList.unshift(toot)
+
+      this.setState({
+        list: newList
+      })
     }
   }
 
-  componentDidMount() {
-    getStatuses(this.props.navigation.getParam('id')).then(res => {
+  deleteToot = id => {
+    this.setState({
+      list: this.state.list.filter(toot => toot.id !== id)
+    })
+  }
+
+  // 清空列表中刚被mute的人的所有消息
+  muteAccount = id => {
+    this.setState({
+      list: this.state.list.filter(toot => toot.account.id !== id)
+    })
+  }
+
+  // 清空列表中刚被mute的人的所有消息
+  blockAccount = id => {
+    this.setState({
+      list: this.state.list.filter(toot => toot.account.id !== id)
+    })
+  }
+
+  /**
+   * @description 获取时间线数据
+   * @param {cb}: 成功后的回调函数
+   * @param {params}: 分页参数
+   */
+  getNotifications = (cb, params) => {
+    getNotifications(params).then(res => {
+      // 同时将数据更新到state数据中，刷新视图
       this.setState({
-        toot: res
+        list: this.state.list.concat(res),
+        loading: false
       })
+      if (cb) cb()
+    })
+  }
+
+  refreshHandler = () => {
+    this.setState({
+      loading: true,
+      list: []
+    })
+    this.getNotifications()
+  }
+
+  // 滚动到了底部，加载数据
+  onEndReached = () => {
+    const state = this.state
+    this.getNotifications(null, {
+      max_id: state.list[state.list.length - 1].id
     })
   }
 
   render() {
+    if (this.state.loading) {
+      return <Spinner style={{ marginTop: 250 }} color={color.headerBg} />
+    }
     return (
-      <Container>
+      <View style={styles.container}>
         <Header>
           <Left>
             <Button transparent>
               <Icon
-                style={[styles.icon, styles.navIcon]}
+                style={styles.navIcon}
                 name="arrow-left"
-                onPress={() => this.props.navigation.goBack()}
+                onPress={() => this.navigateToHome()}
               />
             </Button>
           </Left>
           <Body>
-            <Title>Header</Title>
+            <Title>发嘟</Title>
           </Body>
           <Right>
             <Button transparent>
-              <Icon style={[styles.icon, styles.navIcon]} name="ellipsis-h" />
+              <Icon style={styles.navIcon} name="ellipsis-h" />
             </Button>
           </Right>
         </Header>
-        <Content padder>
-          <Card transparent>
-            <CardItem>
-              <Left>
-                <Thumbnail source={{ uri: this.state.toot.account.avatar }} />
-                <Body>
-                  <Text>
-                    {this.state.toot.account.display_name ||
-                      this.state.toot.account.username}
-                  </Text>
-                  <Text note>{this.state.toot.account.username}</Text>
-                </Body>
-              </Left>
-            </CardItem>
-            <CardItem cardBody style={styles.body}>
-              <Ripple>
-                <HTML
-                  html={this.state.toot.content}
-                  tagsStyles={tagsStyles}
-                  imagesMaxWidth={Dimensions.get('window').width}
-                />
-                <Text style={styles.time}>
-                  {momentTimezone(this.state.toot.created_at)
-                    .tz(this.state.timezone)
-                    .format('LLL')}
-                </Text>
-              </Ripple>
-            </CardItem>
-            <CardItem>
-              <Left style={styles.leftBody}>
-                <Button transparent>
-                  <Icon style={styles.icon} name="reply" />
-                  <Text style={styles.bottomText}>
-                    {this.state.toot.replies_count}
-                  </Text>
-                </Button>
-                <Button transparent>
-                  <Icon style={styles.icon} name="retweet" />
-                  <Text style={styles.bottomText}>
-                    {this.state.toot.reblogs_count}
-                  </Text>
-                </Button>
-                <Button transparent>
-                  <Icon style={styles.icon} name="star" />
-                  <Text style={styles.bottomText}>
-                    {this.state.toot.favourites_count}
-                  </Text>
-                </Button>
-              </Left>
-              <Right>
-                <Icon style={styles.icon} name="ellipsis-h" />
-              </Right>
-            </CardItem>
-          </Card>
-        </Content>
-      </Container>
+        <FlatList
+          ItemSeparatorComponent={() => <Divider />}
+          showsVerticalScrollIndicator={false}
+          data={this.state.list}
+          onEndReachedThreshold={0.1}
+          onEndReached={this.onEndReached}
+          onScroll={this.props.onScroll}
+          keyExtractor={item => item.id}
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.loading}
+              onRefresh={this.refreshHandler}
+            />
+          }
+          ListFooterComponent={() => <ListFooterComponent />}
+          renderItem={({ item }) => (
+            <TootBox
+              data={item.status}
+              navigation={this.props.navigation}
+              deleteToot={this.deleteToot}
+              muteAccount={this.muteAccount}
+              blockAccount={this.blockAccount}
+            />
+          )}
+        />
+      </View>
     )
   }
 }
 
-const tagsStyles = {
-  p: {
-    color: '#2b2e3d',
-    fontSize: 16,
-    lineHeight: 20
-  },
-  a: {
-    lineHeight: 20
-  }
-}
-
 const styles = StyleSheet.create({
-  body: {
-    flexDirection: 'column'
-  },
-  time: {
-    alignSelf: 'flex-start',
-    color: color.grey,
-    fontSize: 15,
-    marginTop: 20
-  },
-  leftBody: {
-    flexDirection: 'row',
-    alignItems: 'center'
-  },
-  icon: {
-    fontSize: 17
+  container: {
+    flex: 1,
+    paddingTop: 0,
+    backgroundColor: color.white
   },
   navIcon: {
     fontSize: 20,
-    color: '#fff'
-  },
-  bottomText: {
-    marginLeft: 10
+    color: color.lightGrey
   }
 })

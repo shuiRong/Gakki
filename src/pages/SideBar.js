@@ -14,7 +14,7 @@ export default class SideBar extends Component {
       username: '',
       avatar: '',
       header: '',
-      host: '',
+      host: 'cmx.im',
       display_name: '',
       emojiObj: {}
     }
@@ -51,7 +51,11 @@ export default class SideBar extends Component {
           <View style={styles.infoBox}>
             <Image source={{ uri: this.state.avatar }} style={styles.image} />
             <View style={styles.info}>
-              <HTMLView data={state.display_name} emojiObj={state.emojiObj} />
+              <HTMLView
+                data={state.display_name}
+                emojiObj={state.emojiObj}
+                pTagStyle={{ color: color.white, fontWeight: 'bold' }}
+              />
               <Text style={styles.domain}>
                 @{this.state.username}@{this.state.host}
               </Text>

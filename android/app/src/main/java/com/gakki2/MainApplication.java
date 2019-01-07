@@ -1,4 +1,4 @@
-package com.gakki2;
+package com.gakki;
 
 import android.app.Application;
 

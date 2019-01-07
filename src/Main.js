@@ -18,7 +18,7 @@ export default createStackNavigator(
     Test: Test
   },
   {
-    initialRouteName: 'Home',
+    initialRouteName: 'Notifications',
     headerMode: 'none'
   }
 )
