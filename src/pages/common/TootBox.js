@@ -97,6 +97,9 @@ class TootContent extends Component {
   }
 }
 
+/**
+ * @description 需要考虑到普通嘟文和通知接口的嘟文两种数据格式
+ */
 export default class TootBox extends Component {
   static defaultProps = {
     showTread: true // 是否显示'显示前文字符'
@@ -107,14 +110,19 @@ export default class TootBox extends Component {
     this.state = {
       timezone: jstz.determine().name(), // 获得当前用户所在的时区
       locale: zh,
-      toot: null,
-      emojiObj: {}
+      toot: null, // 嘟文数据，数据格式参考Mastodon文档
+      emojiObj: {},
+      isNotificationPage: false, // 当前组件是否使用在通知页面，因为通知接口返回的数据格式稍有不同
+      notification: null // 存储notification接口返回的嘟文数据
     }
   }
 
   componentDidMount() {
+    const data = this.props.data
     this.setState({
-      toot: this.props.data
+      toot: data.type ? data.status : data, // 有type属性，表示是Notification entity
+      isNotificationPage: data.status,
+      notification: data
     })
 
     fetch('emojiObj').then(res => {
@@ -129,7 +137,9 @@ export default class TootBox extends Component {
 
   componentWillReceiveProps({ data }) {
     this.setState({
-      toot: data
+      toot: data.status || data,
+      isNotificationPage: data.status,
+      notification: data
     })
   }
 
@@ -395,34 +405,58 @@ export default class TootBox extends Component {
 
   getAdditionalInfo = () => {
     const state = this.state
-    const toot = state.toot
+    let toot = state.toot
     let type = undefined
     const info = {
       reblog: '转嘟了',
-      pinned: '置顶嘟文'
+      pinned: '置顶嘟文',
+      favourite: '收藏了',
+      follow: '关注了',
+      mention: '提及了'
     }
     const icon = {
       reblog: 'retweet',
-      pinned: 'thumbtack'
+      pinned: 'thumbtack',
+      favourite: 'star',
+      follow: 'user-plus',
+      mention: 'reply'
     }
 
     if (toot.reblog) {
       type = 'reblog'
     } else if (toot.pinned) {
       type = 'pinned'
+    } else if (state.isNotificationPage) {
+      // 如果是在通知页面，那么类型的名称可以直接当作变量名
+      type = state.notification.type
     }
 
     if (type === undefined) {
       return type
     }
 
+    /**
+     * @description 返回嘟文上面的附加信息的用户名
+     * 通知页面和其他页面所需要的用户名的数据来源不同
+     */
+    const getDisplayName = () => {
+      let tempToot = toot
+      if (state.isNotificationPage) {
+        tempToot = state.notification.status
+        // console.log('__', tempToot.account.display_name)
+      }
+      return (
+        <HTMLView
+          data={tempToot.account.display_name || tempToot.account.username}
+          emojiObj={state.emojiObj}
+        />
+      )
+    }
+
     return (
       <View style={styles.additional}>
         <Icon name={icon[type]} style={[styles.additionalIcon]} />
-        <HTMLView
-          data={toot.account.display_name || toot.account.username}
-          emojiObj={state.emojiObj}
-        />
+        {getDisplayName()}
         <Text style={styles.additionalTypeInfo}>&nbsp;{info[type]}</Text>
       </View>
     )
@@ -431,6 +465,9 @@ export default class TootBox extends Component {
   getBody = toot => {
     const data = toot.reblog || toot
     const state = this.state
+    if (!toot) {
+      return null
+    }
 
     return (
       <View style={styles.body}>

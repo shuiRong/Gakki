@@ -139,7 +139,7 @@ export default class HomeScreen extends Component {
               <Icon
                 style={styles.navIcon}
                 name="arrow-left"
-                onPress={() => this.navigateToHome()}
+                onPress={() => this.props.navigation.goBack()}
               />
             </Button>
           </Left>
@@ -169,7 +169,7 @@ export default class HomeScreen extends Component {
           ListFooterComponent={() => <ListFooterComponent />}
           renderItem={({ item }) => (
             <TootBox
-              data={item.status}
+              data={item}
               navigation={this.props.navigation}
               deleteToot={this.deleteToot}
               muteAccount={this.muteAccount}
