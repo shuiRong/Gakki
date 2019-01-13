@@ -128,7 +128,8 @@ export default class HomeScreen extends Component {
   }
 
   render() {
-    if (this.state.loading) {
+    const state = this.state
+    if (state.loading) {
       return <Spinner style={{ marginTop: 250 }} color={color.headerBg} />
     }
     return (
@@ -155,14 +156,14 @@ export default class HomeScreen extends Component {
         <FlatList
           ItemSeparatorComponent={() => <Divider />}
           showsVerticalScrollIndicator={false}
-          data={this.state.list}
+          data={state.list}
           onEndReachedThreshold={0.1}
           onEndReached={this.onEndReached}
           onScroll={this.props.onScroll}
           keyExtractor={item => item.id}
           refreshControl={
             <RefreshControl
-              refreshing={this.state.loading}
+              refreshing={state.loading}
               onRefresh={this.refreshHandler}
             />
           }

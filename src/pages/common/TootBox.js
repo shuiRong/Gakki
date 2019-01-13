@@ -33,7 +33,8 @@ class TootContent extends Component {
     this.state = {
       hide: true, // CW模式隐藏敏感内容
       emojiObj: {},
-      toot: {}
+      toot: {},
+      isNotificationPage: false
     }
   }
 
@@ -42,15 +43,17 @@ class TootContent extends Component {
     this.setState({
       hide: props.sensitive,
       toot: props.data,
-      emojiObj: props.emojiObj
+      emojiObj: props.emojiObj,
+      isNotificationPage: props.isNotificationPage
     })
   }
 
-  componentWillReceiveProps({ data, sensitive, emojiObj }) {
+  componentWillReceiveProps({ data, sensitive, emojiObj, isNotificationPage }) {
     this.setState({
       toot: data,
       hide: sensitive,
-      emojiObj
+      emojiObj,
+      isNotificationPage
     })
   }
 
@@ -59,6 +62,13 @@ class TootContent extends Component {
     const toot = state.toot
     const hide = state.hide
     const emojiObj = state.emojiObj
+    let pTagStyle = {}
+
+    if (state.isNotificationPage) {
+      pTagStyle = {
+        color: color.grey
+      }
+    }
 
     // 这里不用使用hide变量来做判断，否则会因为hide变量造成render函数的再次调用而造成错误的预期
     if (!toot.sensitive) {
@@ -67,6 +77,7 @@ class TootContent extends Component {
           data={this.props.data.content}
           hide={hide}
           emojiObj={emojiObj}
+          pTagStyle={pTagStyle}
         />
       )
     }
@@ -74,7 +85,13 @@ class TootContent extends Component {
     return (
       <View>
         <View>
-          <Text style={{ color: color.pColor, fontSize: 16 }}>
+          <Text
+            style={{
+              color: color.pColor,
+              fontSize: 16,
+              ...pTagStyle
+            }}
+          >
             {toot.spoiler_text}
           </Text>
           <TouchableOpacity
@@ -90,7 +107,12 @@ class TootContent extends Component {
               {hide ? '显示内容' : '隐藏内容'}
             </Text>
           </TouchableOpacity>
-          <HTMLView data={toot.content} hide={hide} emojiObj={emojiObj} />
+          <HTMLView
+            data={toot.content}
+            hide={hide}
+            emojiObj={emojiObj}
+            pTagStyle={pTagStyle}
+          />
         </View>
       </View>
     )
@@ -118,10 +140,11 @@ export default class TootBox extends Component {
   }
 
   componentDidMount() {
-    const data = this.props.data
+    const props = this.props
+    const data = props.data
     this.setState({
       toot: data.type ? data.status : data, // 有type属性，表示是Notification entity
-      isNotificationPage: data.status,
+      isNotificationPage: Boolean(data.type),
       notification: data
     })
 
@@ -137,8 +160,8 @@ export default class TootBox extends Component {
 
   componentWillReceiveProps({ data }) {
     this.setState({
-      toot: data.status || data,
-      isNotificationPage: data.status,
+      toot: data.type ? data.status : data,
+      isNotificationPage: Boolean(data.type),
       notification: data
     })
   }
@@ -353,10 +376,113 @@ export default class TootBox extends Component {
   }
 
   /**
+   * @description 返回相对时间或者关注好友的按钮
+   * @param {data}: 嘟文数据，也可能是notification entity
+   * @param {isNotificationPage}: 是否是通知页
+   */
+  getRelativeTimeOrIcon = (data, isNotificationPage) => {
+    if (
+      !data ||
+      (isNotificationPage && this.state.notification.type === 'follow')
+    ) {
+      return null
+    }
+
+    return (
+      <Text
+        style={{
+          flex: 1,
+          textAlign: 'right'
+        }}
+      >
+        <RelativeTime
+          locale={this.state.locale}
+          time={this.getTimeValue(data.created_at)}
+        />
+      </Text>
+    )
+  }
+
+  /**
+   * @description 返回HTML内容前先判断
+   * @param {data}: 嘟文数据
+   * @param {isNotificationPage}: 是否是通知页
+   */
+  getHTMLContent = (data, isNotificationPage) => {
+    if (!data || data.type === 'follow') {
+      return null
+    }
+    return (
+      <View style={styles.htmlBox}>
+        <TootContent
+          data={data}
+          sensitive={data.sensitive}
+          isNotificationPage={isNotificationPage}
+        />
+      </View>
+    )
+  }
+
+  /**
+   * @description 返回嘟文底部图标
+   * @param {data}: 嘟文数据
+   * @param {isNotificationPage}: 是否是通知页
+   */
+  getIcons = (data, isNotificationPage) => {
+    if (!data || data.type === 'follow') {
+      return null
+    }
+
+    return (
+      <View style={styles.iconBox}>
+        <TouchableOpacity
+          style={styles.iconParent}
+          onPress={() => this.replyTo(data)}
+        >
+          <Icon style={styles.icon} name="reply" />
+          <Text style={styles.bottomText}>{data.replies_count}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.iconParent}
+          onPress={() => this.reblog(data.id, !data.reblogged)}
+        >
+          {data.reblogged ? (
+            <Icon style={styles.iconColored} name="retweet" />
+          ) : (
+            <Icon style={styles.icon} name="retweet" />
+          )}
+          <Text style={styles.bottomText}>{data.reblogs_count}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.iconParent}
+          onPress={() => this.favourite(data.id, !data.favourited)}
+        >
+          {data.favourited ? (
+            <Icon style={styles.iconColored} name="star" solid />
+          ) : (
+            <Icon style={styles.icon} name="star" />
+          )}
+          <Text style={styles.bottomText}>{data.favourites_count}</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.iconParent}
+          ref={ref => (this.ref = ref)}
+          onPress={this.showMenu}
+        >
+          <Icon style={styles.icon} name="ellipsis-h" />
+        </TouchableOpacity>
+      </View>
+    )
+  }
+
+  /**
    * @description 获取用户头像，如果是转发，则同时显示两人头像
-   * @param {toot}: 包含所有信息的toot数据
+   * @param {toot}: 包含所有信息的toot数据。如果数据为空，说明情况是：Notification Entity 中的follow类型
    */
   getAvatar = toot => {
+    if (!toot) {
+      toot = this.state.notification
+    }
     if (!toot.reblog) {
       return (
         <Image style={styles.avatar} source={{ uri: toot.account.avatar }} />
@@ -403,32 +529,47 @@ export default class TootBox extends Component {
     )
   }
 
+  /**
+   * @description 嘟文上方的辅助性信息
+   */
   getAdditionalInfo = () => {
     const state = this.state
     let toot = state.toot
     let type = undefined
+    let pTagStyle = {}
     const info = {
       reblog: '转嘟了',
       pinned: '置顶嘟文',
       favourite: '收藏了',
-      follow: '关注了',
+      follow: '开始关注你',
       mention: '提及了'
     }
     const icon = {
       reblog: 'retweet',
       pinned: 'thumbtack',
       favourite: 'star',
-      follow: 'user-plus',
-      mention: 'reply'
+      follow: 'user-plus'
+    }
+    const iconColor = {
+      favourite: 'pink',
+      follow: 'green',
+      reblog: color.headerBg
     }
 
-    if (toot.reblog) {
-      type = 'reblog'
-    } else if (toot.pinned) {
-      type = 'pinned'
-    } else if (state.isNotificationPage) {
+    if (state.isNotificationPage) {
       // 如果是在通知页面，那么类型的名称可以直接当作变量名
       type = state.notification.type
+      pTagStyle = {
+        fontWeight: 'bold',
+        color: color.lightBlack
+      }
+    } else if (toot) {
+      // 如果嘟文内容存在，即普通嘟文模式
+      if (toot.reblog) {
+        type = 'reblog'
+      } else if (toot.pinned) {
+        type = 'pinned'
+      }
     }
 
     if (type === undefined) {
@@ -440,32 +581,64 @@ export default class TootBox extends Component {
      * 通知页面和其他页面所需要的用户名的数据来源不同
      */
     const getDisplayName = () => {
-      let tempToot = toot
+      let account = toot && toot.account
       if (state.isNotificationPage) {
-        tempToot = state.notification.status
-        // console.log('__', tempToot.account.display_name)
+        account = state.notification.account
       }
+
       return (
         <HTMLView
-          data={tempToot.account.display_name || tempToot.account.username}
+          containerStyle={{
+            width: '70%'
+          }}
+          data={account.display_name || account.username}
           emojiObj={state.emojiObj}
+          pTagStyle={pTagStyle}
         />
       )
     }
 
     return (
       <View style={styles.additional}>
-        <Icon name={icon[type]} style={[styles.additionalIcon]} />
-        {getDisplayName()}
-        <Text style={styles.additionalTypeInfo}>&nbsp;{info[type]}</Text>
+        <Icon
+          name={icon[type]}
+          style={{ ...styles.additionalIcon, color: iconColor[type] }}
+          solid
+        />
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            flex: 1
+          }}
+        >
+          {getDisplayName()}
+          <Text style={[styles.additionalTypeInfo, pTagStyle]}>
+            {info[type]}
+          </Text>
+        </View>
       </View>
     )
   }
 
   getBody = toot => {
-    const data = toot.reblog || toot
     const state = this.state
-    if (!toot) {
+    const notification = state.notification
+    const isNotificationPage = state.isNotificationPage
+    let data = {} // 嘟文数据
+    let pTagStyle = {}
+
+    if (isNotificationPage) {
+      pTagStyle = {
+        color: color.grey
+      }
+    }
+
+    if (isNotificationPage) {
+      data = notification.status || notification
+    } else if (toot) {
+      data = toot.reblog || toot
+    } else {
       return null
     }
 
@@ -475,86 +648,44 @@ export default class TootBox extends Component {
           activeOpacity={1}
           onPress={() => this.goProfile(data.account.id)}
         >
-          {this.getAvatar(toot)}
+          {this.getAvatar(data)}
         </TouchableOpacity>
         <View style={styles.list}>
           <TouchableOpacity
             activeOpacity={1}
-            onPress={() => this.goTootDetail(toot)}
+            onPress={() => this.goTootDetail(data)}
           >
             <View style={styles.row}>
-              <View style={styles.titleWidth}>
+              <View
+                style={
+                  data.type === 'follow'
+                    ? styles.notificationTitleWidth
+                    : styles.titleWidth
+                }
+              >
                 <HTMLView
                   data={data.account.display_name || data.account.username}
                   emojiObj={state.emojiObj}
                   pTagStyle={{
                     color: color.lightBlack,
                     fontWeight: 'bold',
-                    fontSize: 14
+                    fontSize: 14,
+                    ...pTagStyle
                   }}
                 />
                 <Text style={styles.smallGrey}>
                   &nbsp;@{data.account.username}
                 </Text>
               </View>
-              <Text
-                style={{
-                  flex: 1,
-                  textAlign: 'right'
-                }}
-              >
-                <RelativeTime
-                  locale={this.state.locale}
-                  time={this.getTimeValue(data.created_at)}
-                />
-              </Text>
+              {this.getRelativeTimeOrIcon(data, isNotificationPage)}
             </View>
-            <View style={styles.htmlBox}>
-              <TootContent data={data} sensitive={data.sensitive} />
-            </View>
+            {this.getHTMLContent(data, isNotificationPage)}
             <MediaBox
-              data={data.media_attachments}
-              sensitive={data.sensitive}
+              data={data && data.media_attachments}
+              sensitive={data && data.sensitive}
             />
             {this.showTread(data)}
-            <View style={styles.iconBox}>
-              <TouchableOpacity
-                style={styles.iconParent}
-                onPress={() => this.replyTo(data)}
-              >
-                <Icon style={styles.icon} name="reply" />
-                <Text style={styles.bottomText}>{data.replies_count}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.iconParent}
-                onPress={() => this.reblog(data.id, !data.reblogged)}
-              >
-                {data.reblogged ? (
-                  <Icon style={styles.iconColored} name="retweet" />
-                ) : (
-                  <Icon style={styles.icon} name="retweet" />
-                )}
-                <Text style={styles.bottomText}>{data.reblogs_count}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.iconParent}
-                onPress={() => this.favourite(data.id, !data.favourited)}
-              >
-                {data.favourited ? (
-                  <Icon style={styles.iconColored} name="star" solid />
-                ) : (
-                  <Icon style={styles.icon} name="star" />
-                )}
-                <Text style={styles.bottomText}>{data.favourites_count}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.iconParent}
-                ref={ref => (this.ref = ref)}
-                onPress={this.showMenu}
-              >
-                <Icon style={styles.icon} name="ellipsis-h" />
-              </TouchableOpacity>
-            </View>
+            {this.getIcons(data, isNotificationPage)}
           </TouchableOpacity>
         </View>
       </View>
@@ -563,11 +694,6 @@ export default class TootBox extends Component {
 
   render() {
     const toot = this.state.toot
-
-    if (!toot) {
-      return <View />
-    }
-
     return (
       <View style={styles.container}>
         {this.getAdditionalInfo()}
@@ -629,6 +755,10 @@ const styles = StyleSheet.create({
     width: 170,
     flexDirection: 'row',
     alignItems: 'flex-end',
+    justifyContent: 'flex-start'
+  },
+  notificationTitleWidth: {
+    width: 170,
     justifyContent: 'flex-start'
   },
   iconBox: {

@@ -100,7 +100,7 @@ export default class Profile extends Component {
    * @param {id}: id
    */
   getRelationship = id => {
-    getRelationship(id).then(res => {
+    getRelationship([id]).then(res => {
       this.setState({
         relationship: res[0]
       })

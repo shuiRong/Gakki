@@ -93,9 +93,14 @@ export default class HTMLView extends Component {
           p: {
             ...tagsStyles.p,
             ...props.pTagStyle
+          },
+          a: {
+            ...tagsStyles.a,
+            ...props.aTagStyle
           }
         }}
         imagesMaxWidth={Dimensions.get('window').width}
+        containerStyle={props.containerStyle}
       />
     )
   }
@@ -109,7 +114,8 @@ const tagsStyles = {
     flexWrap: 'wrap'
   },
   a: {
-    lineHeight: 20
+    color: color.headerBg,
+    textDecorationLine: 'none'
   },
   img: {
     width: 17,

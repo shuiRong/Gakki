@@ -130,8 +130,13 @@ export const sendStatuses = data => {
 
 // 获取和某人的关系数据
 export const getRelationship = id => {
+  let query = ''
+  id.forEach(item => {
+    query += `id[]=${item}&`
+  })
+
   return request({
-    url: `/api/v1/accounts/relationships?id[]=${id}`,
+    url: `/api/v1/accounts/relationships?${query}`,
     method: 'get',
     headers
   })
