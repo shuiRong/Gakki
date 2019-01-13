@@ -7,5 +7,7 @@ export const color = {
   pColor: '#2b2e3d',
   lightBlack: '#606984',
   moreBlack: '#333333',
-  black: '#000000'
+  black: '#000000',
+  gold: '#F3AB27',
+  lightgreen: '#1FC966'
 }
