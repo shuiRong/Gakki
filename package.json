@@ -21,6 +21,7 @@
     "react-native-material-ripple": "^0.8.0",
     "react-native-render-html": "^3.10.0",
     "react-native-scrollable-tab-view": "^0.10.0",
+    "react-native-textinput-effects": "^0.4.2",
     "react-native-vector-icons": "^6.1.0",
     "react-navigation": "^2.5.0",
     "relative-time-react-native-component": "^4.5.1",
