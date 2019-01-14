@@ -1,5 +1,5 @@
 /**
- * 通知页面
+ * 个人资料编辑页面
  */
 
 import React, { Component } from 'react'
@@ -12,7 +12,7 @@ import ListFooterComponent from './common/ListFooterComponent'
 import { color } from '../utils/color'
 import Divider from './common/Divider'
 
-export default class Notifications extends Component {
+export default class EditProfile extends Component {
   constructor(props) {
     super(props)
     this.state = {

@@ -192,7 +192,7 @@ export default class TootBox extends Component {
    * @param {reblogged}: 转发状态
    */
   reblog = (id, reblogged) => {
-    reblog(id, reblogged).then(() => {
+    reblog(id, reblogged).then(res => {
       const toot = this.state.toot
       this.setState({
         toot: {
@@ -458,7 +458,11 @@ export default class TootBox extends Component {
           onPress={() => this.favourite(data.id, !data.favourited)}
         >
           {data.favourited ? (
-            <Icon style={styles.iconColored} name="star" solid />
+            <Icon
+              style={{ ...styles.iconColored, color: color.gold }}
+              name="star"
+              solid
+            />
           ) : (
             <Icon style={styles.icon} name="star" />
           )}
@@ -589,7 +593,7 @@ export default class TootBox extends Component {
       return (
         <TouchableOpacity
           style={{
-            width: '70%'
+            width: '60%'
           }}
           activeOpacity={0.5}
           onPress={() =>
@@ -657,7 +661,7 @@ export default class TootBox extends Component {
           activeOpacity={1}
           onPress={() => this.goProfile(data.account.id)}
         >
-          {this.getAvatar(data)}
+          {this.getAvatar(toot)}
         </TouchableOpacity>
         <View style={styles.list}>
           <TouchableOpacity
@@ -682,7 +686,7 @@ export default class TootBox extends Component {
                     ...pTagStyle
                   }}
                 />
-                <Text style={styles.smallGrey}>
+                <Text style={[styles.smallGrey, pTagStyle]}>
                   &nbsp;@{data.account.username}
                 </Text>
               </View>
