@@ -552,8 +552,8 @@ export default class TootBox extends Component {
     }
     const iconColor = {
       favourite: color.gold,
-      follow: color.headerBg,
-      reblog: color.lightgreen
+      follow: color.lightgreen,
+      reblog: color.headerBg
     }
 
     if (state.isNotificationPage) {
@@ -587,14 +587,23 @@ export default class TootBox extends Component {
       }
 
       return (
-        <HTMLView
-          containerStyle={{
+        <TouchableOpacity
+          style={{
             width: '70%'
           }}
-          data={account.display_name || account.username}
-          emojiObj={state.emojiObj}
-          pTagStyle={pTagStyle}
-        />
+          activeOpacity={0.5}
+          onPress={() =>
+            this.props.navigation.navigate('Profile', {
+              id: account.id
+            })
+          }
+        >
+          <HTMLView
+            data={account.display_name || account.username}
+            emojiObj={state.emojiObj}
+            pTagStyle={pTagStyle}
+          />
+        </TouchableOpacity>
       )
     }
 
