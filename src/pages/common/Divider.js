@@ -9,7 +9,8 @@ export default class Divider extends Component {
         style={{
           borderColor: color.lightGrey,
           borderWidth: 1,
-          borderBottomWidth: 0
+          borderBottomWidth: 0,
+          ...this.props.style
         }}
       />
     )

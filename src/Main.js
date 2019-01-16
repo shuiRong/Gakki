@@ -20,7 +20,7 @@ export default createStackNavigator(
     Test
   },
   {
-    initialRouteName: 'EditProfile',
+    initialRouteName: 'Home',
     headerMode: 'none'
   }
 )

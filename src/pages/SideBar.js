@@ -1,11 +1,21 @@
 import React, { Component } from 'react'
 import Icon from 'react-native-vector-icons/FontAwesome5'
-import { View, Text, Image, StyleSheet, ImageBackground } from 'react-native'
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  ImageBackground,
+  TouchableOpacity,
+  Button
+} from 'react-native'
 import { getCurrentUser } from '../utils/api'
 import mobx from '../utils/mobx'
 import { color } from '../utils/color'
 import HTMLView from './common/HTMLView'
+import Divider from './common/Divider'
 import { fetch } from '../utils/store'
+import { Overlay } from 'teaset'
 
 export default class SideBar extends Component {
   constructor(props) {
@@ -16,7 +26,8 @@ export default class SideBar extends Component {
       header: '',
       host: 'cmx.im',
       display_name: '',
-      emojiObj: {}
+      emojiObj: {},
+      id: ''
     }
   }
   componentDidMount() {
@@ -26,7 +37,8 @@ export default class SideBar extends Component {
           avatar: res.avatar,
           username: res.username,
           header: res.header,
-          display_name: res.display_name
+          display_name: res.display_name,
+          id: res.id
         })
         mobx.updateAccount(res)
       })
@@ -43,13 +55,66 @@ export default class SideBar extends Component {
       })
     })
   }
+
+  showTheme = () => {
+    let overlayView = (
+      <Overlay.View
+        style={{ alignItems: 'center', justifyContent: 'center' }}
+        modal={true}
+        overlayOpacity={0.5}
+        ref={v => (this.overlayView = v)}
+      >
+        <View
+          style={{
+            backgroundColor: color.white,
+            padding: 20,
+            width: '85%',
+            height: 180,
+            borderRadius: 5,
+            alignItems: 'center'
+          }}
+        >
+          <View
+            style={{
+              alignSelf: 'flex-start'
+            }}
+          >
+            <Text style={{ fontSize: 18, color: color.moreBlack }}>
+              应用主题
+            </Text>
+            <View />
+          </View>
+          <TouchableOpacity
+            style={{
+              alignSelf: 'flex-end'
+            }}
+            onPress={() => this.overlayView && this.overlayView.close()}
+            activeOpacity={0.5}
+          >
+            <Text>取消</Text>
+          </TouchableOpacity>
+        </View>
+      </Overlay.View>
+    )
+    Overlay.show(overlayView)
+  }
+
   render() {
     const state = this.state
     return (
       <View style={styles.main}>
         <ImageBackground source={{ uri: this.state.header }} style={styles.bg}>
           <View style={styles.infoBox}>
-            <Image source={{ uri: this.state.avatar }} style={styles.image} />
+            <TouchableOpacity
+              activeOpacity={0.5}
+              onPress={() =>
+                this.props.navigation.navigate('Profile', {
+                  id: state.id
+                })
+              }
+            >
+              <Image source={{ uri: this.state.avatar }} style={styles.image} />
+            </TouchableOpacity>
             <View style={styles.info}>
               <HTMLView
                 data={state.display_name}
@@ -67,37 +132,40 @@ export default class SideBar extends Component {
             <View style={styles.iconBox}>
               <Icon name="user" style={styles.icon} />
             </View>
-            <Text style={styles.text}>编辑个人资料</Text>
+            <TouchableOpacity activeOpacity={0.5} onPress={this.showTheme}>
+              <Text style={styles.text}>主题</Text>
+            </TouchableOpacity>
           </View>
           <View style={styles.list}>
             <View style={styles.iconBox}>
               <Icon name="star" style={styles.icon} />
             </View>
-            <Text style={styles.text}>我的收藏</Text>
+            <Text style={styles.text}>字体大小</Text>
           </View>
           <View style={styles.list}>
             <View style={styles.iconBox}>
               <Icon name="list" style={styles.icon} />
             </View>
-            <Text style={styles.text}>列表</Text>
+            <Text style={styles.text}>默认嘟文可见范围</Text>
           </View>
+          <View style={styles.list}>
+            <View style={styles.iconBox}>
+              <Icon name="cogs" style={styles.icon} />
+            </View>
+            <Text style={styles.text}>浏览时隐藏发嘟按钮</Text>
+          </View>
+          <Divider style={{ marginTop: 5, marginBottom: 20 }} />
           <View style={styles.list}>
             <View style={styles.iconBox}>
               <Icon name="book" style={styles.icon} />
             </View>
-            <Text style={styles.text}>草稿</Text>
+            <Text style={styles.text}>官方账号</Text>
           </View>
           <View style={styles.list}>
             <View style={styles.iconBox}>
               <Icon name="user-cog" style={styles.icon} />
             </View>
             <Text style={styles.text}>账户设置</Text>
-          </View>
-          <View style={styles.list}>
-            <View style={styles.iconBox}>
-              <Icon name="cogs" style={styles.icon} />
-            </View>
-            <Text style={styles.text}>设置</Text>
           </View>
           <View style={styles.list}>
             <View style={styles.iconBox}>
@@ -134,7 +202,7 @@ const styles = StyleSheet.create({
     marginTop: 10
   },
   body: {
-    padding: 10,
+    paddingTop: 10,
     flex: 1,
     flexDirection: 'column',
     marginTop: 20
@@ -142,7 +210,9 @@ const styles = StyleSheet.create({
   list: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 20
+    marginBottom: 20,
+    paddingLeft: 10,
+    paddingRight: 10
   },
   iconBox: {
     width: 40,

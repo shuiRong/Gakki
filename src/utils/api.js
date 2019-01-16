@@ -210,3 +210,13 @@ export const getNotifications = params => {
     headers
   })
 }
+
+// 获取通知消息
+export const setProfile = data => {
+  return request({
+    url: '/settings/profile',
+    method: 'get',
+    params,
+    headers
+  })
+}

@@ -40,6 +40,7 @@ export default class Home extends Component {
   }
 
   componentDidMount() {
+    this.openDrawer()
     fetch('emojis').then(res => {
       // 检测是否保存有emoji数据，如果没有的话，从网络获取
       if (!res || !res.length) {
@@ -114,7 +115,12 @@ export default class Home extends Component {
             this.drawer = ref
           }}
           styles={{ mainOverlay: 0 }}
-          content={<SideBar navigator={this.navigator} />}
+          content={
+            <SideBar
+              navigator={this.navigator}
+              navigation={this.props.navigation}
+            />
+          }
           onClose={this.closeDrawer}
         >
           <View style={{ flex: 1 }}>

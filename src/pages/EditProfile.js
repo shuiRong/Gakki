@@ -5,6 +5,7 @@
 import React, { Component } from 'react'
 import {
   View,
+  ScrollView,
   StyleSheet,
   ImageBackground,
   TextInput,
@@ -42,7 +43,7 @@ export default class EditProfile extends Component {
       return <Spinner style={{ marginTop: 250 }} color={color.headerBg} />
     }
     return (
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <Header>
           <Left>
             <Button transparent>
@@ -62,7 +63,7 @@ export default class EditProfile extends Component {
             </Button>
           </Right>
         </Header>
-        <View class={styles.body}>
+        <View contentContainerStyle={styles.body}>
           <ImageBackground
             source={{
               uri:
@@ -73,7 +74,7 @@ export default class EditProfile extends Component {
             <View
               style={{
                 width: '100%',
-                height: 200,
+
                 backgroundColor: color.moreBlack,
                 opacity: 0.5,
                 position: 'absolute'
@@ -120,7 +121,7 @@ export default class EditProfile extends Component {
               />
             </View>
             <View style={{ marginTop: 20 }}>
-              <Text>简介</Text>
+              <Text style={{ fontSize: 17, color: color.grey }}>简介</Text>
               <TextInput
                 style={[styles.baseInput, styles.multilineInput]}
                 onChangeText={text =>
@@ -136,16 +137,127 @@ export default class EditProfile extends Component {
                 numberOfLines={4}
               />
             </View>
-            <View style={{ flexDirection: 'row' }}>
-              <CheckBox checked={state.lockAccount} color="green" />
-              <View>
-                <Text>保护你的账户（锁嘟）</Text>
-                <Text>你需要手动审核所有关注请求</Text>
+            <View
+              style={{
+                flexDirection: 'row',
+                marginTop: 40,
+                justifyContent: 'flex-start',
+                alignItems: 'center'
+              }}
+            >
+              <CheckBox
+                checked={state.lockAccount}
+                color={color.headerBg}
+                onPress={() =>
+                  this.setState({
+                    lockAccount: !state.lockAccount
+                  })
+                }
+              />
+              <View style={{ marginLeft: 20 }}>
+                <Text style={{ fontSize: 18, color: color.moreBlack }}>
+                  保护你的账户（锁嘟）
+                </Text>
+                <Text style={{ color: color.grey }}>
+                  你需要手动审核所有关注请求
+                </Text>
+              </View>
+            </View>
+            <View style={{ marginTop: 20 }}>
+              <Text style={{ fontSize: 17, color: color.grey }}>
+                个人资料附加信息
+              </Text>
+              <View
+                style={{
+                  marginTop: 20,
+                  borderColor: color.lightGrey,
+                  borderWidth: 0.5,
+                  padding: 20
+                }}
+              >
+                <TextInput
+                  style={[styles.baseInput, { borderColor: color.moreBlack }]}
+                  onChangeText={text =>
+                    this.setState({
+                      displayName: text
+                    })
+                  }
+                  value={state.displayName}
+                  maxLength={10}
+                />
+                <TextInput
+                  style={[styles.baseInput, { borderColor: color.moreBlack }]}
+                  onChangeText={text =>
+                    this.setState({
+                      displayName: text
+                    })
+                  }
+                  value={state.displayName}
+                  maxLength={10}
+                />
+              </View>
+              <View
+                style={{
+                  marginTop: 20,
+                  borderColor: color.lightGrey,
+                  borderWidth: 0.5,
+                  padding: 20
+                }}
+              >
+                <TextInput
+                  style={[styles.baseInput, { borderColor: color.moreBlack }]}
+                  onChangeText={text =>
+                    this.setState({
+                      displayName: text
+                    })
+                  }
+                  value={state.displayName}
+                  maxLength={10}
+                />
+                <TextInput
+                  style={[styles.baseInput, { borderColor: color.moreBlack }]}
+                  onChangeText={text =>
+                    this.setState({
+                      displayName: text
+                    })
+                  }
+                  value={state.displayName}
+                  maxLength={10}
+                />
+              </View>
+              <View
+                style={{
+                  marginTop: 20,
+                  borderColor: color.lightGrey,
+                  borderWidth: 0.5,
+                  padding: 20
+                }}
+              >
+                <TextInput
+                  style={[styles.baseInput, { borderColor: color.moreBlack }]}
+                  onChangeText={text =>
+                    this.setState({
+                      displayName: text
+                    })
+                  }
+                  value={state.displayName}
+                  maxLength={10}
+                />
+                <TextInput
+                  style={[styles.baseInput, { borderColor: color.moreBlack }]}
+                  onChangeText={text =>
+                    this.setState({
+                      displayName: text
+                    })
+                  }
+                  value={state.displayName}
+                  maxLength={10}
+                />
               </View>
             </View>
           </View>
         </View>
-      </View>
+      </ScrollView>
     )
   }
 }
@@ -157,8 +269,7 @@ const styles = StyleSheet.create({
     backgroundColor: color.white
   },
   body: {
-    flex: 1,
-    backgroundColor: 'lightgreen'
+    flex: 1
   },
   navIcon: {
     fontSize: 20,
@@ -185,15 +296,14 @@ const styles = StyleSheet.create({
   },
   baseInput: {
     borderWidth: 0,
-    borderColor: color.headerBg,
+    borderColor: color.moreBlack,
     borderBottomWidth: 2,
-    padding: 5,
+    paddingBottom: 5,
     fontSize: 20,
     color: color.moreBlack,
     height: 50
   },
   multilineInput: {
-    height: 120,
-    backgroundColor: 'lightblue'
+    height: 120
   }
 })
