@@ -21,7 +21,6 @@ import {
   Title,
   CheckBox
 } from 'native-base'
-import { getNotifications } from '../utils/api'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { color } from '../utils/color'
 
@@ -40,7 +39,7 @@ export default class EditProfile extends Component {
   render() {
     const state = this.state
     if (state.loading) {
-      return <Spinner style={{ marginTop: 250 }} color={color.headerBg} />
+      return <Spinner style={{ marginTop: 250 }} color={color.themeColor} />
     }
     return (
       <ScrollView style={styles.container}>
@@ -147,7 +146,7 @@ export default class EditProfile extends Component {
             >
               <CheckBox
                 checked={state.lockAccount}
-                color={color.headerBg}
+                color={color.themeColor}
                 onPress={() =>
                   this.setState({
                     lockAccount: !state.lockAccount

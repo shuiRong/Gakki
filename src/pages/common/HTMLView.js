@@ -114,7 +114,7 @@ const tagsStyles = {
     flexWrap: 'wrap'
   },
   a: {
-    color: color.headerBg,
+    color: color.themeColor,
     textDecorationLine: 'none'
   },
   img: {

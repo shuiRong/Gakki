@@ -8,9 +8,13 @@ import { Spinner } from 'native-base'
 import { getHomeTimelines } from '../../utils/api'
 import TootBox from '../common/TootBox'
 import ListFooterComponent from '../common/ListFooterComponent'
-import { color } from '../../utils/color'
+import { themeData } from '../../utils/color'
 import Divider from '../common/Divider'
+import mobx from '../../utils/mobx'
+import { observer } from 'mobx-react'
 
+let color = {}
+@observer
 export default class HomeScreen extends Component {
   constructor(props) {
     super(props)
@@ -130,8 +134,10 @@ export default class HomeScreen extends Component {
   }
 
   render() {
+    color = themeData[mobx.theme]
+
     if (this.state.loading) {
-      return <Spinner style={{ marginTop: 250 }} color={color.headerBg} />
+      return <Spinner style={{ marginTop: 250 }} color={color.themeColor} />
     }
     return (
       <View style={styles.container}>
@@ -167,8 +173,6 @@ export default class HomeScreen extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    paddingTop: 0,
-    backgroundColor: color.white
+    flex: 1
   }
 })

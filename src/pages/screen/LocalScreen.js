@@ -131,7 +131,7 @@ export default class LocalScreen extends Component {
 
   render() {
     if (this.state.loading) {
-      return <Spinner style={{ marginTop: 250 }} color={color.headerBg} />
+      return <Spinner style={{ marginTop: 250 }} color={color.themeColor} />
     }
     return (
       <View style={styles.container}>

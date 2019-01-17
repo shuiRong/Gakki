@@ -152,7 +152,7 @@ class UploadMedia extends Component {
               <Text
                 style={{
                   ...styles.descriptionText,
-                  color: color.headerBg
+                  color: color.themeColor
                 }}
               >
                 确定
@@ -696,11 +696,11 @@ const styles = StyleSheet.create({
   },
   enableCW: {
     fontWeight: 'bold',
-    color: color.headerBg
+    color: color.themeColor
   },
   sendButton: {
     alignItems: 'center',
-    backgroundColor: color.headerBg,
+    backgroundColor: color.themeColor,
     padding: 9,
     borderRadius: 5,
     width: 80
@@ -732,7 +732,7 @@ const styles = StyleSheet.create({
     color: color.lightBlack
   },
   highlight: {
-    color: color.headerBg
+    color: color.themeColor
   },
   descriptionInputBox: {
     alignItems: 'center',
@@ -753,7 +753,7 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     borderWidth: 0,
     borderBottomWidth: 1,
-    borderBottomColor: color.headerBg
+    borderBottomColor: color.themeColor
   },
   descriptionButtonBox: {
     flexDirection: 'row',
@@ -781,7 +781,7 @@ const styles = StyleSheet.create({
     marginRight: 15
   },
   syncIcon: {
-    color: color.headerBg,
+    color: color.themeColor,
     fontSize: 18
   },
   emojiFlatList: {

@@ -148,7 +148,7 @@ export default class TootScreen extends Component {
 
   render() {
     if (this.state.loading) {
-      return <Spinner style={{ marginTop: 50 }} color={color.headerBg} />
+      return <Spinner style={{ marginTop: 50 }} color={color.themeColor} />
     }
     return (
       <View style={styles.container}>

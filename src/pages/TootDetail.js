@@ -109,7 +109,7 @@ export default class TootDetail extends Component {
       return (
         <View style={styles.container}>
           {headerElement}
-          <Spinner style={{ marginTop: 250 }} color={color.headerBg} />
+          <Spinner style={{ marginTop: 250 }} color={color.themeColor} />
         </View>
       )
     }

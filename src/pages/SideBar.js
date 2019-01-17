@@ -14,8 +14,70 @@ import mobx from '../utils/mobx'
 import { color } from '../utils/color'
 import HTMLView from './common/HTMLView'
 import Divider from './common/Divider'
-import { fetch } from '../utils/store'
+import { fetch, save } from '../utils/store'
+import { CheckBox } from 'native-base'
 import { Overlay } from 'teaset'
+
+class ThemeList extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      black: false,
+      white: true,
+      night: false
+    }
+  }
+
+  exchange = which => {
+    const newTheme = {
+      black: false,
+      white: false,
+      night: false
+    }
+    newTheme[which] = true
+    this.setState(newTheme)
+  }
+
+  render() {
+    const state = this.state
+
+    return (
+      <View
+        style={{
+          alignSelf: 'flex-start'
+        }}
+      >
+        <Text style={{ fontSize: 21, color: color.moreBlack }}>应用主题</Text>
+        <View style={{ flex: 1, marginTop: 0 }}>
+          <View style={styles.themeList}>
+            <CheckBox
+              checked={state.black}
+              color={color.themeColor}
+              onPress={() => this.exchange('black')}
+            />
+            <Text style={styles.themeListText}>黑色</Text>
+          </View>
+          <View style={styles.themeList}>
+            <CheckBox
+              checked={state.white}
+              color={color.themeColor}
+              onPress={() => this.exchange('white')}
+            />
+            <Text style={styles.themeListText}>白色</Text>
+          </View>
+          <View style={styles.themeList}>
+            <CheckBox
+              checked={state.night}
+              color={color.themeColor}
+              onPress={() => this.exchange('night')}
+            />
+            <Text style={styles.themeListText}>夜晚</Text>
+          </View>
+        </View>
+      </View>
+    )
+  }
+}
 
 export default class SideBar extends Component {
   constructor(props) {
@@ -27,7 +89,10 @@ export default class SideBar extends Component {
       host: 'cmx.im',
       display_name: '',
       emojiObj: {},
-      id: ''
+      id: '',
+      black: false,
+      white: true,
+      night: false
     }
   }
   componentDidMount() {
@@ -60,7 +125,6 @@ export default class SideBar extends Component {
     let overlayView = (
       <Overlay.View
         style={{ alignItems: 'center', justifyContent: 'center' }}
-        modal={true}
         overlayOpacity={0.5}
         ref={v => (this.overlayView = v)}
       >
@@ -69,24 +133,17 @@ export default class SideBar extends Component {
             backgroundColor: color.white,
             padding: 20,
             width: '85%',
-            height: 180,
+            height: 250,
             borderRadius: 5,
-            alignItems: 'center'
+            alignItems: 'center',
+            justifyContent: 'space-around'
           }}
         >
-          <View
-            style={{
-              alignSelf: 'flex-start'
-            }}
-          >
-            <Text style={{ fontSize: 18, color: color.moreBlack }}>
-              应用主题
-            </Text>
-            <View />
-          </View>
+          <ThemeList />
           <TouchableOpacity
             style={{
-              alignSelf: 'flex-end'
+              alignSelf: 'flex-end',
+              marginBottom: 10
             }}
             onPress={() => this.overlayView && this.overlayView.close()}
             activeOpacity={0.5}
@@ -96,6 +153,7 @@ export default class SideBar extends Component {
         </View>
       </Overlay.View>
     )
+
     Overlay.show(overlayView)
   }
 
@@ -240,5 +298,16 @@ const styles = StyleSheet.create({
     height: 50,
     width: 50,
     borderRadius: 50
+  },
+  themeList: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 20,
+    marginLeft: -5
+  },
+  themeListText: {
+    marginLeft: 30,
+    fontSize: 18,
+    color: color.moreBlack
   }
 })

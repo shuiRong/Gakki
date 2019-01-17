@@ -557,7 +557,7 @@ export default class TootBox extends Component {
     const iconColor = {
       favourite: color.gold,
       follow: color.lightgreen,
-      reblog: color.headerBg
+      reblog: color.themeColor
     }
 
     if (state.isNotificationPage) {
@@ -790,7 +790,7 @@ const styles = StyleSheet.create({
   },
   iconColored: {
     fontSize: 15,
-    color: color.headerBg
+    color: color.themeColor
   },
   menuIcon: {
     color: color.lightBlack,

@@ -1,33 +1,47 @@
 import React, { Component } from 'react'
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet } from 'react-native'
 import { Header, Left, Body, Right, Button, Title } from 'native-base'
 import Icon from 'react-native-vector-icons/FontAwesome5'
-import { color } from '../utils/color'
+import { themeData } from '../utils/color'
+import mobx from '../utils/mobx'
+import { observer } from 'mobx-react'
 
+let color = {}
+@observer
 export default class HeaderItem extends Component {
   render() {
+    color = themeData[mobx.theme]
     return (
-      <Header style={this.props.style}>
+      <Header style={[this.props.style, { backgroundColor: color.themeColor }]}>
         <Left>
           <Button transparent onPress={this.props.openDrawer}>
-            <Icon style={styles.icon} name="bars" />
+            <Icon
+              style={[styles.icon, { color: color.lightGrey }]}
+              name="bars"
+            />
           </Button>
         </Left>
         <Body>
-          <Title>Gakki</Title>
+          <Title style={{ color: color.secondColor }}>Gakki</Title>
         </Body>
         <Right>
           <Button
             transparent
             onPress={() => this.props.navigation.navigate('Notifications')}
           >
-            <Icon style={styles.icon} name="bell" />
+            <Icon
+              style={[styles.icon, { color: color.lightGrey }]}
+              name="bell"
+            />
           </Button>
           <Button
             transparent
             onPress={() => this.props.navigation.navigate('Search')}
           >
-            <Icon style={styles.icon} name="search" />
+            <Icon
+              style={[styles.icon, { color: color.lightGrey }]}
+              name="search"
+            />
           </Button>
         </Right>
       </Header>
@@ -37,7 +51,6 @@ export default class HeaderItem extends Component {
 
 const styles = StyleSheet.create({
   icon: {
-    color: color.lightGrey,
     fontSize: 17
   }
 })

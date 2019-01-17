@@ -175,7 +175,7 @@ export default class Profile extends Component {
    */
   getRelationshop = () => {
     let configStyle = {
-      backgroundColor: color.headerBg,
+      backgroundColor: color.themeColor,
       iconName: 'user',
       iconColor: color.white,
       text: '已关注',
@@ -185,9 +185,9 @@ export default class Profile extends Component {
       configStyle = {
         backgroundColor: color.white,
         iconName: 'user-plus',
-        iconColor: color.headerBg,
+        iconColor: color.themeColor,
         text: '关注',
-        textColor: color.headerBg
+        textColor: color.themeColor
       }
     }
 
@@ -309,8 +309,8 @@ export default class Profile extends Component {
             renderTabBar={() => (
               <DefaultTabBar
                 backgroundColor={color.white}
-                activeTextColor={color.headerBg}
-                underlineStyle={{ backgroundColor: color.headerBg }}
+                activeTextColor={color.themeColor}
+                underlineStyle={{ backgroundColor: color.themeColor }}
               />
             )}
           >
@@ -389,7 +389,7 @@ const styles = StyleSheet.create({
     marginLeft: 10
   },
   headerStyle: {
-    backgroundColor: color.headerBg,
+    backgroundColor: color.themeColor,
     position: 'absolute',
     top: 0,
     left: 0,

@@ -600,7 +600,7 @@ const styles = StyleSheet.create({
   },
   iconColored: {
     fontSize: 15,
-    color: color.headerBg
+    color: color.themeColor
   },
   menuIcon: {
     color: color.lightBlack,

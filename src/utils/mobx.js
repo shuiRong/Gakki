@@ -11,6 +11,7 @@ class Globe {
   @observable cw = false // 输入框的CW模式
   @observable spoiler_text = undefined // CW模式的警告语
   @observable inputValue = '' // 输入框内容
+  @observable theme = 'white' // 当前用户选择主题
 
   updateReply({
     reply_to_username,
@@ -78,6 +79,11 @@ class Globe {
 
   updateAccount(account) {
     this.account = account
+  }
+
+  updateTheme(theme) {
+    console.log('updateTheme', theme)
+    this.theme = theme
   }
 }
 

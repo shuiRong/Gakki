@@ -11,13 +11,18 @@ import ScrollableTabView, {
   DefaultTabBar
 } from 'react-native-scrollable-tab-view'
 import { getCustomEmojis } from '../utils/api'
-import { color } from '../utils/color'
+import { themeData } from '../utils/color'
 import { save, fetch } from '../utils/store'
+import mobx from '../utils/mobx'
+import { observer } from 'mobx-react'
 
 /**
  * 主页
  */
+let color = {}
 let deviceHeight = require('Dimensions').get('window').height
+
+@observer
 export default class Home extends Component {
   constructor(props) {
     super(props)
@@ -40,7 +45,7 @@ export default class Home extends Component {
   }
 
   componentDidMount() {
-    this.openDrawer()
+    // this.openDrawer()
     fetch('emojis').then(res => {
       // 检测是否保存有emoji数据，如果没有的话，从网络获取
       if (!res || !res.length) {
@@ -108,6 +113,8 @@ export default class Home extends Component {
   }
 
   render() {
+    color = themeData[mobx.theme]
+
     return (
       <View style={{ flex: 1, backgroundColor: color.white }}>
         <Drawer
@@ -140,7 +147,7 @@ export default class Home extends Component {
                 initialPage={1}
                 renderTabBar={() => (
                   <DefaultTabBar
-                    backgroundColor={color.headerBg}
+                    backgroundColor={color.themeColor}
                     activeTextColor={color.lightGrey}
                     underlineStyle={{ backgroundColor: color.white }}
                   />
