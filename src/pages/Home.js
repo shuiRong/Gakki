@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { View, Animated } from 'react-native'
 import { Drawer } from 'native-base'
-import HeaderItem from './Header'
+import HeaderItem from './common/Header'
 import SideBar from './SideBar'
 import HomeScreen from './screen/HomeScreen'
 import LocalScreen from './screen/LocalScreen'
@@ -148,8 +148,9 @@ export default class Home extends Component {
                 renderTabBar={() => (
                   <DefaultTabBar
                     backgroundColor={color.themeColor}
-                    activeTextColor={color.lightGrey}
-                    underlineStyle={{ backgroundColor: color.white }}
+                    activeTextColor={color.contrastColor}
+                    inactiveTextColor={color.subColor}
+                    underlineStyle={{ backgroundColor: color.contrastColor }}
                   />
                 )}
               >

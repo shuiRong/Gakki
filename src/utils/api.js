@@ -211,6 +211,15 @@ export const getNotifications = params => {
   })
 }
 
+// 清空通知消息
+export const clearNotifications = () => {
+  return request({
+    url: '/api/v1/notifications/clear',
+    method: 'post',
+    headers
+  })
+}
+
 // 获取通知消息
 export const setProfile = data => {
   return request({

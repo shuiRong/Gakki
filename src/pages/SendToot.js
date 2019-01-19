@@ -1,14 +1,19 @@
 import React, { Component } from 'react'
-import { StyleSheet, View, Dimensions } from 'react-native'
-import { Header, Left, Body, Right, Button, Title } from 'native-base'
+import { StyleSheet, View, Dimensions, Image } from 'react-native'
+import { Button } from 'native-base'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import ReplyInput from './common/ReplyInput'
-import { color } from '../utils/color'
+import Header from './common/Header'
+import { themeData } from '../utils/color'
+import mobx from '../utils/mobx'
+import { observer } from 'mobx-react'
 
+let color = {}
 const width = Dimensions.get('window').width
 /**
  * Toot详情页面
  */
+@observer
 export default class SendToot extends Component {
   constructor(props) {
     super(props)
@@ -22,28 +27,33 @@ export default class SendToot extends Component {
   }
 
   render() {
+    color = themeData[mobx.theme]
+
     return (
-      <View style={styles.container}>
-        <Header>
-          <Left>
+      <View style={[styles.container, { backgroundColor: color.white }]}>
+        <Header
+          left={
             <Button transparent>
               <Icon
-                style={styles.navIcon}
+                style={[styles.icon, { color: color.subColor }]}
                 name="arrow-left"
                 onPress={() => this.navigateToHome()}
               />
             </Button>
-          </Left>
-          <Body>
-            <Title>发嘟</Title>
-          </Body>
-          <Right>
-            <Button transparent>
-              <Icon style={styles.navIcon} name="ellipsis-h" />
-            </Button>
-          </Right>
-        </Header>
-        <View style={styles.inputBox}>
+          }
+          title={'发嘟'}
+          right={
+            <Image source={{ uri: mobx.account.avatar }} style={styles.image} />
+          }
+        />
+        <View
+          style={[
+            styles.inputBox,
+            {
+              backgroundColor: color.white
+            }
+          ]}
+        >
           <ReplyInput
             autoFocus={true}
             tootId={this.props.navigation.getParam('id')}
@@ -58,19 +68,21 @@ export default class SendToot extends Component {
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: color.white,
     flex: 1
   },
   inputBox: {
     width: width - 30,
     alignSelf: 'center',
     marginTop: 15,
-    backgroundColor: color.white,
     elevation: 5,
     borderRadius: 5
   },
-  navIcon: {
-    fontSize: 20,
-    color: color.lightGrey
+  icon: {
+    fontSize: 17
+  },
+  image: {
+    height: 40,
+    width: 40,
+    borderRadius: 5
   }
 })

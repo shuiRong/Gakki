@@ -4,7 +4,7 @@
 
 import React, { Component } from 'react'
 import { View, StyleSheet, FlatList, RefreshControl } from 'react-native'
-import { Spinner } from 'native-base'
+import Loading from '../common/Loading'
 import { getHomeTimelines } from '../../utils/api'
 import TootBox from '../common/TootBox'
 import ListFooterComponent from '../common/ListFooterComponent'
@@ -131,7 +131,7 @@ export default class LocalScreen extends Component {
 
   render() {
     if (this.state.loading) {
-      return <Spinner style={{ marginTop: 250 }} color={color.themeColor} />
+      return <Loading />
     }
     return (
       <View style={styles.container}>

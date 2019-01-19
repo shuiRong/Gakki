@@ -4,12 +4,12 @@
 
 import React, { Component } from 'react'
 import { View, StyleSheet, FlatList, RefreshControl } from 'react-native'
-import { Spinner } from 'native-base'
 import { getHomeTimelines } from '../../utils/api'
 import TootBox from '../common/TootBox'
 import ListFooterComponent from '../common/ListFooterComponent'
 import { themeData } from '../../utils/color'
 import Divider from '../common/Divider'
+import Loading from '../common/Loading'
 import mobx from '../../utils/mobx'
 import { observer } from 'mobx-react'
 
@@ -137,7 +137,7 @@ export default class HomeScreen extends Component {
     color = themeData[mobx.theme]
 
     if (this.state.loading) {
-      return <Spinner style={{ marginTop: 250 }} color={color.themeColor} />
+      return <Loading />
     }
     return (
       <View style={styles.container}>

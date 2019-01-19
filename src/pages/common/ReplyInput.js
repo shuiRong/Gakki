@@ -185,7 +185,7 @@ class UploadMedia extends Component {
       },
       {
         title: getTitle('移除'),
-        icon: getIcon('trash'),
+        icon: getIcon('trash-alt'),
         onPress: () => this.props.removeMedia(index)
       }
     ]

@@ -1,7 +1,8 @@
 export const themeData = {
   white: {
     themeColor: '#ffffff', // 主色
-    secondColor: '#333333', // 主色对比色
+    subColor: '#747474', // 副色
+    contrastColor: '#333333', // 对比色
     lightHeaderBg: '#5067FF',
     lightGrey: '#dddddd',
     grey: '#999999',

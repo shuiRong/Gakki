@@ -4,12 +4,13 @@
 
 import React, { Component } from 'react'
 import { View, StyleSheet, FlatList, RefreshControl } from 'react-native'
-import { Spinner } from 'native-base'
+import loading from '../common/Loading'
 import { getUserStatuses } from '../../utils/api'
 import ListFooterComponent from '../common/ListFooterComponent'
 import TootBox from '../common/TootBox'
 import { color } from '../../utils/color'
 import Divider from '../common/Divider'
+import Loading from '../common/Loading'
 
 export default class TootScreen extends Component {
   constructor(props) {
@@ -166,7 +167,7 @@ export default class TootScreen extends Component {
 
   render() {
     if (this.state.loading) {
-      return <Spinner style={{ marginTop: 50 }} color={color.themeColor} />
+      return <Loading />
     }
     return (
       <View style={styles.container}>

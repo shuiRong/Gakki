@@ -6,18 +6,19 @@ import {
   Image,
   StyleSheet,
   ImageBackground,
-  TouchableOpacity,
-  Button
+  TouchableOpacity
 } from 'react-native'
 import { getCurrentUser } from '../utils/api'
 import mobx from '../utils/mobx'
-import { color } from '../utils/color'
+import { themeData } from '../utils/color'
 import HTMLView from './common/HTMLView'
 import Divider from './common/Divider'
-import { fetch, save } from '../utils/store'
+import { fetch } from '../utils/store'
 import { CheckBox } from 'native-base'
 import { Overlay } from 'teaset'
+import { observer } from 'mobx-react'
 
+let color = {}
 class ThemeList extends Component {
   constructor(props) {
     super(props)
@@ -52,26 +53,38 @@ class ThemeList extends Component {
           <View style={styles.themeList}>
             <CheckBox
               checked={state.black}
-              color={color.themeColor}
+              color={color.contrastColor}
               onPress={() => this.exchange('black')}
             />
-            <Text style={styles.themeListText}>黑色</Text>
+            <Text
+              style={[styles.themeListText, { color: color.contrastColor }]}
+            >
+              黑色
+            </Text>
           </View>
           <View style={styles.themeList}>
             <CheckBox
               checked={state.white}
-              color={color.themeColor}
+              color={color.contrastColor}
               onPress={() => this.exchange('white')}
             />
-            <Text style={styles.themeListText}>白色</Text>
+            <Text
+              style={[styles.themeListText, { color: color.contrastColor }]}
+            >
+              白色
+            </Text>
           </View>
           <View style={styles.themeList}>
             <CheckBox
               checked={state.night}
-              color={color.themeColor}
+              color={color.contrastColor}
               onPress={() => this.exchange('night')}
             />
-            <Text style={styles.themeListText}>夜晚</Text>
+            <Text
+              style={[styles.themeListText, { color: color.contrastColor }]}
+            >
+              夜晚
+            </Text>
           </View>
         </View>
       </View>
@@ -79,6 +92,7 @@ class ThemeList extends Component {
   }
 }
 
+@observer
 export default class SideBar extends Component {
   constructor(props) {
     super(props)
@@ -148,7 +162,7 @@ export default class SideBar extends Component {
             onPress={() => this.overlayView && this.overlayView.close()}
             activeOpacity={0.5}
           >
-            <Text>取消</Text>
+            <Text style={{ color: color.contrastColor }}> 取消</Text>
           </TouchableOpacity>
         </View>
       </Overlay.View>
@@ -159,8 +173,10 @@ export default class SideBar extends Component {
 
   render() {
     const state = this.state
+    color = themeData[mobx.theme]
+
     return (
-      <View style={styles.main}>
+      <View style={[styles.main, { backgroundColor: color.themeColor }]}>
         <ImageBackground source={{ uri: this.state.header }} style={styles.bg}>
           <View style={styles.infoBox}>
             <TouchableOpacity
@@ -179,7 +195,7 @@ export default class SideBar extends Component {
                 emojiObj={state.emojiObj}
                 pTagStyle={{ color: color.white, fontWeight: 'bold' }}
               />
-              <Text style={styles.domain}>
+              <Text style={{ color: color.lightGrey }}>
                 @{this.state.username}@{this.state.host}
               </Text>
             </View>
@@ -188,54 +204,94 @@ export default class SideBar extends Component {
         <View style={styles.body}>
           <View style={styles.list}>
             <View style={styles.iconBox}>
-              <Icon name="user" style={styles.icon} />
+              <Icon
+                name="user"
+                style={[styles.icon, { color: color.contrastColor }]}
+              />
             </View>
             <TouchableOpacity activeOpacity={0.5} onPress={this.showTheme}>
-              <Text style={styles.text}>主题</Text>
+              <Text style={[styles.text, { color: color.contrastColor }]}>
+                主题
+              </Text>
             </TouchableOpacity>
           </View>
           <View style={styles.list}>
             <View style={styles.iconBox}>
-              <Icon name="star" style={styles.icon} />
+              <Icon
+                name="star"
+                style={[styles.icon, { color: color.contrastColor }]}
+              />
             </View>
-            <Text style={styles.text}>字体大小</Text>
+            <Text style={[styles.text, { color: color.contrastColor }]}>
+              字体大小
+            </Text>
           </View>
           <View style={styles.list}>
             <View style={styles.iconBox}>
-              <Icon name="list" style={styles.icon} />
+              <Icon
+                name="list"
+                style={[styles.icon, { color: color.contrastColor }]}
+              />
             </View>
-            <Text style={styles.text}>默认嘟文可见范围</Text>
+            <Text style={[styles.text, { color: color.contrastColor }]}>
+              默认嘟文可见范围
+            </Text>
           </View>
           <View style={styles.list}>
             <View style={styles.iconBox}>
-              <Icon name="cogs" style={styles.icon} />
+              <Icon
+                name="cogs"
+                style={[styles.icon, { color: color.contrastColor }]}
+              />
             </View>
-            <Text style={styles.text}>浏览时隐藏发嘟按钮</Text>
+            <Text style={[styles.text, { color: color.contrastColor }]}>
+              浏览时隐藏发嘟按钮
+            </Text>
           </View>
           <Divider style={{ marginTop: 5, marginBottom: 20 }} />
           <View style={styles.list}>
             <View style={styles.iconBox}>
-              <Icon name="book" style={styles.icon} />
+              <Icon
+                name="book"
+                style={[styles.icon, { color: color.contrastColor }]}
+              />
             </View>
-            <Text style={styles.text}>官方账号</Text>
+            <Text style={[styles.text, { color: color.contrastColor }]}>
+              官方账号
+            </Text>
           </View>
           <View style={styles.list}>
             <View style={styles.iconBox}>
-              <Icon name="user-cog" style={styles.icon} />
+              <Icon
+                name="user-cog"
+                style={[styles.icon, { color: color.contrastColor }]}
+              />
             </View>
-            <Text style={styles.text}>账户设置</Text>
+            <Text style={[styles.text, { color: color.contrastColor }]}>
+              账户设置
+            </Text>
           </View>
           <View style={styles.list}>
             <View style={styles.iconBox}>
-              <Icon name="exclamation-circle" style={styles.icon} />
+              <Icon
+                name="exclamation-circle"
+                style={[styles.icon, { color: color.contrastColor }]}
+              />
             </View>
-            <Text style={styles.text}>关于</Text>
+            <Text style={[styles.text, { color: color.contrastColor }]}>
+              关于
+            </Text>
           </View>
           <View style={styles.list}>
             <View style={styles.iconBox}>
-              <Icon name="sign-out-alt" style={styles.icon} />
+              <Icon
+                name="sign-out-alt"
+                style={[styles.icon, { color: color.contrastColor }]}
+              />
             </View>
-            <Text style={styles.text}>退出登录</Text>
+            <Text style={[styles.text, { color: color.contrastColor }]}>
+              退出登录
+            </Text>
           </View>
         </View>
       </View>
@@ -245,7 +301,6 @@ export default class SideBar extends Component {
 
 const styles = StyleSheet.create({
   main: {
-    backgroundColor: color.white,
     flex: 1
   },
   bg: {
@@ -279,20 +334,11 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   icon: {
-    color: color.lightBlack,
     fontSize: 23
   },
   text: {
-    color: color.moreBlack,
     fontWeight: 'bold',
     fontSize: 15
-  },
-  name: {
-    color: color.lightGrey,
-    fontWeight: 'bold'
-  },
-  domain: {
-    color: color.lightGrey
   },
   image: {
     height: 50,
@@ -307,7 +353,6 @@ const styles = StyleSheet.create({
   },
   themeListText: {
     marginLeft: 30,
-    fontSize: 18,
-    color: color.moreBlack
+    fontSize: 18
   }
 })

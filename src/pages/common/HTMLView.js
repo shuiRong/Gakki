@@ -1,8 +1,12 @@
 import React, { Component } from 'react'
 import { Dimensions } from 'react-native'
-import { color } from '../../utils/color'
+import { themeData } from '../../utils/color'
+import mobx from '../../utils/mobx'
 import HTML from 'react-native-render-html'
+import { observer } from 'mobx-react'
 
+let color = {}
+@observer
 export default class HTMLView extends Component {
   static defaultProps = {
     hide: false,
@@ -42,6 +46,7 @@ export default class HTMLView extends Component {
    * 这样就能解决每行的img元素内联显示了
    */
   render() {
+    color = themeData[mobx.theme]
     const state = this.state
     const props = this.props
     if (state.hide) {
@@ -91,10 +96,12 @@ export default class HTMLView extends Component {
         tagsStyles={{
           ...tagsStyles,
           p: {
+            color: color.contrastColor,
             ...tagsStyles.p,
             ...props.pTagStyle
           },
           a: {
+            color: color.subColor,
             ...tagsStyles.a,
             ...props.aTagStyle
           }
@@ -108,13 +115,11 @@ export default class HTMLView extends Component {
 
 const tagsStyles = {
   p: {
-    color: color.pColor,
     fontSize: 16,
     lineHeight: 20,
     flexWrap: 'wrap'
   },
   a: {
-    color: color.themeColor,
     textDecorationLine: 'none'
   },
   img: {

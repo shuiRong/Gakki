@@ -4,10 +4,12 @@
 
 import React, { Component } from 'react'
 import { View, StyleSheet, FlatList, RefreshControl } from 'react-native'
-import { Spinner, Header, Left, Body, Right, Button, Title } from 'native-base'
-import { getNotifications } from '../utils/api'
+import { Button } from 'native-base'
+import { getNotifications, clearNotifications } from '../utils/api'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import TootBox from './common/TootBox'
+import Header from './common/Header'
+import Loading from './common/Loading'
 import ListFooterComponent from './common/ListFooterComponent'
 import { color } from '../utils/color'
 import Divider from './common/Divider'
@@ -111,6 +113,19 @@ export default class Notifications extends Component {
     })
   }
 
+  /**
+   * @description 清空通知
+   * @param {}:
+   */
+  clearNotifications = () => {
+    clearNotifications().then(res => {
+      this.setState({
+        list: [],
+        loading: false
+      })
+    })
+  }
+
   refreshHandler = () => {
     this.setState({
       loading: true,
@@ -130,29 +145,30 @@ export default class Notifications extends Component {
   render() {
     const state = this.state
     if (state.loading) {
-      return <Spinner style={{ marginTop: 250 }} color={color.themeColor} />
+      return <Loading />
     }
     return (
       <View style={styles.container}>
-        <Header>
-          <Left>
+        <Header
+          left={
             <Button transparent>
               <Icon
-                style={styles.navIcon}
+                style={[styles.icon, { color: color.subColor }]}
                 name="arrow-left"
                 onPress={() => this.props.navigation.goBack()}
               />
             </Button>
-          </Left>
-          <Body>
-            <Title>发嘟</Title>
-          </Body>
-          <Right>
-            <Button transparent>
-              <Icon style={styles.navIcon} name="ellipsis-h" />
+          }
+          title={'通知'}
+          right={
+            <Button transparent onPress={this.clearNotifications}>
+              <Icon
+                style={[styles.icon, { color: color.subColor }]}
+                name="trash-alt"
+              />
             </Button>
-          </Right>
-        </Header>
+          }
+        />
         <FlatList
           ItemSeparatorComponent={() => <Divider />}
           showsVerticalScrollIndicator={false}
@@ -167,7 +183,9 @@ export default class Notifications extends Component {
               onRefresh={this.refreshHandler}
             />
           }
-          ListFooterComponent={() => <ListFooterComponent />}
+          ListFooterComponent={() => (
+            <ListFooterComponent info={'你还没有收到任何通知'} />
+          )}
           renderItem={({ item }) => (
             <TootBox
               data={item}
@@ -189,8 +207,7 @@ const styles = StyleSheet.create({
     paddingTop: 0,
     backgroundColor: color.white
   },
-  navIcon: {
-    fontSize: 20,
-    color: color.lightGrey
+  icon: {
+    fontSize: 17
   }
 })

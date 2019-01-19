@@ -242,7 +242,10 @@ export default class Profile extends Component {
           >
             <Icon style={styles.navIcon} name="arrow-left" />
           </TouchableOpacity>
-          <TouchableOpacity style={{ marginRight: 20 }}>
+          <TouchableOpacity
+            style={{ marginRight: 20 }}
+            onPress={() => alert('v1')}
+          >
             <Icon style={styles.navIcon} name="ellipsis-v" />
           </TouchableOpacity>
         </View>

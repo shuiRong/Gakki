@@ -12,7 +12,7 @@ import {
   RefreshControl
 } from 'react-native'
 import { getUserStatuses } from '../../utils/api'
-import { Spinner } from 'native-base'
+import Loading from '../common/Loading'
 import ListFooterComponent from '../common/ListFooterComponent'
 import { color } from '../../utils/color'
 import mobx from '../../utils/mobx'
@@ -148,7 +148,7 @@ export default class TootScreen extends Component {
 
   render() {
     if (this.state.loading) {
-      return <Spinner style={{ marginTop: 50 }} color={color.themeColor} />
+      return <Loading />
     }
     return (
       <View style={styles.container}>

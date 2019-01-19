@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { View, StyleSheet } from 'react-native'
-import { Header, Left, Body, Right, Button, Title, Spinner } from 'native-base'
+import { Button } from 'native-base'
+import Header from './common/Header'
+import Loading from './common/Loading'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { getStatuses, context } from '../utils/api'
 import { color } from '../utils/color'
@@ -64,7 +66,7 @@ export default class TootDetail extends Component {
    * @description 回到主页，带着一些可能变化的数据
    * @param {mute} 隐藏某人动态
    */
-  goBackWithParam = mute => {
+  goBackWithParam = () => {
     this.props.navigation.navigate('Home', {
       data: {
         id: this.state.toot.id,
@@ -72,8 +74,8 @@ export default class TootDetail extends Component {
         reblogged: this.state.toot.reblogged,
         reblogs_count: this.state.toot.reblogs_count,
         favourited: this.state.toot.favourited,
-        favourites_count: this.state.toot.favourites_count,
-        mute: mute
+        favourites_count: this.state.toot.favourites_count
+        // mute: mute
       }
     })
   }
@@ -84,32 +86,26 @@ export default class TootDetail extends Component {
     const descendants = this.state.descendants
 
     const headerElement = (
-      <Header>
-        <Left>
+      <Header
+        left={
           <Button transparent>
             <Icon
-              style={[styles.icon, styles.navIcon]}
+              style={[styles.icon, { color: color.subColor }]}
               name="arrow-left"
               onPress={this.goBackWithParam}
             />
           </Button>
-        </Left>
-        <Body>
-          <Title>嘟文</Title>
-        </Body>
-        <Right>
-          <Button transparent>
-            <Icon style={[styles.icon, styles.navIcon]} name="ellipsis-h" />
-          </Button>
-        </Right>
-      </Header>
+        }
+        title={'嘟文'}
+        right={'none'}
+      />
     )
 
     if (!toot) {
       return (
         <View style={styles.container}>
           {headerElement}
-          <Spinner style={{ marginTop: 250 }} color={color.themeColor} />
+          <Loading />
         </View>
       )
     }
@@ -142,10 +138,6 @@ const styles = StyleSheet.create({
     backgroundColor: color.white
   },
   icon: {
-    fontSize: 15
-  },
-  navIcon: {
-    fontSize: 20,
-    color: color.white
+    fontSize: 17
   }
 })

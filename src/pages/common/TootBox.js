@@ -21,12 +21,15 @@ import jstz from 'jstz'
 import { RelativeTime } from 'relative-time-react-native-component'
 import { zh } from '../../utils/locale'
 import MediaBox from './MediaBox'
-import { color } from '../../utils/color'
+import { themeData } from '../../utils/color'
 import { Menu } from 'teaset'
 import mobx from '../../utils/mobx'
 import { fetch } from '../../utils/store'
 import HTMLView from './HTMLView'
+import { observer } from 'mobx-react'
 
+let color = {}
+@observer
 class TootContent extends Component {
   constructor(props) {
     super(props)
@@ -535,12 +538,12 @@ export default class TootBox extends Component {
 
   /**
    * @description 嘟文上方的辅助性信息
+   * @param {toot} 嘟文数据
    */
-  getAdditionalInfo = () => {
+  getAdditionalInfo = toot => {
     const state = this.state
-    let toot = state.toot
     let type = undefined
-    let pTagStyle = {}
+    let pTagStyle = { color: color.subColor }
     const info = {
       reblog: '转嘟了',
       pinned: '置顶嘟文',
@@ -557,7 +560,7 @@ export default class TootBox extends Component {
     const iconColor = {
       favourite: color.gold,
       follow: color.lightgreen,
-      reblog: color.themeColor
+      reblog: color.subColor
     }
 
     if (state.isNotificationPage) {
@@ -639,7 +642,7 @@ export default class TootBox extends Component {
     const notification = state.notification
     const isNotificationPage = state.isNotificationPage
     let data = {} // 嘟文数据
-    let pTagStyle = {}
+    let pTagStyle = { color: color.contrastColor }
 
     if (isNotificationPage) {
       pTagStyle = {
@@ -707,9 +710,10 @@ export default class TootBox extends Component {
 
   render() {
     const toot = this.state.toot
+    color = themeData[mobx.theme]
     return (
       <View style={styles.container}>
-        {this.getAdditionalInfo()}
+        {this.getAdditionalInfo(toot)}
         {this.getBody(toot)}
       </View>
     )
