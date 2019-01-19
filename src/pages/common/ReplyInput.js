@@ -20,11 +20,12 @@ import {
   getCustomEmojis
 } from '../../utils/api'
 import mobx from '../../utils/mobx'
-import { color } from '../../utils/color'
+import { themeData } from '../../utils/color'
 import { Menu, Overlay, Input } from 'teaset'
 import ImagePicker from 'react-native-image-picker'
 import { save, fetch } from '../../utils/store'
 
+let color = {}
 const width = Dimensions.get('window').width
 // 嘟文可见范围的图标与实际字段的对应关系
 const visibilityDict = {
@@ -532,6 +533,7 @@ export default class ReplyInput extends Component {
 
   render() {
     const state = this.state
+    color = themeData[mobx.theme]
 
     let inputStyle = {
       ...inputCommonStyle,
@@ -651,7 +653,9 @@ export default class ReplyInput extends Component {
             onPress={() => mobx.exchangeCW()}
           >
             {mobx.cw ? (
-              <Text style={styles.enableCW}>CW</Text>
+              <Text style={[styles.enableCW, { color: color.themeColor }]}>
+                CW
+              </Text>
             ) : (
               <Text style={styles.disenableCW}>CW</Text>
             )}
@@ -667,8 +671,16 @@ export default class ReplyInput extends Component {
             )}
           </TouchableOpacity>
           <Text style={styles.grey}>{500 - mobx.inputValue.length}</Text>
-          <TouchableOpacity style={styles.sendButton} onPress={this.sendToot}>
-            <Text style={styles.sendText}>TOOT!</Text>
+          <TouchableOpacity
+            style={[
+              styles.sendButton,
+              { backgroundColor: color.contrastColor }
+            ]}
+            onPress={this.sendToot}
+          >
+            <Text style={[styles.sendText, { color: color.themeColor }]}>
+              TOOT!
+            </Text>
           </TouchableOpacity>
         </View>
         {this.emojiBoxIsShown()}
@@ -695,12 +707,10 @@ const styles = StyleSheet.create({
     fontWeight: 'bold'
   },
   enableCW: {
-    fontWeight: 'bold',
-    color: color.themeColor
+    fontWeight: 'bold'
   },
   sendButton: {
     alignItems: 'center',
-    backgroundColor: color.themeColor,
     padding: 9,
     borderRadius: 5,
     width: 80
@@ -715,8 +725,7 @@ const styles = StyleSheet.create({
     color: color.grey
   },
   sendText: {
-    fontWeight: 'bold',
-    color: color.white
+    fontWeight: 'bold'
   },
   title: {
     color: color.moreBlack,
