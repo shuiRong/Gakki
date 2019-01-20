@@ -29,7 +29,6 @@ import HTMLView from './HTMLView'
 import { observer } from 'mobx-react'
 
 let color = {}
-@observer
 class TootContent extends Component {
   constructor(props) {
     super(props)
@@ -69,7 +68,7 @@ class TootContent extends Component {
 
     if (state.isNotificationPage) {
       pTagStyle = {
-        color: color.grey
+        color: color.subColor
       }
     }
 
@@ -90,7 +89,7 @@ class TootContent extends Component {
         <View>
           <Text
             style={{
-              color: color.pColor,
+              color: color.contrastColor,
               fontSize: 16,
               ...pTagStyle
             }}
@@ -98,12 +97,12 @@ class TootContent extends Component {
             {toot.spoiler_text}
           </Text>
           <TouchableOpacity
-            style={styles.sensitiveSwitch}
+            style={[styles.sensitiveSwitch, { color: color.subColor }]}
             onPress={() => this.setState({ hide: !hide })}
           >
             <Text
               style={{
-                color: color.white,
+                color: color.themeColor,
                 textAlign: 'center'
               }}
             >
@@ -125,6 +124,7 @@ class TootContent extends Component {
 /**
  * @description 需要考虑到普通嘟文和通知接口的嘟文两种数据格式
  */
+@observer
 export default class TootBox extends Component {
   static defaultProps = {
     showTread: true // 是否显示'显示前文字符'
@@ -212,9 +212,11 @@ export default class TootBox extends Component {
   showMenu = () => {
     const toot = this.state.toot
     const getTitle = title => (
-      <Text style={{ color: color.moreBlack }}>{title}</Text>
+      <Text style={{ color: color.contrastColor }}>{title}</Text>
     )
-    const getIcon = name => <Icon name={name} style={styles.menuIcon} />
+    const getIcon = name => (
+      <Icon name={name} style={[styles.menuIcon, { color: color.subColor }]} />
+    )
 
     const baseItems = [
       {
@@ -259,7 +261,7 @@ export default class TootBox extends Component {
       let items = baseItems.concat(this.isMine() ? myToot : theirToot)
       Menu.show({ x: x - 20, y, width, height }, items, {
         popoverStyle: {
-          backgroundColor: color.white,
+          backgroundColor: color.themeColor,
           justifyContent: 'center',
           elevation: 10
         }
@@ -450,7 +452,10 @@ export default class TootBox extends Component {
           onPress={() => this.reblog(data.id, !data.reblogged)}
         >
           {data.reblogged ? (
-            <Icon style={styles.iconColored} name="retweet" />
+            <Icon
+              style={{ fontSize: 15, color: color.contrastColor }}
+              name="retweet"
+            />
           ) : (
             <Icon style={styles.icon} name="retweet" />
           )}
@@ -462,7 +467,7 @@ export default class TootBox extends Component {
         >
           {data.favourited ? (
             <Icon
-              style={{ ...styles.iconColored, color: color.gold }}
+              style={{ fontSize: 15, color: color.gold }}
               name="star"
               solid
             />
@@ -531,7 +536,9 @@ export default class TootBox extends Component {
         style={styles.showTreadButton}
         onPress={() => this.goTootDetail(data)}
       >
-        <Text style={styles.showTreadText}>显示前文</Text>
+        <Text style={[styles.showTreadText, { color: color.subColor }]}>
+          显示前文
+        </Text>
       </TouchableOpacity>
     )
   }
@@ -568,7 +575,7 @@ export default class TootBox extends Component {
       type = state.notification.type
       pTagStyle = {
         fontWeight: 'bold',
-        color: color.lightBlack
+        color: color.contrastColor
       }
     } else if (toot) {
       // 如果嘟文内容存在，即普通嘟文模式
@@ -629,7 +636,7 @@ export default class TootBox extends Component {
           }}
         >
           {getDisplayName()}
-          <Text style={[styles.additionalTypeInfo, pTagStyle]}>
+          <Text style={[{ color: color.contrastColor }, pTagStyle]}>
             {info[type]}
           </Text>
         </View>
@@ -646,7 +653,7 @@ export default class TootBox extends Component {
 
     if (isNotificationPage) {
       pTagStyle = {
-        color: color.grey
+        color: color.subColor
       }
     }
 
@@ -683,13 +690,19 @@ export default class TootBox extends Component {
                   data={data.account.display_name || data.account.username}
                   emojiObj={state.emojiObj}
                   pTagStyle={{
-                    color: color.lightBlack,
+                    color: color.contrastColor,
                     fontWeight: 'bold',
                     fontSize: 14,
                     ...pTagStyle
                   }}
                 />
-                <Text style={[styles.smallGrey, pTagStyle]}>
+                <Text
+                  style={[
+                    styles.smallGrey,
+                    { color: color.contrastColor },
+                    pTagStyle
+                  ]}
+                >
                   &nbsp;@{data.account.username}
                 </Text>
               </View>
@@ -735,16 +748,8 @@ const styles = StyleSheet.create({
   additionalIcon: {
     width: 40,
     fontSize: 15,
-    color: color.lightBlack,
     marginRight: 10,
     textAlign: 'right'
-  },
-  additionalName: {
-    marginRight: 10,
-    color: color.lightBlack
-  },
-  additionalTypeInfo: {
-    color: color.lightBlack
   },
   list: {
     alignItems: 'stretch',
@@ -765,7 +770,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between'
   },
   smallGrey: {
-    color: color.lightBlack,
     fontWeight: 'normal'
   },
   titleWidth: {
@@ -792,12 +796,7 @@ const styles = StyleSheet.create({
   icon: {
     fontSize: 15
   },
-  iconColored: {
-    fontSize: 15,
-    color: color.themeColor
-  },
   menuIcon: {
-    color: color.lightBlack,
     fontSize: 15,
     marginRight: 10
   },
@@ -810,7 +809,6 @@ const styles = StyleSheet.create({
     padding: 10
   },
   showTreadText: {
-    color: color.grey,
     fontSize: 15,
     textAlign: 'left'
   },
@@ -835,7 +833,6 @@ const styles = StyleSheet.create({
     bottom: 0
   },
   sensitiveSwitch: {
-    backgroundColor: color.lightBlack,
     width: 75,
     borderRadius: 3,
     padding: 5,

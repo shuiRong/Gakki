@@ -131,7 +131,12 @@ class UploadMedia extends Component {
         ref={v => (this.overlayView = v)}
         style={styles.descriptionOverlay}
       >
-        <View style={styles.descriptionInputBox}>
+        <View
+          style={[
+            styles.descriptionInputBox,
+            { backgroundColor: color.themeColor }
+          ]}
+        >
           <Input
             autoFocus={true}
             placeholder={'为视觉障碍人士添加文字说明...'}
@@ -139,7 +144,10 @@ class UploadMedia extends Component {
             maxLength={20}
             numberOfLines={3}
             textAlignVertical={'top'}
-            style={styles.descriptionInput}
+            style={[
+              styles.descriptionInput,
+              { borderBottomColor: color.contrastColor }
+            ]}
             // value={this.state.description}
             onChangeText={text => this.setState({ description: text })}
           />
@@ -147,13 +155,15 @@ class UploadMedia extends Component {
             <TouchableOpacity
               onPress={() => this.overlayView && this.overlayView.close()}
             >
-              <Text style={styles.descriptionText}>取消</Text>
+              <Text style={[styles.descriptionText, { color: color.subColor }]}>
+                取消
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={() => this.setDescription(index)}>
               <Text
                 style={{
                   ...styles.descriptionText,
-                  color: color.themeColor
+                  color: color.contrastColor
                 }}
               >
                 确定
@@ -172,10 +182,19 @@ class UploadMedia extends Component {
    */
   showMediaOption = index => {
     const getTitle = title => {
-      return <Text style={styles.title}>{title}</Text>
+      return (
+        <Text style={[styles.titlle, { color: color.contrastColor }]}>
+          {title}
+        </Text>
+      )
     }
     const getIcon = name => {
-      return <Icon name={name} style={styles.menuIcon} />
+      return (
+        <Icon
+          name={name}
+          style={[styles.menuIcon, { color: color.contrastColor }]}
+        />
+      )
     }
 
     const items = [
@@ -194,7 +213,7 @@ class UploadMedia extends Component {
     this.refMedia[index].measureInWindow((x, y, width, height) => {
       Menu.show({ x, y: y - 5, width, height }, items, {
         popoverStyle: {
-          backgroundColor: color.white,
+          backgroundColor: color.themeColor,
           justifyContent: 'center',
           elevation: 10
         },
@@ -311,8 +330,14 @@ export default class ReplyInput extends Component {
 
       if (response.didCancel) {
         console.log('User cancelled image picker')
+        this.setState({
+          stopRotate: true
+        })
       } else if (response.error) {
         console.log('ImagePicker Error: ', response.error)
+        this.setState({
+          stopRotate: true
+        })
       } else {
         upload({
           response: response,
@@ -372,24 +397,40 @@ export default class ReplyInput extends Component {
       if (this.state.visibilityIcon === iconName) {
         return (
           <View>
-            <Text style={[styles.title, styles.highlight]}>{title}</Text>
-            <Text style={[styles.subTitle, styles.highlight]}>{subTitle}</Text>
+            <Text style={[styles.title, { color: color.contrastColor }]}>
+              {title}
+            </Text>
+            <Text style={[styles.subTitle, { color: color.contrastColor }]}>
+              {subTitle}
+            </Text>
           </View>
         )
       }
 
       return (
         <View>
-          <Text style={styles.title}>{title}</Text>
-          <Text style={styles.subTitle}>{subTitle}</Text>
+          <Text style={[styles.title, { color: color.subColor }]}>{title}</Text>
+          <Text style={[styles.subTitle, { color: color.subColor }]}>
+            {subTitle}
+          </Text>
         </View>
       )
     }
     const getIcon = name => {
       if (this.state.visibilityIcon === name) {
-        return <Icon name={name} style={[styles.menuIcon, styles.highlight]} />
+        return (
+          <Icon
+            name={name}
+            style={[styles.menuIcon, { color: color.contrastColor }]}
+          />
+        )
       }
-      return <Icon name={name} style={styles.menuIcon} />
+      return (
+        <Icon
+          name={name}
+          style={[styles.menuIcon, { color: color.subColor }]}
+        />
+      )
     }
 
     const items = [
@@ -426,7 +467,7 @@ export default class ReplyInput extends Component {
     this.refOption.measureInWindow((x, y, width, height) => {
       Menu.show({ x: x + 10, y, width, height }, items, {
         popoverStyle: {
-          backgroundColor: color.white,
+          backgroundColor: color.themeColor,
           justifyContent: 'center',
           elevation: 10
         },
@@ -524,7 +565,10 @@ export default class ReplyInput extends Component {
               ]
             }}
           >
-            <Icon name={'sync-alt'} style={styles.syncIcon} />
+            <Icon
+              name={'sync-alt'}
+              style={[styles.syncIcon, { color: color.contrastColor }]}
+            />
           </Animated.View>
         )}
       </TouchableOpacity>
@@ -534,6 +578,14 @@ export default class ReplyInput extends Component {
   render() {
     const state = this.state
     color = themeData[mobx.theme]
+    const boxCommonStyle = {
+      padding: 10,
+      borderColor: color.lightThemeColor
+    }
+    const inputCommonStyle = {
+      ...boxCommonStyle,
+      borderRadius: 5
+    }
 
     let inputStyle = {
       ...inputCommonStyle,
@@ -653,7 +705,7 @@ export default class ReplyInput extends Component {
             onPress={() => mobx.exchangeCW()}
           >
             {mobx.cw ? (
-              <Text style={[styles.enableCW, { color: color.themeColor }]}>
+              <Text style={[styles.enableCW, { color: color.contrastColor }]}>
                 CW
               </Text>
             ) : (
@@ -664,13 +716,15 @@ export default class ReplyInput extends Component {
             {state.emojiBoxIsShown ? (
               <Icon
                 name={'grin-squint'}
-                style={[styles.icon, styles.highlight]}
+                style={[styles.icon, { color: color.contrastColor }]}
               />
             ) : (
               <Icon name={'grin-squint'} style={styles.icon} />
             )}
           </TouchableOpacity>
-          <Text style={styles.grey}>{500 - mobx.inputValue.length}</Text>
+          <Text style={{ color: color.subColor }}>
+            {500 - mobx.inputValue.length}
+          </Text>
           <TouchableOpacity
             style={[
               styles.sendButton,
@@ -687,16 +741,6 @@ export default class ReplyInput extends Component {
       </View>
     )
   }
-}
-
-const boxCommonStyle = {
-  borderColor: color.lightGrey,
-  padding: 10
-}
-
-const inputCommonStyle = {
-  ...boxCommonStyle,
-  borderRadius: 5
 }
 
 const styles = StyleSheet.create({
@@ -721,34 +765,20 @@ const styles = StyleSheet.create({
     height: 55,
     alignItems: 'center'
   },
-  grey: {
-    color: color.grey
-  },
   sendText: {
     fontWeight: 'bold'
   },
   title: {
-    color: color.moreBlack,
     fontWeight: 'bold'
   },
   subTitle: {
-    color: color.grey,
     fontSize: 10
-  },
-  menuIcon: {
-    fontSize: 15,
-    marginRight: 10,
-    color: color.lightBlack
-  },
-  highlight: {
-    color: color.themeColor
   },
   descriptionInputBox: {
     alignItems: 'center',
     justifyContent: 'center',
     width: width - 50,
     height: 170,
-    backgroundColor: color.white,
     borderRadius: 5,
     padding: 20
   },
@@ -761,8 +791,7 @@ const styles = StyleSheet.create({
     height: 80,
     textAlign: 'left',
     borderWidth: 0,
-    borderBottomWidth: 1,
-    borderBottomColor: color.themeColor
+    borderBottomWidth: 1
   },
   descriptionButtonBox: {
     flexDirection: 'row',
@@ -771,8 +800,11 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-end',
     width: '50%'
   },
+  menuIcon: {
+    fontSize: 15,
+    marginRight: 10
+  },
   descriptionText: {
-    color: color.grey,
     fontSize: 15,
     fontWeight: 'bold'
   },
@@ -790,7 +822,6 @@ const styles = StyleSheet.create({
     marginRight: 15
   },
   syncIcon: {
-    color: color.themeColor,
     fontSize: 18
   },
   emojiFlatList: {

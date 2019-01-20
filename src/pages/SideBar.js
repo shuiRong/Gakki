@@ -36,6 +36,7 @@ class ThemeList extends Component {
       night: false
     }
     newTheme[which] = true
+    mobx.updateTheme(which)
     this.setState(newTheme)
   }
 
@@ -144,7 +145,7 @@ export default class SideBar extends Component {
       >
         <View
           style={{
-            backgroundColor: color.white,
+            backgroundColor: color.themeColor,
             padding: 20,
             width: '85%',
             height: 250,

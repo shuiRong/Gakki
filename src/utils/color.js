@@ -1,6 +1,7 @@
 export const themeData = {
   white: {
     themeColor: '#ffffff', // 主色
+    lightThemeColor: '#E8E8E8',
     subColor: '#747474', // 副色
     contrastColor: '#333333', // 对比色
     lightHeaderBg: '#5067FF',
@@ -15,7 +16,10 @@ export const themeData = {
     lightgreen: '#1FC966'
   },
   black: {
-    themeColor: '#000000',
+    themeColor: '#333333', // 主色
+    lightThemeColor: '#2F2F2F',
+    subColor: '#747474', // 副色
+    contrastColor: '#FFFFFF', // 对比色
     lightHeaderBg: '#5067FF',
     lightGrey: '#dddddd',
     grey: '#999999',

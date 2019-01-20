@@ -13,6 +13,7 @@ import Loading from './common/Loading'
 import ListFooterComponent from './common/ListFooterComponent'
 import { color } from '../utils/color'
 import Divider from './common/Divider'
+import Confirm from './common/ConfirmDialog'
 
 export default class Notifications extends Component {
   constructor(props) {
@@ -118,10 +119,12 @@ export default class Notifications extends Component {
    * @param {}:
    */
   clearNotifications = () => {
-    clearNotifications().then(res => {
-      this.setState({
-        list: [],
-        loading: false
+    Confirm.show('确定清空所有通知吗？', () => {
+      clearNotifications().then(() => {
+        this.setState({
+          list: [],
+          loading: false
+        })
       })
     })
   }

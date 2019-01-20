@@ -22,14 +22,18 @@ import ScrollableTabView, {
 import TootScreen from './screen/TootScreen'
 import MediaScreen from './screen/MediaScreen'
 import Fab from './common/Fab'
-import { color } from '../utils/color'
+import { themeData } from '../utils/color'
+import mobx from '../utils/mobx'
 import { fetch } from '../utils/store'
 import HTMLView from './common/HTMLView'
+import { observer } from 'mobx-react'
 
 /**
  * Toot详情页面
  */
 let deviceHeight = require('Dimensions').get('window').height
+let color = {}
+@observer
 export default class Profile extends Component {
   constructor(props) {
     super(props)
@@ -171,19 +175,19 @@ export default class Profile extends Component {
   }
 
   /**
-   * @description 返回是否已经关注对方的Element
+   * @description 返回是否已经关注对方的relationship
    */
   getRelationshop = () => {
     let configStyle = {
       backgroundColor: color.themeColor,
       iconName: 'user',
-      iconColor: color.white,
+      iconColor: color.themeColor,
       text: '已关注',
-      textColor: color.white
+      textColor: color.themeColor
     }
     if (!this.state.relationship.following) {
       configStyle = {
-        backgroundColor: color.white,
+        backgroundColor: color.themeColor,
         iconName: 'user-plus',
         iconColor: color.themeColor,
         text: '关注',
@@ -214,13 +218,15 @@ export default class Profile extends Component {
   render() {
     const state = this.state
     const profile = state.profile
+    color = themeData[mobx.theme]
 
     return (
-      <View style={styles.contianer}>
+      <View style={{ flex: 1, backgroundColor: color.themeColor }}>
         <View style={styles.header}>
           <Animated.View
             scrollEventThrottle={20}
             style={{
+              color: color.themeColor,
               ...styles.headerStyle,
               opacity: this.opacity
             }}
@@ -229,9 +235,12 @@ export default class Profile extends Component {
               <HTMLView
                 data={profile.display_name}
                 emojiObj={state.emojiObj}
-                pTagStyle={{ color: color.white, fontWeight: 'bold' }}
+                pTagStyle={{ color: color.themeColor, fontWeight: 'bold' }}
               />
-              <Text numberOfLines={1} style={styles.headerUserName}>
+              <Text
+                numberOfLines={1}
+                style={{ fontSize: 14, color: color.subColor }}
+              >
                 &nbsp;@{profile.username}
               </Text>
             </View>
@@ -240,13 +249,19 @@ export default class Profile extends Component {
             style={{ marginLeft: 20 }}
             onPress={() => this.props.navigation.goBack()}
           >
-            <Icon style={styles.navIcon} name="arrow-left" />
+            <Icon
+              style={{ fontSize: 20, color: color.themeColor }}
+              name="arrow-left"
+            />
           </TouchableOpacity>
           <TouchableOpacity
             style={{ marginRight: 20 }}
             onPress={() => alert('v1')}
           >
-            <Icon style={styles.navIcon} name="ellipsis-v" />
+            <Icon
+              style={{ fontSize: 20, color: color.themeColor }}
+              name="ellipsis-v"
+            />
           </TouchableOpacity>
         </View>
         <Animated.View
@@ -262,16 +277,18 @@ export default class Profile extends Component {
                 <HTMLView
                   data={profile.display_name}
                   emojiObj={state.emojiObj}
-                  pTagStyle={{ color: color.white }}
+                  pTagStyle={{ color: color.themeColor }}
                 />
-                <Text style={styles.userName}>@{profile.username}</Text>
+                <Text style={[styles.userName, { color: color.subColor }]}>
+                  @{profile.username}
+                </Text>
                 <TouchableOpacity>{this.getRelationshop()}</TouchableOpacity>
               </View>
               <HTMLView
                 data={profile.note}
                 emojiObj={state.emojiObj}
                 pTagStyle={{
-                  color: color.white,
+                  color: color.themeColor,
                   fontSize: 11,
                   textAlign: 'center',
                   lineHeight: 13
@@ -279,19 +296,25 @@ export default class Profile extends Component {
               />
               <View style={styles.followInfoBox}>
                 <View style={styles.sideInfoBox}>
-                  <Text style={styles.followCount}>
+                  <Text
+                    style={[styles.followCount, { color: color.contrastColor }]}
+                  >
                     {profile.followers_count}
                   </Text>
-                  <Text style={{ color: color.white }}>关注者</Text>
+                  <Text style={{ color: color.themeColor }}>关注者</Text>
                 </View>
                 <View style={styles.insideInfoBox}>
-                  <Text style={styles.followCount}>
+                  <Text
+                    style={[styles.followCount, { color: color.contrastColor }]}
+                  >
                     {profile.following_count}
                   </Text>
-                  <Text style={{ color: color.white }}>正在关注</Text>
+                  <Text style={{ color: color.themeColor }}>正在关注</Text>
                 </View>
                 <View style={styles.insideInfoBox}>
-                  <Text style={styles.followCount}>
+                  <Text
+                    style={[styles.followCount, { color: color.contrastColor }]}
+                  >
                     {profile.statuses_count}
                   </Text>
                   <Text style={styles.white}>嘟文</Text>
@@ -311,7 +334,7 @@ export default class Profile extends Component {
             initialPage={0}
             renderTabBar={() => (
               <DefaultTabBar
-                backgroundColor={color.white}
+                backgroundColor={color.themeColor}
                 activeTextColor={color.themeColor}
                 underlineStyle={{ backgroundColor: color.themeColor }}
               />
@@ -336,10 +359,6 @@ export default class Profile extends Component {
 }
 
 const styles = StyleSheet.create({
-  contianer: {
-    flex: 1,
-    backgroundColor: color.white
-  },
   body: {
     flexDirection: 'column'
   },
@@ -373,26 +392,15 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginBottom: 5
   },
-  time: {
-    alignSelf: 'flex-start',
-    color: color.grey,
-    fontSize: 15,
-    marginTop: 20
-  },
   leftBody: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between'
   },
-  navIcon: {
-    fontSize: 20,
-    color: color.white
-  },
   bottomText: {
     marginLeft: 10
   },
   headerStyle: {
-    backgroundColor: color.themeColor,
     position: 'absolute',
     top: 0,
     left: 0,
@@ -408,10 +416,6 @@ const styles = StyleSheet.create({
     width: '75%',
     overflow: 'hidden'
   },
-  headerUserName: {
-    color: color.lightGrey,
-    fontSize: 14
-  },
   bgBox: {
     flex: 1,
     margin: 10,
@@ -424,7 +428,6 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between'
   },
   userName: {
-    color: color.lightGrey,
     fontSize: 14,
     marginBottom: 5
   },
@@ -439,12 +442,8 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   followCount: {
-    color: color.white,
     fontWeight: 'bold',
     fontSize: 15,
     textAlign: 'center'
-  },
-  white: {
-    color: color.white
   }
 })

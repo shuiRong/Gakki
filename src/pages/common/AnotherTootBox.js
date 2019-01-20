@@ -16,12 +16,14 @@ import jstz from 'jstz'
 import { RelativeTime } from 'relative-time-react-native-component'
 import { zh } from '../../utils/locale'
 import MediaBox from './MediaBox'
-import { color } from '../../utils/color'
+import { themeData } from '../../utils/color'
 import { Menu } from 'teaset'
 import mobx from '../../utils/mobx'
 import { fetch } from '../../utils/store'
 import HTMLView from './HTMLView'
+import { observer } from 'mobx-react'
 
+let color = {}
 class TootContent extends Component {
   constructor(props) {
     super(props)
@@ -67,12 +69,12 @@ class TootContent extends Component {
     return (
       <View>
         <View>
-          <Text style={{ color: color.pColor, fontSize: 16 }}>
+          <Text style={{ color: color.contrastColor, fontSize: 16 }}>
             {toot.spoiler_text}
           </Text>
           <TouchableOpacity
             style={{
-              backgroundColor: color.lightBlack,
+              backgroundColor: color.subColor,
               width: 75,
               borderRadius: 3,
               padding: 5,
@@ -85,7 +87,7 @@ class TootContent extends Component {
           >
             <Text
               style={{
-                color: color.white,
+                color: color.themeColor,
                 textAlign: 'center'
               }}
             >
@@ -99,6 +101,7 @@ class TootContent extends Component {
   }
 }
 
+@observer
 export default class AnotherTootBox extends Component {
   static defaultProps = {
     showTread: true // 是否显示'显示前文字符'
@@ -168,9 +171,11 @@ export default class AnotherTootBox extends Component {
   showMenu = () => {
     const toot = this.state.toot
     const getTitle = title => (
-      <Text style={{ color: color.moreBlack }}>{title}</Text>
+      <Text style={{ color: color.contrastColor }}>{title}</Text>
     )
-    const getIcon = name => <Icon name={name} style={styles.menuIcon} />
+    const getIcon = name => (
+      <Icon name={name} style={[styles.menuIcon, { color: color.subColor }]} />
+    )
 
     const baseItems = [
       {
@@ -215,7 +220,7 @@ export default class AnotherTootBox extends Component {
       let items = baseItems.concat(this.isMine() ? myToot : theirToot)
       Menu.show({ x: x - 20, y, width, height }, items, {
         popoverStyle: {
-          backgroundColor: color.white,
+          backgroundColor: color.themeColor,
           justifyContent: 'center',
           elevation: 10
         }
@@ -381,7 +386,9 @@ export default class AnotherTootBox extends Component {
         style={styles.showTreadButton}
         onPress={() => this.goTootDetail(data)}
       >
-        <Text style={styles.showTreadText}>显示前文</Text>
+        <Text style={[styles.showTreadText, { color: color.subColor }]}>
+          显示前文
+        </Text>
       </TouchableOpacity>
     )
   }
@@ -410,11 +417,14 @@ export default class AnotherTootBox extends Component {
 
     return (
       <View style={styles.additional}>
-        <Icon name={icon[type]} style={[styles.additionalIcon]} />
-        <Text style={styles.additionalName}>
+        <Icon
+          name={icon[type]}
+          style={[styles.additionalIcon, { color: color.contrastColor }]}
+        />
+        <Text style={{ marginRight: 10, color: color.contrastColor }}>
           {toot.account.display_name || toot.account.username}
         </Text>
-        <Text style={styles.additionalTypeInfo}>{info[type]}</Text>
+        <Text style={{ color: color.contrastColor }}>{info[type]}</Text>
       </View>
     )
   }
@@ -437,10 +447,12 @@ export default class AnotherTootBox extends Component {
                 {this.getAvatar(toot)}
               </TouchableOpacity>
               <Text style={styles.titleWidth}>
-                <Text style={styles.displayName}>
+                <Text style={{ color: color.contrastColor }}>
                   {data.account.display_name || data.account.username}
                 </Text>
-                <Text style={styles.smallGrey}>
+                <Text
+                  style={{ color: color.contrastColor, fontWeight: 'normal' }}
+                >
                   &nbsp;@{data.account.username}
                 </Text>
               </Text>
@@ -481,7 +493,10 @@ export default class AnotherTootBox extends Component {
                 onPress={() => this.reblog(data.id, !data.reblogged)}
               >
                 {data.reblogged ? (
-                  <Icon style={styles.iconColored} name="retweet" />
+                  <Icon
+                    style={{ fontSize: 15, color: color.contrastColor }}
+                    name="retweet"
+                  />
                 ) : (
                   <Icon style={styles.icon} name="retweet" />
                 )}
@@ -492,7 +507,11 @@ export default class AnotherTootBox extends Component {
                 onPress={() => this.favourite(data.id, !data.favourited)}
               >
                 {data.favourited ? (
-                  <Icon style={styles.iconColored} name="star" solid />
+                  <Icon
+                    style={{ fontSize: 15, color: color.contrastColor }}
+                    name="star"
+                    solid
+                  />
                 ) : (
                   <Icon style={styles.icon} name="star" />
                 )}
@@ -514,6 +533,7 @@ export default class AnotherTootBox extends Component {
 
   render() {
     const toot = this.state.toot
+    color = themeData[mobx.theme]
 
     if (!toot) {
       return <View />
@@ -543,16 +563,11 @@ const styles = StyleSheet.create({
   additionalIcon: {
     width: 40,
     fontSize: 15,
-    color: color.lightBlack,
     marginRight: 10,
     textAlign: 'right'
   },
   additionalName: {
-    marginRight: 10,
-    color: color.lightBlack
-  },
-  additionalTypeInfo: {
-    color: color.lightBlack
+    marginRight: 10
   },
   list: {
     alignItems: 'stretch',
@@ -572,17 +587,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between'
   },
-  smallGrey: {
-    color: color.lightBlack,
-    fontWeight: 'normal'
-  },
   titleWidth: {
     width: 170,
     alignItems: 'flex-end',
     justifyContent: 'space-between'
-  },
-  displayName: {
-    color: color.moreBlack
   },
   iconBox: {
     flexDirection: 'row',
@@ -598,12 +606,7 @@ const styles = StyleSheet.create({
   icon: {
     fontSize: 15
   },
-  iconColored: {
-    fontSize: 15,
-    color: color.themeColor
-  },
   menuIcon: {
-    color: color.lightBlack,
     fontSize: 15,
     marginRight: 10
   },
@@ -616,7 +619,6 @@ const styles = StyleSheet.create({
     padding: 10
   },
   showTreadText: {
-    color: color.grey,
     fontSize: 15,
     textAlign: 'left'
   },
