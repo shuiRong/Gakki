@@ -725,7 +725,7 @@ export default class TootBox extends Component {
     const toot = this.state.toot
     color = themeData[mobx.theme]
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, { backgroundColor: color.themeColor }]}>
         {this.getAdditionalInfo(toot)}
         {this.getBody(toot)}
       </View>

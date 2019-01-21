@@ -1,16 +1,17 @@
 export const themeData = {
   white: {
-    themeColor: '#ffffff', // 主色
+    themeColor: '#FFFFFF', // 主色
     lightThemeColor: '#E8E8E8',
     subColor: '#747474', // 副色
-    contrastColor: '#333333', // 对比色
+    lightContrastColor: '#464646',
+    contrastColor: '#2F2F2F', // 对比色
     lightHeaderBg: '#5067FF',
     lightGrey: '#dddddd',
     grey: '#999999',
     white: '#ffffff',
     pColor: '#2b2e3d',
     lightBlack: '#606984',
-    moreBlack: '#333333',
+    moreBlack: '#2F2F2F',
     black: '#000000',
     gold: '#F3AB27',
     lightgreen: '#1FC966'
@@ -19,6 +20,7 @@ export const themeData = {
     themeColor: '#333333', // 主色
     lightThemeColor: '#2F2F2F',
     subColor: '#747474', // 副色
+    lightContrastColor: '#E8E8E8',
     contrastColor: '#FFFFFF', // 对比色
     lightHeaderBg: '#5067FF',
     lightGrey: '#dddddd',
@@ -26,7 +28,7 @@ export const themeData = {
     white: '#ffffff',
     pColor: '#2b2e3d',
     lightBlack: '#606984',
-    moreBlack: '#333333',
+    moreBlack: '#2F2F2F',
     black: '#000000',
     gold: '#F3AB27',
     lightgreen: '#1FC966'
@@ -41,7 +43,7 @@ export const color = {
   white: '#ffffff',
   pColor: '#2b2e3d',
   lightBlack: '#606984',
-  moreBlack: '#333333',
+  moreBlack: '#2F2F2F',
   black: '#000000',
   gold: '#F3AB27',
   lightgreen: '#1FC966'

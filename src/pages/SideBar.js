@@ -13,86 +13,11 @@ import mobx from '../utils/mobx'
 import { themeData } from '../utils/color'
 import HTMLView from './common/HTMLView'
 import Divider from './common/Divider'
+import { Radio } from './common/Notice'
 import { fetch } from '../utils/store'
-import { CheckBox } from 'native-base'
-import { Overlay } from 'teaset'
 import { observer } from 'mobx-react'
 
 let color = {}
-class ThemeList extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      black: false,
-      white: true,
-      night: false
-    }
-  }
-
-  exchange = which => {
-    const newTheme = {
-      black: false,
-      white: false,
-      night: false
-    }
-    newTheme[which] = true
-    mobx.updateTheme(which)
-    this.setState(newTheme)
-  }
-
-  render() {
-    const state = this.state
-
-    return (
-      <View
-        style={{
-          alignSelf: 'flex-start'
-        }}
-      >
-        <Text style={{ fontSize: 21, color: color.moreBlack }}>应用主题</Text>
-        <View style={{ flex: 1, marginTop: 0 }}>
-          <View style={styles.themeList}>
-            <CheckBox
-              checked={state.black}
-              color={color.contrastColor}
-              onPress={() => this.exchange('black')}
-            />
-            <Text
-              style={[styles.themeListText, { color: color.contrastColor }]}
-            >
-              黑色
-            </Text>
-          </View>
-          <View style={styles.themeList}>
-            <CheckBox
-              checked={state.white}
-              color={color.contrastColor}
-              onPress={() => this.exchange('white')}
-            />
-            <Text
-              style={[styles.themeListText, { color: color.contrastColor }]}
-            >
-              白色
-            </Text>
-          </View>
-          <View style={styles.themeList}>
-            <CheckBox
-              checked={state.night}
-              color={color.contrastColor}
-              onPress={() => this.exchange('night')}
-            />
-            <Text
-              style={[styles.themeListText, { color: color.contrastColor }]}
-            >
-              夜晚
-            </Text>
-          </View>
-        </View>
-      </View>
-    )
-  }
-}
-
 @observer
 export default class SideBar extends Component {
   constructor(props) {
@@ -136,40 +61,52 @@ export default class SideBar extends Component {
     })
   }
 
+  /**
+   * @description 展示主题切换弹框
+   */
   showTheme = () => {
-    let overlayView = (
-      <Overlay.View
-        style={{ alignItems: 'center', justifyContent: 'center' }}
-        overlayOpacity={0.5}
-        ref={v => (this.overlayView = v)}
-      >
-        <View
-          style={{
-            backgroundColor: color.themeColor,
-            padding: 20,
-            width: '85%',
-            height: 250,
-            borderRadius: 5,
-            alignItems: 'center',
-            justifyContent: 'space-around'
-          }}
-        >
-          <ThemeList />
-          <TouchableOpacity
-            style={{
-              alignSelf: 'flex-end',
-              marginBottom: 10
-            }}
-            onPress={() => this.overlayView && this.overlayView.close()}
-            activeOpacity={0.5}
-          >
-            <Text style={{ color: color.contrastColor }}> 取消</Text>
-          </TouchableOpacity>
-        </View>
-      </Overlay.View>
+    const newTheme = {
+      black: {
+        value: false,
+        label: '黑夜'
+      },
+      white: {
+        value: false,
+        label: '白天'
+      }
+    }
+    newTheme[mobx.theme].value = true
+    Radio.show(
+      newTheme,
+      theme => {
+        mobx.updateTheme(theme)
+      },
+      { height: 200 }
     )
+  }
 
-    Overlay.show(overlayView)
+  /**
+   * @description 展示嘟文可见范围切换弹框
+   */
+  showVisibilityRange = () => {
+    const newTheme = {
+      black: {
+        value: false,
+        label: '黑夜'
+      },
+      white: {
+        value: false,
+        label: '白天'
+      }
+    }
+    newTheme[mobx.theme].value = true
+    Radio.show(
+      newTheme,
+      theme => {
+        mobx.updateTheme(theme)
+      },
+      { height: 200 }
+    )
   }
 
   render() {
@@ -194,9 +131,9 @@ export default class SideBar extends Component {
               <HTMLView
                 data={state.display_name}
                 emojiObj={state.emojiObj}
-                pTagStyle={{ color: color.white, fontWeight: 'bold' }}
+                pTagStyle={{ color: color.themeColor, fontWeight: 'bold' }}
               />
-              <Text style={{ color: color.lightGrey }}>
+              <Text style={{ color: color.themeColor }}>
                 @{this.state.username}@{this.state.host}
               </Text>
             </View>

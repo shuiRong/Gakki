@@ -12,6 +12,7 @@ class Globe {
   @observable spoiler_text = undefined // CW模式的警告语
   @observable inputValue = '' // 输入框内容
   @observable theme = 'white' // 当前用户选择主题
+  @observable visibility = '' // 当前用户选择主题
 
   updateReply({
     reply_to_username,
@@ -82,8 +83,11 @@ class Globe {
   }
 
   updateTheme(theme) {
-    console.log('updateTheme', theme)
     this.theme = theme
+  }
+
+  updateVisibility(visibility) {
+    this.visibility = visibility
   }
 }
 

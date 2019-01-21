@@ -116,7 +116,7 @@ export default class Home extends Component {
     color = themeData[mobx.theme]
 
     return (
-      <View style={{ flex: 1, backgroundColor: color.white }}>
+      <View style={{ flex: 1, backgroundColor: color.themeColor }}>
         <Drawer
           ref={ref => {
             this.drawer = ref

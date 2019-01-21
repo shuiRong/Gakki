@@ -21,7 +21,7 @@ export default class FabTool extends Component {
         position="bottomRight"
         onPress={this.sendToot}
       >
-        <Icon name="pen" />
+        <Icon name="pen" style={{ color: color.themeColor }} />
       </Fab>
     )
   }

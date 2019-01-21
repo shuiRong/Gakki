@@ -13,7 +13,7 @@ import Loading from './common/Loading'
 import ListFooterComponent from './common/ListFooterComponent'
 import { color } from '../utils/color'
 import Divider from './common/Divider'
-import Confirm from './common/ConfirmDialog'
+import { Confirm } from './common/Notice'
 
 export default class Notifications extends Component {
   constructor(props) {
