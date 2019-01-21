@@ -149,29 +149,53 @@ export default class SideBar extends Component {
           <View style={styles.list}>
             <View style={styles.iconBox}>
               <Icon
-                name="user"
+                name="envelope"
                 style={[styles.icon, { color: color.contrastColor }]}
               />
             </View>
             <TouchableOpacity activeOpacity={0.5} onPress={this.showTheme}>
               <Text style={[styles.text, { color: color.contrastColor }]}>
-                主题
+                私信
               </Text>
             </TouchableOpacity>
           </View>
           <View style={styles.list}>
             <View style={styles.iconBox}>
               <Icon
-                name="star"
+                name="ban"
                 style={[styles.icon, { color: color.contrastColor }]}
               />
             </View>
-            <TouchableOpacity
-              activeOpacity={0.5}
-              onPress={this.showVisibilityRange}
-            >
+            <TouchableOpacity activeOpacity={0.5} onPress={this.showTheme}>
               <Text style={[styles.text, { color: color.contrastColor }]}>
-                字体大小
+                被屏蔽用户
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.list}>
+            <View style={styles.iconBox}>
+              <Icon
+                name="bell-slash"
+                style={[styles.icon, { color: color.contrastColor }]}
+              />
+            </View>
+            <TouchableOpacity activeOpacity={0.5} onPress={this.showTheme}>
+              <Text style={[styles.text, { color: color.contrastColor }]}>
+                被隐藏用户
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <Divider style={{ marginTop: 5, marginBottom: 20 }} />
+          <View style={styles.list}>
+            <View style={styles.iconBox}>
+              <Icon
+                name="user"
+                style={[styles.icon, { color: color.contrastColor }]}
+              />
+            </View>
+            <TouchableOpacity activeOpacity={0.5} onPress={this.showTheme}>
+              <Text style={[styles.text, { color: color.contrastColor }]}>
+                切换主题
               </Text>
             </TouchableOpacity>
           </View>
@@ -191,22 +215,6 @@ export default class SideBar extends Component {
               </Text>
             </TouchableOpacity>
           </View>
-          <View style={styles.list}>
-            <View style={styles.iconBox}>
-              <Icon
-                name="cogs"
-                style={[styles.icon, { color: color.contrastColor }]}
-              />
-            </View>
-            <TouchableOpacity
-              activeOpacity={0.5}
-              onPress={this.showVisibilityRange}
-            >
-              <Text style={[styles.text, { color: color.contrastColor }]}>
-                浏览时隐藏发嘟按钮
-              </Text>
-            </TouchableOpacity>
-          </View>
           <Divider style={{ marginTop: 5, marginBottom: 20 }} />
           <View style={styles.list}>
             <View style={styles.iconBox}>
@@ -217,17 +225,6 @@ export default class SideBar extends Component {
             </View>
             <Text style={[styles.text, { color: color.contrastColor }]}>
               官方账号
-            </Text>
-          </View>
-          <View style={styles.list}>
-            <View style={styles.iconBox}>
-              <Icon
-                name="user-cog"
-                style={[styles.icon, { color: color.contrastColor }]}
-              />
-            </View>
-            <Text style={[styles.text, { color: color.contrastColor }]}>
-              账户设置
             </Text>
           </View>
           <View style={styles.list}>
