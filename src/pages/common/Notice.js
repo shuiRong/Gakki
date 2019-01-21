@@ -119,7 +119,7 @@ class ThemeList extends Component {
         }}
       >
         <Text style={{ fontSize: 21, color: color.contrastColor }}>
-          应用主题
+          {this.props.title}
         </Text>
         <View style={{ flex: 1, marginTop: 0 }}>
           {Object.keys(state).map(item => (
@@ -153,7 +153,7 @@ class RadioDialog {
    * @param {callback}: 除默认动作之外，自定义的函数
    * @param {style}: 自定义的样式
    */
-  show = (data, callback, style) => {
+  show = (title, data, callback, style) => {
     let overlayView = (
       <Overlay.View
         style={{ alignItems: 'center', justifyContent: 'center' }}
@@ -171,7 +171,12 @@ class RadioDialog {
             ...style
           }}
         >
-          <ThemeList data={data} callback={callback} hide={() => this.hide()} />
+          <ThemeList
+            data={data}
+            title={title}
+            callback={callback}
+            hide={() => this.hide()}
+          />
           <TouchableOpacity
             style={{
               alignSelf: 'flex-end',

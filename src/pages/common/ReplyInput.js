@@ -29,10 +29,22 @@ let color = {}
 const width = Dimensions.get('window').width
 // 嘟文可见范围的图标与实际字段的对应关系
 const visibilityDict = {
-  'globe-americas': 'public',
-  unlock: 'unlisted',
-  lock: 'private',
-  envelope: 'direct'
+  public: {
+    label: '公开',
+    iconName: 'globe-americas'
+  },
+  unlisted: {
+    label: '不公开',
+    iconName: 'unlock'
+  },
+  private: {
+    label: '仅关注者',
+    iconName: 'lock'
+  },
+  direct: {
+    label: '私信',
+    iconName: 'envelope'
+  }
 }
 
 class EmojiBox extends Component {
@@ -256,7 +268,7 @@ export default class ReplyInput extends Component {
     this.state = {
       expand: false, // 输入框是否展开成多行？
       whichIsFocused: '', // 当前哪个输入框被触发了
-      visibilityIcon: 'globe-americas', // 当前选择的嘟文公开选项的图标名称
+      visibility: mobx.visibility, // 当前选择的嘟文公开选项的图标名称
       mediaList: [],
       rotateValue: new Animated.Value(0),
       stopRotate: true,
@@ -329,12 +341,10 @@ export default class ReplyInput extends Component {
       this.startRotate()
 
       if (response.didCancel) {
-        console.log('User cancelled image picker')
         this.setState({
           stopRotate: true
         })
       } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error)
         this.setState({
           stopRotate: true
         })
@@ -369,7 +379,7 @@ export default class ReplyInput extends Component {
       in_reply_to_id: mobx.in_reply_to_id,
       status: mobx.inputValue,
       spoiler_text: mobx.cw ? mobx.spoiler_text : '',
-      visibility: visibilityDict[this.state.visibilityIcon],
+      visibility: this.state.visibility,
       sensitive: false,
       media_ids: this.state.mediaList.map(media => media.id)
     }).then(res => {
@@ -392,13 +402,13 @@ export default class ReplyInput extends Component {
   }
 
   // 显示嘟文可见范围的选项菜单
-  showOptions = () => {
-    const getTitle = (title, subTitle, iconName) => {
-      if (this.state.visibilityIcon === iconName) {
+  showVisibilityOptions = () => {
+    const getTitle = (title, subTitle) => {
+      if (this.state.visibility === title) {
         return (
           <View>
             <Text style={[styles.title, { color: color.contrastColor }]}>
-              {title}
+              {visibilityDict[title].label}
             </Text>
             <Text style={[styles.subTitle, { color: color.contrastColor }]}>
               {subTitle}
@@ -409,15 +419,17 @@ export default class ReplyInput extends Component {
 
       return (
         <View>
-          <Text style={[styles.title, { color: color.subColor }]}>{title}</Text>
+          <Text style={[styles.title, { color: color.subColor }]}>
+            {visibilityDict[title].label}
+          </Text>
           <Text style={[styles.subTitle, { color: color.subColor }]}>
             {subTitle}
           </Text>
         </View>
       )
     }
-    const getIcon = name => {
-      if (this.state.visibilityIcon === name) {
+    const getIcon = (name, which) => {
+      if (this.state.visibility === which) {
         return (
           <Icon
             name={name}
@@ -435,32 +447,24 @@ export default class ReplyInput extends Component {
 
     const items = [
       {
-        title: getTitle(
-          '公开',
-          '所有人可见，并会出现在公共时间轴上',
-          'globe-americas'
-        ),
-        icon: getIcon('globe-americas'),
-        onPress: () => this.changeOption('globe-americas')
+        title: getTitle('public', '所有人可见，并会出现在公共时间轴上'),
+        icon: getIcon('globe-americas', 'public'),
+        onPress: () => this.changeOption('public')
       },
       {
-        title: getTitle(
-          '不公开',
-          '所有人可见，但不会出现在公共时间轴上',
-          'unlock'
-        ),
-        icon: getIcon('unlock'),
-        onPress: () => this.changeOption('unlock')
+        title: getTitle('unlisted', '所有人可见，但不会出现在公共时间轴上'),
+        icon: getIcon('unlock', 'unlisted'),
+        onPress: () => this.changeOption('unlisted')
       },
       {
-        title: getTitle('仅关注者', '只有关注你的用户能看到', 'lock'),
-        icon: getIcon('lock'),
-        onPress: () => this.changeOption('lock')
+        title: getTitle('private', '只有关注你的用户能看到'),
+        icon: getIcon('lock', 'private'),
+        onPress: () => this.changeOption('private')
       },
       {
-        title: getTitle('私信', '只有被提及的用户能看到', 'envelope'),
-        icon: getIcon('envelope'),
-        onPress: () => this.changeOption('envelope')
+        title: getTitle('direct', '只有被提及的用户能看到'),
+        icon: getIcon('envelope', 'direct'),
+        onPress: () => this.changeOption('direct')
       }
     ]
 
@@ -476,9 +480,9 @@ export default class ReplyInput extends Component {
     })
   }
 
-  changeOption = visibilityIcon => {
+  changeOption = visibility => {
     this.setState({
-      visibilityIcon
+      visibility
     })
   }
 
@@ -697,8 +701,11 @@ export default class ReplyInput extends Component {
         </View>
         <View style={styles.inputTools}>
           {this.getMediaIcon()}
-          <TouchableOpacity onPress={this.showOptions}>
-            <Icon name={this.state.visibilityIcon} style={styles.icon} />
+          <TouchableOpacity onPress={this.showVisibilityOptions}>
+            <Icon
+              name={visibilityDict[state.visibility].iconName}
+              style={styles.icon}
+            />
           </TouchableOpacity>
           <TouchableOpacity
             ref={ref => (this.refOption = ref)}

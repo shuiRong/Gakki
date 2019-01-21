@@ -77,6 +77,7 @@ export default class SideBar extends Component {
     }
     newTheme[mobx.theme].value = true
     Radio.show(
+      '切换主题',
       newTheme,
       theme => {
         mobx.updateTheme(theme)
@@ -89,23 +90,28 @@ export default class SideBar extends Component {
    * @description 展示嘟文可见范围切换弹框
    */
   showVisibilityRange = () => {
-    const newTheme = {
-      black: {
+    const visibility = {
+      public: {
         value: false,
-        label: '黑夜'
+        label: '公开'
       },
-      white: {
+      unlisted: {
         value: false,
-        label: '白天'
+        label: '不公开'
+      },
+      private: {
+        value: false,
+        label: '仅关注者'
       }
     }
-    newTheme[mobx.theme].value = true
+    visibility[mobx.visibility].value = true
     Radio.show(
-      newTheme,
-      theme => {
-        mobx.updateTheme(theme)
+      '选择可见范围',
+      visibility,
+      item => {
+        mobx.updateVisibility(item)
       },
-      { height: 200 }
+      { height: 220 }
     )
   }
 
@@ -160,9 +166,14 @@ export default class SideBar extends Component {
                 style={[styles.icon, { color: color.contrastColor }]}
               />
             </View>
-            <Text style={[styles.text, { color: color.contrastColor }]}>
-              字体大小
-            </Text>
+            <TouchableOpacity
+              activeOpacity={0.5}
+              onPress={this.showVisibilityRange}
+            >
+              <Text style={[styles.text, { color: color.contrastColor }]}>
+                字体大小
+              </Text>
+            </TouchableOpacity>
           </View>
           <View style={styles.list}>
             <View style={styles.iconBox}>
@@ -171,9 +182,14 @@ export default class SideBar extends Component {
                 style={[styles.icon, { color: color.contrastColor }]}
               />
             </View>
-            <Text style={[styles.text, { color: color.contrastColor }]}>
-              默认嘟文可见范围
-            </Text>
+            <TouchableOpacity
+              activeOpacity={0.5}
+              onPress={this.showVisibilityRange}
+            >
+              <Text style={[styles.text, { color: color.contrastColor }]}>
+                设置嘟文默认可见范围
+              </Text>
+            </TouchableOpacity>
           </View>
           <View style={styles.list}>
             <View style={styles.iconBox}>
@@ -182,9 +198,14 @@ export default class SideBar extends Component {
                 style={[styles.icon, { color: color.contrastColor }]}
               />
             </View>
-            <Text style={[styles.text, { color: color.contrastColor }]}>
-              浏览时隐藏发嘟按钮
-            </Text>
+            <TouchableOpacity
+              activeOpacity={0.5}
+              onPress={this.showVisibilityRange}
+            >
+              <Text style={[styles.text, { color: color.contrastColor }]}>
+                浏览时隐藏发嘟按钮
+              </Text>
+            </TouchableOpacity>
           </View>
           <Divider style={{ marginTop: 5, marginBottom: 20 }} />
           <View style={styles.list}>
