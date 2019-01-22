@@ -121,7 +121,7 @@ export default class SideBar extends Component {
 
     return (
       <View style={[styles.main, { backgroundColor: color.themeColor }]}>
-        <ImageBackground source={{ uri: this.state.header }} style={styles.bg}>
+        <ImageBackground source={{ uri: state.header }} style={styles.bg}>
           <View style={styles.infoBox}>
             <TouchableOpacity
               activeOpacity={0.5}
@@ -131,7 +131,7 @@ export default class SideBar extends Component {
                 })
               }
             >
-              <Image source={{ uri: this.state.avatar }} style={styles.image} />
+              <Image source={{ uri: state.avatar }} style={styles.image} />
             </TouchableOpacity>
             <View style={styles.info}>
               <HTMLView
@@ -140,7 +140,7 @@ export default class SideBar extends Component {
                 pTagStyle={{ color: color.themeColor, fontWeight: 'bold' }}
               />
               <Text style={{ color: color.themeColor }}>
-                @{this.state.username}@{this.state.host}
+                @{state.username}@{state.host}
               </Text>
             </View>
           </View>
@@ -153,7 +153,10 @@ export default class SideBar extends Component {
                 style={[styles.icon, { color: color.contrastColor }]}
               />
             </View>
-            <TouchableOpacity activeOpacity={0.5} onPress={this.showTheme}>
+            <TouchableOpacity
+              activeOpacity={0.5}
+              onPress={() => this.props.navigation.navigate('Envelope')}
+            >
               <Text style={[styles.text, { color: color.contrastColor }]}>
                 私信
               </Text>
@@ -166,7 +169,10 @@ export default class SideBar extends Component {
                 style={[styles.icon, { color: color.contrastColor }]}
               />
             </View>
-            <TouchableOpacity activeOpacity={0.5} onPress={this.showTheme}>
+            <TouchableOpacity
+              activeOpacity={0.5}
+              onPress={() => this.props.navigation.navigate('MutedUsers')}
+            >
               <Text style={[styles.text, { color: color.contrastColor }]}>
                 被屏蔽用户
               </Text>
@@ -179,7 +185,10 @@ export default class SideBar extends Component {
                 style={[styles.icon, { color: color.contrastColor }]}
               />
             </View>
-            <TouchableOpacity activeOpacity={0.5} onPress={this.showTheme}>
+            <TouchableOpacity
+              activeOpacity={0.5}
+              onPress={() => this.props.navigation.navigate('BlockedUsers')}
+            >
               <Text style={[styles.text, { color: color.contrastColor }]}>
                 被隐藏用户
               </Text>

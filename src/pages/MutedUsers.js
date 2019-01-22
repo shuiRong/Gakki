@@ -1,11 +1,11 @@
 /**
- * 通知页面
+ * 私信页面
  */
 
 import React, { Component } from 'react'
 import { View, StyleSheet, FlatList, RefreshControl } from 'react-native'
 import { Button } from 'native-base'
-import { getNotifications, clearNotifications } from '../utils/api'
+import { getBlocks } from '../utils/api'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import TootBox from './common/TootBox'
 import Header from './common/Header'
@@ -13,9 +13,9 @@ import Loading from './common/Loading'
 import ListFooterComponent from './common/ListFooterComponent'
 import { color } from '../utils/color'
 import Divider from './common/Divider'
-import { Confirm } from './common/Notice'
+import UserList from './common/UserList'
 
-export default class Notifications extends Component {
+export default class MutedUsers extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -24,7 +24,7 @@ export default class Notifications extends Component {
     }
   }
   componentDidMount() {
-    this.getNotifications()
+    this.getBlocks()
   }
 
   deleteToot = id => {
@@ -52,8 +52,8 @@ export default class Notifications extends Component {
    * @param {cb}: 成功后的回调函数
    * @param {params}: 分页参数
    */
-  getNotifications = (cb, params) => {
-    getNotifications(params).then(res => {
+  getBlocks = (cb, params) => {
+    getBlocks(params).then(res => {
       // 同时将数据更新到state数据中，刷新视图
       this.setState({
         list: this.state.list.concat(res),
@@ -63,34 +63,19 @@ export default class Notifications extends Component {
     })
   }
 
-  /**
-   * @description 清空通知
-   * @param {}:
-   */
-  clearNotifications = () => {
-    Confirm.show('确定清空所有通知吗？', () => {
-      clearNotifications().then(() => {
-        this.setState({
-          list: [],
-          loading: false
-        })
-      })
-    })
-  }
-
   refreshHandler = () => {
     this.setState({
       loading: true,
       list: []
     })
-    this.getNotifications()
+    this.getBlocks()
   }
 
   // 滚动到了底部，加载数据
   onEndReached = () => {
     const state = this.state
-    this.getNotifications(null, {
-      max_id: state.list[state.list.length - 1].id
+    this.getBlocks(null, {
+      max_id: state.list[state.list.length - 1].last_status.id
     })
   }
 
@@ -111,21 +96,14 @@ export default class Notifications extends Component {
               />
             </Button>
           }
-          title={'通知'}
-          right={
-            <Button transparent onPress={this.clearNotifications}>
-              <Icon
-                style={[styles.icon, { color: color.subColor }]}
-                name="trash-alt"
-              />
-            </Button>
-          }
+          title={'已隐藏用户'}
+          right={'none'}
         />
         <FlatList
           ItemSeparatorComponent={() => <Divider />}
           showsVerticalScrollIndicator={false}
           data={state.list}
-          onEndReachedThreshold={0.1}
+          onEndReachedThreshold={0.3}
           onEndReached={this.onEndReached}
           onScroll={this.props.onScroll}
           keyExtractor={item => item.id}
@@ -136,17 +114,9 @@ export default class Notifications extends Component {
             />
           }
           ListFooterComponent={() => (
-            <ListFooterComponent info={'你还没有收到任何通知'} />
+            <ListFooterComponent info={'没有更多了...'} />
           )}
-          renderItem={({ item }) => (
-            <TootBox
-              data={item}
-              navigation={this.props.navigation}
-              deleteToot={this.deleteToot}
-              muteAccount={this.muteAccount}
-              blockAccount={this.blockAccount}
-            />
-          )}
+          renderItem={({ item }) => <UserList data={item} />}
         />
       </View>
     )

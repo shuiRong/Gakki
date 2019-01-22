@@ -101,7 +101,6 @@ export const muteAccount = (id, mute) => {
 
 // 屏蔽/取消屏蔽 某人
 export const blockAccount = (id, block) => {
-  console.log('block')
   return request({
     url: `/api/v1/accounts/${id}/${block ? 'block' : 'unblock'}`,
     method: 'post',
@@ -224,6 +223,36 @@ export const clearNotifications = () => {
 export const setProfile = data => {
   return request({
     url: '/settings/profile',
+    method: 'get',
+    params,
+    headers
+  })
+}
+
+// 获取私信数据
+export const getConversations = params => {
+  return request({
+    url: '/api/v1/conversations',
+    method: 'get',
+    params,
+    headers
+  })
+}
+
+// 获取屏蔽用户
+export const getBlocks = params => {
+  return request({
+    url: '/api/v1/blocks',
+    method: 'get',
+    params,
+    headers
+  })
+}
+
+// 获取隐藏用户
+export const getMutes = params => {
+  return request({
+    url: '/api/v1/mutes',
     method: 'get',
     params,
     headers

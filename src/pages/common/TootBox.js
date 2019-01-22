@@ -447,20 +447,7 @@ export default class TootBox extends Component {
           <Icon style={styles.icon} name="reply" />
           <Text style={styles.bottomText}>{data.replies_count}</Text>
         </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.iconParent}
-          onPress={() => this.reblog(data.id, !data.reblogged)}
-        >
-          {data.reblogged ? (
-            <Icon
-              style={{ fontSize: 15, color: color.contrastColor }}
-              name="retweet"
-            />
-          ) : (
-            <Icon style={styles.icon} name="retweet" />
-          )}
-          <Text style={styles.bottomText}>{data.reblogs_count}</Text>
-        </TouchableOpacity>
+        {this.getRetweetIcon(data)}
         <TouchableOpacity
           style={styles.iconParent}
           onPress={() => this.favourite(data.id, !data.favourited)}
@@ -487,6 +474,34 @@ export default class TootBox extends Component {
     )
   }
 
+  getRetweetIcon = data => {
+    if (data.accounts) {
+      return (
+        <Icon
+          style={[styles.icon, { color: color.lightThemeColor }]}
+          name="envelope"
+        />
+      )
+    }
+
+    return (
+      <TouchableOpacity
+        style={styles.iconParent}
+        onPress={() => this.reblog(data.id, !data.reblogged)}
+      >
+        {data.reblogged ? (
+          <Icon
+            style={{ fontSize: 15, color: color.contrastColor }}
+            name="retweet"
+          />
+        ) : (
+          <Icon style={styles.icon} name="retweet" />
+        )}
+        <Text style={styles.bottomText}>{data.reblogs_count}</Text>
+      </TouchableOpacity>
+    )
+  }
+
   /**
    * @description 获取用户头像，如果是转发，则同时显示两人头像
    * @param {toot}: 包含所有信息的toot数据。如果数据为空，说明情况是：Notification Entity 中的follow类型
@@ -496,6 +511,17 @@ export default class TootBox extends Component {
       toot = this.state.notification
     }
     if (!toot.reblog) {
+      // 如果是私信页面的头像
+      if (toot.accounts) {
+        // 且 @ 的用户只有一个，照常展示
+        if (toot.accounts.length === 1) {
+          toot.account = toot.accounts[0]
+        } else {
+          // 如果涉及的用户多于一个，则另外处理
+          return this.getEnvelopeAvatar(toot.accounts)
+        }
+      }
+
       return (
         <Image style={styles.avatar} source={{ uri: toot.account.avatar }} />
       )
@@ -513,6 +539,91 @@ export default class TootBox extends Component {
         />
       </View>
     )
+  }
+
+  /**
+   * @description 私信页面的头像，需要对两个及其以上的 @ 用户头像特殊处理
+   * @param {accounts}:
+   */
+  getEnvelopeAvatar = accounts => {
+    if (accounts.length === 2) {
+      return (
+        <View
+          style={{
+            width: 40,
+            height: 40,
+            marginRight: 10,
+            flexDirection: 'row',
+            justifyContent: 'space-between'
+          }}
+        >
+          <Image
+            style={{ width: 19, height: 40, borderRadius: 3 }}
+            source={{ uri: accounts[0].avatar }}
+          />
+          <Image
+            style={{ width: 19, height: 40, borderRadius: 3 }}
+            source={{ uri: accounts[1].avatar }}
+          />
+        </View>
+      )
+    } else {
+      return (
+        <View
+          style={{
+            width: 40,
+            height: 40,
+            marginRight: 10,
+            justifyContent: 'space-between',
+            alignItems: 'space-between'
+          }}
+        >
+          <View
+            style={{
+              width: 40,
+              height: 20,
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'flex-start'
+            }}
+          >
+            <Image
+              style={{ width: 19, height: 19, borderRadius: 3 }}
+              source={{ uri: accounts[0].avatar }}
+            />
+            <Image
+              style={{ width: 19, height: 19, borderRadius: 3 }}
+              source={{ uri: accounts[1].avatar }}
+            />
+          </View>
+          <View
+            style={{
+              width: 40,
+              height: 20,
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'flex-end'
+            }}
+          >
+            <Image
+              style={{ width: 19, height: 19, borderRadius: 3 }}
+              source={{ uri: accounts[2].avatar }}
+            />
+            {accounts[3] && (
+              <Image
+                style={{
+                  width: 19,
+                  height: 19,
+                  marginLeft: 2,
+                  borderRadius: 3
+                }}
+                source={{ uri: accounts[3].avatar }}
+              />
+            )}
+          </View>
+        </View>
+      )
+    }
   }
 
   /**
@@ -785,6 +896,7 @@ const styles = StyleSheet.create({
   iconBox: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
     flex: 1,
     width: '90%'
   },

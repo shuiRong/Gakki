@@ -11,7 +11,7 @@ export default class ListFooterComponent extends Component {
           alignItems: 'center'
         }}
       >
-        <Text>{this.props.info || '正在加载...'}</Text>
+        <Text>{this.props.info || '没有更多了...'}</Text>
       </View>
     )
   }
