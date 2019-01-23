@@ -181,7 +181,7 @@ export default class Profile extends Component {
     let configStyle = {
       backgroundColor: color.themeColor,
       iconName: 'user',
-      iconColor: color.themeColor,
+      iconColor: color.contrastColor,
       text: '已关注',
       textColor: color.themeColor
     }
@@ -189,9 +189,9 @@ export default class Profile extends Component {
       configStyle = {
         backgroundColor: color.themeColor,
         iconName: 'user-plus',
-        iconColor: color.themeColor,
+        iconColor: color.contrastColor,
         text: '关注',
-        textColor: color.themeColor
+        textColor: color.contrastColor
       }
     }
 
@@ -246,11 +246,11 @@ export default class Profile extends Component {
             </View>
           </Animated.View>
           <TouchableOpacity
-            style={{ marginLeft: 20 }}
+            style={{ marginLeft: 20, borderColor: color.contrastColor }}
             onPress={() => this.props.navigation.goBack()}
           >
             <Icon
-              style={{ fontSize: 20, color: color.themeColor }}
+              style={{ fontSize: 20, color: color.contrastColor }}
               name="arrow-left"
             />
           </TouchableOpacity>
@@ -297,7 +297,7 @@ export default class Profile extends Component {
               <View style={styles.followInfoBox}>
                 <View style={styles.sideInfoBox}>
                   <Text
-                    style={[styles.followCount, { color: color.contrastColor }]}
+                    style={[styles.followCount, { color: color.themeColor }]}
                   >
                     {profile.followers_count}
                   </Text>
@@ -305,7 +305,7 @@ export default class Profile extends Component {
                 </View>
                 <View style={styles.insideInfoBox}>
                   <Text
-                    style={[styles.followCount, { color: color.contrastColor }]}
+                    style={[styles.followCount, { color: color.themeColor }]}
                   >
                     {profile.following_count}
                   </Text>
@@ -313,11 +313,11 @@ export default class Profile extends Component {
                 </View>
                 <View style={styles.insideInfoBox}>
                   <Text
-                    style={[styles.followCount, { color: color.contrastColor }]}
+                    style={[styles.followCount, { color: color.themeColor }]}
                   >
                     {profile.statuses_count}
                   </Text>
-                  <Text style={styles.white}>嘟文</Text>
+                  <Text style={{ color: color.themeColor }}>嘟文</Text>
                 </View>
               </View>
             </View>
@@ -335,8 +335,9 @@ export default class Profile extends Component {
             renderTabBar={() => (
               <DefaultTabBar
                 backgroundColor={color.themeColor}
-                activeTextColor={color.themeColor}
-                underlineStyle={{ backgroundColor: color.themeColor }}
+                activeTextColor={color.contrastColor}
+                inactiveTextColor={color.subColor}
+                underlineStyle={{ backgroundColor: color.contrastColor }}
               />
             )}
           >

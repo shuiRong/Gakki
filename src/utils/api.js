@@ -90,11 +90,17 @@ export const reblog = (id, reblog) => {
   })
 }
 
-// 隐藏/取消隐藏 某人
-export const muteAccount = (id, mute) => {
+/**
+ * @description 隐藏/取消隐藏 某人
+ * @param {notificationStatus}: 是否同时隐藏该用户的通知
+ */
+export const muteAccount = (id, mute, notificationStatus) => {
   return request({
     url: `/api/v1/accounts/${id}/${mute ? 'mute' : 'unmute'}`,
     method: 'post',
+    data: {
+      notifications: notificationStatus
+    },
     headers
   })
 }
@@ -240,21 +246,25 @@ export const getConversations = params => {
 }
 
 // 获取屏蔽用户
-export const getBlocks = params => {
+export const getBlocks = () => {
   return request({
     url: '/api/v1/blocks',
     method: 'get',
-    params,
+    params: {
+      limit: 100
+    },
     headers
   })
 }
 
 // 获取隐藏用户
-export const getMutes = params => {
+export const getMutes = () => {
   return request({
     url: '/api/v1/mutes',
     method: 'get',
-    params,
+    params: {
+      limit: 100
+    },
     headers
   })
 }

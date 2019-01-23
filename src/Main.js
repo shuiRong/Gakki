@@ -26,7 +26,7 @@ export default createStackNavigator(
     Test
   },
   {
-    initialRouteName: 'BlockedUsers',
+    initialRouteName: 'MutedUsers',
     headerMode: 'none'
   }
 )

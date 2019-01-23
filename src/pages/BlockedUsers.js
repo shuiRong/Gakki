@@ -5,25 +5,25 @@
 import React, { Component } from 'react'
 import { View, StyleSheet, FlatList, RefreshControl } from 'react-native'
 import { Button } from 'native-base'
-import { getConversations } from '../utils/api'
+import { getBlocks, getRelationship } from '../utils/api'
 import Icon from 'react-native-vector-icons/FontAwesome5'
-import TootBox from './common/TootBox'
 import Header from './common/Header'
 import Loading from './common/Loading'
-import ListFooterComponent from './common/ListFooterComponent'
 import { color } from '../utils/color'
 import Divider from './common/Divider'
+import UserItem from './common/UserItem'
 
-export default class BlockedUsers extends Component {
+export default class MutedUsers extends Component {
   constructor(props) {
     super(props)
     this.state = {
       list: [],
+      relationships: [],
       loading: true
     }
   }
   componentDidMount() {
-    this.getConversations()
+    this.getMutes()
   }
 
   deleteToot = id => {
@@ -32,18 +32,13 @@ export default class BlockedUsers extends Component {
     })
   }
 
-  // 清空列表中刚被mute的人的所有消息
-  muteAccount = id => {
-    this.setState({
-      list: this.state.list.filter(toot => toot.account.id !== id)
-    })
-  }
-
-  // 清空列表中刚被mute的人的所有消息
-  blockAccount = id => {
-    this.setState({
-      list: this.state.list.filter(toot => toot.account.id !== id)
-    })
+  /**
+   * @description 从关系数组中找到特定用户的数据
+   * @param {id}: account.id
+   */
+  findOne = id => {
+    const result = this.state.relationships.filter(item => item.id === id)[0]
+    return result || {}
   }
 
   /**
@@ -51,14 +46,23 @@ export default class BlockedUsers extends Component {
    * @param {cb}: 成功后的回调函数
    * @param {params}: 分页参数
    */
-  getConversations = (cb, params) => {
-    getConversations(params).then(res => {
+  getMutes = (cb, params) => {
+    getMutes(params).then(res => {
       // 同时将数据更新到state数据中，刷新视图
       this.setState({
         list: this.state.list.concat(res),
         loading: false
       })
       if (cb) cb()
+      this.getRelationship(this.state.list.map(item => item.id))
+    })
+  }
+
+  getRelationship = ids => {
+    getRelationship(ids).then(res => {
+      this.setState({
+        relationships: res
+      })
     })
   }
 
@@ -67,14 +71,12 @@ export default class BlockedUsers extends Component {
       loading: true,
       list: []
     })
-    this.getConversations()
+    this.getMutes()
   }
 
-  // 滚动到了底部，加载数据
-  onEndReached = () => {
-    const state = this.state
-    this.getConversations(null, {
-      max_id: state.list[state.list.length - 1].last_status.id
+  deleteUser = id => {
+    this.setState({
+      list: this.state.list.filter(item => item.id !== id)
     })
   }
 
@@ -87,11 +89,10 @@ export default class BlockedUsers extends Component {
       <View style={styles.container}>
         <Header
           left={
-            <Button transparent>
+            <Button transparent onPress={() => this.props.navigation.goBack()}>
               <Icon
                 style={[styles.icon, { color: color.subColor }]}
                 name="arrow-left"
-                onPress={() => this.props.navigation.goBack()}
               />
             </Button>
           }
@@ -100,10 +101,9 @@ export default class BlockedUsers extends Component {
         />
         <FlatList
           ItemSeparatorComponent={() => <Divider />}
+          ListFooterComponent={<Divider />}
           showsVerticalScrollIndicator={false}
           data={state.list}
-          onEndReachedThreshold={0.3}
-          onEndReached={this.onEndReached}
           onScroll={this.props.onScroll}
           keyExtractor={item => item.id}
           refreshControl={
@@ -112,19 +112,13 @@ export default class BlockedUsers extends Component {
               onRefresh={this.refreshHandler}
             />
           }
-          ListFooterComponent={() => (
-            <ListFooterComponent info={'没有更多了...'} />
-          )}
           renderItem={({ item }) => (
-            <TootBox
-              data={{
-                ...item.last_status,
-                accounts: item.accounts
-              }}
+            <UserItem
+              data={item}
+              model={'mute'}
+              relationship={this.findOne(item.id)}
               navigation={this.props.navigation}
-              deleteToot={this.deleteToot}
-              muteAccount={this.muteAccount}
-              blockAccount={this.blockAccount}
+              deleteUser={this.deleteUser}
             />
           )}
         />
