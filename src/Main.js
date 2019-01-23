@@ -26,7 +26,7 @@ export default createStackNavigator(
     Test
   },
   {
-    initialRouteName: 'MutedUsers',
+    initialRouteName: 'Home',
     headerMode: 'none'
   }
 )

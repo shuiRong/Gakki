@@ -1,14 +1,7 @@
 import React, { Component } from 'react'
-import {
-  View,
-  StyleSheet,
-  Image,
-  Text,
-  TouchableOpacity,
-  Clipboard
-} from 'react-native'
+import { View, Image, Text, TouchableOpacity } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
-import { muteAccount } from '../../utils/api'
+import { muteAccount, blockAccount } from '../../utils/api'
 import { themeData } from '../../utils/color'
 import mobx from '../../utils/mobx'
 import HTMLView from './HTMLView'
@@ -43,6 +36,20 @@ export default class UserList extends Component {
   /**
    * @description 是否隐藏、取消隐藏账号
    */
+  blockAccount = block => {
+    const state = this.state
+    const id = state.account.id
+    blockAccount(id, block).then(() => {
+      if (!block) {
+        this.props.deleteUser(id)
+        return
+      }
+    })
+  }
+
+  /**
+   * @description 是否隐藏、取消隐藏账号
+   */
   muteAccount = (mute, notification) => {
     const state = this.state
     const id = state.account.id
@@ -71,10 +78,10 @@ export default class UserList extends Component {
       return (
         <TouchableOpacity
           activeOpacity={0.5}
-          onPress={() => this.muteAccount(true)}
+          onPress={() => this.blockAccount(false)}
         >
           <Icon
-            name={'bell'}
+            name={'unlock'}
             style={{ fontSize: 18, color: color.contrastColor }}
           />
         </TouchableOpacity>
@@ -157,19 +164,22 @@ export default class UserList extends Component {
             width: '18%'
           }}
         >
-          <TouchableOpacity
-            activeOpacity={0.5}
-            onPress={() => this.muteAccount(false)}
-          >
-            <Icon
-              name={'volume-up'}
-              style={{
-                fontSize: 18,
-                color: color.contrastColor,
-                marginRight: 15
-              }}
-            />
-          </TouchableOpacity>
+          {this.props.model === 'mute' && (
+            <TouchableOpacity
+              activeOpacity={0.5}
+              onPress={() => this.muteAccount(false)}
+            >
+              <Icon
+                name={'volume-up'}
+                style={{
+                  fontSize: 18,
+                  color: color.contrastColor,
+                  marginRight: 15
+                }}
+              />
+            </TouchableOpacity>
+          )}
+
           <View
             style={{
               width: '60%',

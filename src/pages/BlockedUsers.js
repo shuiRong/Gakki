@@ -23,7 +23,7 @@ export default class MutedUsers extends Component {
     }
   }
   componentDidMount() {
-    this.getMutes()
+    this.getBlocks()
   }
 
   deleteToot = id => {
@@ -46,8 +46,8 @@ export default class MutedUsers extends Component {
    * @param {cb}: 成功后的回调函数
    * @param {params}: 分页参数
    */
-  getMutes = (cb, params) => {
-    getMutes(params).then(res => {
+  getBlocks = (cb, params) => {
+    getBlocks(params).then(res => {
       // 同时将数据更新到state数据中，刷新视图
       this.setState({
         list: this.state.list.concat(res),
@@ -71,7 +71,7 @@ export default class MutedUsers extends Component {
       loading: true,
       list: []
     })
-    this.getMutes()
+    this.getBlocks()
   }
 
   deleteUser = id => {
@@ -115,7 +115,7 @@ export default class MutedUsers extends Component {
           renderItem={({ item }) => (
             <UserItem
               data={item}
-              model={'mute'}
+              model={'block'}
               relationship={this.findOne(item.id)}
               navigation={this.props.navigation}
               deleteUser={this.deleteUser}
