@@ -9,10 +9,14 @@ import { getBlocks, getRelationship } from '../utils/api'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import Header from './common/Header'
 import Loading from './common/Loading'
-import { color } from '../utils/color'
+import { themeData } from '../utils/color'
+import mobx from '../utils/mobx'
 import Divider from './common/Divider'
 import UserItem from './common/UserItem'
+import { observer } from 'mobx-react'
 
+let color = {}
+@observer
 export default class MutedUsers extends Component {
   constructor(props) {
     super(props)
@@ -82,11 +86,13 @@ export default class MutedUsers extends Component {
 
   render() {
     const state = this.state
+    color = themeData[mobx.theme]
+
     if (state.loading) {
       return <Loading />
     }
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, { backgroundColor: color.themeColor }]}>
         <Header
           left={
             <Button transparent onPress={() => this.props.navigation.goBack()}>
@@ -130,8 +136,7 @@ export default class MutedUsers extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 0,
-    backgroundColor: color.white
+    paddingTop: 0
   },
   icon: {
     fontSize: 17

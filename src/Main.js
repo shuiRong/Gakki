@@ -6,6 +6,8 @@ import Notifications from './pages/Notifications'
 import Envelope from './pages/Envelope'
 import BlockedUsers from './pages/BlockedUsers'
 import MutedUsers from './pages/MutedUsers'
+import About from './pages/About'
+import OpenSource from './pages/OpenSource'
 import EditProfile from './pages/EditProfile'
 import Search from './pages/Search'
 import SendToot from './pages/SendToot'
@@ -20,13 +22,15 @@ export default createStackNavigator(
     Envelope,
     BlockedUsers,
     MutedUsers,
+    About,
+    OpenSource,
     EditProfile,
     Search,
     SendToot,
     Test
   },
   {
-    initialRouteName: 'Home',
+    initialRouteName: 'OpenSource',
     headerMode: 'none'
   }
 )

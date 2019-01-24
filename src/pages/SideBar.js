@@ -232,9 +232,18 @@ export default class SideBar extends Component {
                 style={[styles.icon, { color: color.contrastColor }]}
               />
             </View>
-            <Text style={[styles.text, { color: color.contrastColor }]}>
-              官方账号
-            </Text>
+            <TouchableOpacity
+              activeOpacity={0.5}
+              onPress={() => {
+                this.props.navigation.navigate('Profile', {
+                  id: '81232'
+                })
+              }}
+            >
+              <Text style={[styles.text, { color: color.contrastColor }]}>
+                官方账号
+              </Text>
+            </TouchableOpacity>
           </View>
           <View style={styles.list}>
             <View style={styles.iconBox}>
@@ -243,9 +252,16 @@ export default class SideBar extends Component {
                 style={[styles.icon, { color: color.contrastColor }]}
               />
             </View>
-            <Text style={[styles.text, { color: color.contrastColor }]}>
-              关于
-            </Text>
+            <TouchableOpacity
+              activeOpacity={0.5}
+              onPress={() => {
+                this.props.navigation.navigate('About')
+              }}
+            >
+              <Text style={[styles.text, { color: color.contrastColor }]}>
+                关于
+              </Text>
+            </TouchableOpacity>
           </View>
           <View style={styles.list}>
             <View style={styles.iconBox}>

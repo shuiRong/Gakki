@@ -239,7 +239,7 @@ export default class Profile extends Component {
               />
               <Text
                 numberOfLines={1}
-                style={{ fontSize: 14, color: color.subColor }}
+                style={{ fontSize: 14, color: color.lightThemeColor }}
               >
                 &nbsp;@{profile.username}
               </Text>
