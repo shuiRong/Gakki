@@ -3,7 +3,7 @@
  */
 
 import React, { Component } from 'react'
-import { View, Text, TouchableOpacity } from 'react-native'
+import { View, Text, TouchableOpacity, Linking } from 'react-native'
 import Header from './common/Header'
 import { Button } from 'native-base'
 import Icon from 'react-native-vector-icons/FontAwesome5'
@@ -13,7 +13,11 @@ import { observer } from 'mobx-react'
 
 let color = {}
 @observer
-export default class MutedUsers extends Component {
+export default class About extends Component {
+  openURL = url => {
+    Linking.openURL(url).catch(err => console.error('An error occurred', err))
+  }
+
   render() {
     color = themeData[mobx.theme]
 
@@ -53,12 +57,30 @@ export default class MutedUsers extends Component {
           <Text
             style={{
               fontSize: 17,
+              textAlign: 'center',
               color: color.contrastColor
             }}
           >
-            Gakki
-            是基于MIT开源协议的自由软件。完整的许可证协议见：https://github.com/shuiRong/Gakki/blob/master/LICENSE
+            Gakki 是基于MIT开源协议的自由软件。完整的许可证协议见：
           </Text>
+          <TouchableOpacity
+            activeOpacity={0.5}
+            onPress={() =>
+              this.openURL(
+                'https://github.com/shuiRong/Gakki/blob/master/LICENSE'
+              )
+            }
+          >
+            <Text
+              style={{
+                fontSize: 17,
+                textAlign: 'center',
+                color: color.contrastColor
+              }}
+            >
+              https://github.com/shuiRong/Gakki/blob/master/LICENSE
+            </Text>
+          </TouchableOpacity>
           <Text
             style={{
               fontSize: 17,
@@ -68,14 +90,20 @@ export default class MutedUsers extends Component {
           >
             源代码：
           </Text>
-          <Text
-            style={{
-              fontSize: 17,
-              color: color.contrastColor
-            }}
+          <TouchableOpacity
+            activeOpacity={0.5}
+            onPress={() => this.openURL('https://github.com/shuiRong/Gakki')}
           >
-            https://github.com/shuiRong/Gakki
-          </Text>
+            <Text
+              style={{
+                fontSize: 17,
+                textAlign: 'center',
+                color: color.contrastColor
+              }}
+            >
+              https://github.com/shuiRong/Gakki
+            </Text>
+          </TouchableOpacity>
           <Text
             style={{
               fontSize: 17,
@@ -85,15 +113,22 @@ export default class MutedUsers extends Component {
           >
             问题或反馈：
           </Text>
-          <Text
-            style={{
-              fontSize: 17,
-              color: color.contrastColor,
-              textAlign: 'center'
-            }}
+          <TouchableOpacity
+            activeOpacity={0.5}
+            onPress={() =>
+              this.openURL('https://github.com/shuiRong/Gakki/issues')
+            }
           >
-            https://github.com/shuiRong/Gakki/issues
-          </Text>
+            <Text
+              style={{
+                fontSize: 17,
+                textAlign: 'center',
+                color: color.contrastColor
+              }}
+            >
+              https://github.com/shuiRong/Gakki/issues
+            </Text>
+          </TouchableOpacity>
           <TouchableOpacity
             onPress={() =>
               this.props.navigation.navigate('Profile', {
@@ -113,7 +148,7 @@ export default class MutedUsers extends Component {
           >
             <Text
               style={{
-                fontSize: 20,
+                fontSize: 17,
                 color: color.contrastColor
               }}
             >

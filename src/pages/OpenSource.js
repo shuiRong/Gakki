@@ -31,11 +31,11 @@ class Card extends Component {
           borderRadius: 5
         }}
       >
-        <Text style={{ fontWeight: 'bold' }}>{data.name}</Text>
+        <Text style={{ fontWeight: 'bold', fontSize: 16 }}>{data.name}</Text>
         <Text>{data.license}</Text>
         <TouchableOpacity
           activeOpacity={0.5}
-          onPress={this.openURL(data.address)}
+          onPress={() => this.openURL(data.address)}
         >
           <Text style={{ color: color.contrastColor }}>{data.address}</Text>
         </TouchableOpacity>
@@ -66,7 +66,7 @@ export default class MutedUsers extends Component {
               />
             </Button>
           }
-          title={'关于 Gakki'}
+          title={'开源协议声明'}
           right={'none'}
         />
         <View

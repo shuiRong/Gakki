@@ -30,7 +30,7 @@ export default createStackNavigator(
     Test
   },
   {
-    initialRouteName: 'OpenSource',
+    initialRouteName: 'About',
     headerMode: 'none'
   }
 )
