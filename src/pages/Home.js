@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Animated } from 'react-native'
+import { View, Animated, StatusBar } from 'react-native'
 import { Drawer } from 'native-base'
 import HeaderItem from './common/Header'
 import SideBar from './SideBar'
@@ -45,6 +45,10 @@ export default class Home extends Component {
   }
 
   componentDidMount() {
+    this._navListener = this.props.navigation.addListener('didFocus', () => {
+      StatusBar.setBarStyle('dark-content')
+      StatusBar.setBackgroundColor(color.themeColor)
+    })
     // this.openDrawer()
     fetch('emojis').then(res => {
       // 检测是否保存有emoji数据，如果没有的话，从网络获取
@@ -56,6 +60,10 @@ export default class Home extends Component {
       // 如果存在，则接着检测emoji 对象是否存在
       this.detectEmojiObj()
     })
+  }
+
+  componentWillUnmount() {
+    this._navListener.remove()
   }
 
   /**

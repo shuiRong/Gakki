@@ -9,6 +9,11 @@ let color = {}
 export default class Loading extends Component {
   render() {
     color = themeData[mobx.theme]
-    return <Spinner style={{ marginTop: 250 }} color={color.contrastColor} />
+    return (
+      <Spinner
+        style={{ backgroundColor: color.themeColor, flex: 1 }}
+        color={color.contrastColor}
+      />
+    )
   }
 }

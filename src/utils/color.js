@@ -5,7 +5,7 @@ export const themeData = {
     subColor: '#747474', // 副色
     lightContrastColor: '#464646',
     contrastColor: '#2F2F2F', // 对比色
-    lightHeaderBg: '#5067FF',
+    lightHeaderBg: 'pink',
     lightGrey: '#dddddd',
     grey: '#999999',
     white: '#ffffff',
@@ -22,7 +22,7 @@ export const themeData = {
     subColor: '#747474', // 副色
     lightContrastColor: '#E8E8E8',
     contrastColor: '#FFFFFF', // 对比色
-    lightHeaderBg: '#5067FF',
+    lightHeaderBg: 'pink',
     lightGrey: '#dddddd',
     grey: '#999999',
     white: '#ffffff',
@@ -36,8 +36,8 @@ export const themeData = {
 }
 
 export const color = {
-  themeColor: '#3F51B5',
-  lightHeaderBg: '#5067FF',
+  themeColor: 'pink',
+  lightHeaderBg: 'pink',
   lightGrey: '#dddddd',
   grey: '#999999',
   white: '#ffffff',
