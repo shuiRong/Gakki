@@ -1,4 +1,4 @@
-# gakki
+# Gakki
 
 > 这是一个用`React Native`写的 [Mastodon](https://joinmastodon.org/) 客户端（近期只考虑 Android）
 >
