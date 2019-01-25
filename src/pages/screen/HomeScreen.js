@@ -7,14 +7,9 @@ import { View, StyleSheet, FlatList, RefreshControl } from 'react-native'
 import { getHomeTimelines } from '../../utils/api'
 import TootBox from '../common/TootBox'
 import ListFooterComponent from '../common/ListFooterComponent'
-import { themeData } from '../../utils/color'
 import Divider from '../common/Divider'
 import Loading from '../common/Loading'
-import mobx from '../../utils/mobx'
-import { observer } from 'mobx-react'
 
-let color = {}
-@observer
 export default class HomeScreen extends Component {
   constructor(props) {
     super(props)
@@ -134,9 +129,9 @@ export default class HomeScreen extends Component {
   }
 
   render() {
-    color = themeData[mobx.theme]
+    const state = this.state
 
-    if (this.state.loading) {
+    if (state.loading) {
       return <Loading />
     }
     return (
@@ -144,14 +139,14 @@ export default class HomeScreen extends Component {
         <FlatList
           ItemSeparatorComponent={() => <Divider />}
           showsVerticalScrollIndicator={false}
-          data={this.state.list}
+          data={state.list}
           onEndReachedThreshold={0.1}
           onEndReached={this.onEndReached}
           onScroll={this.props.onScroll}
           keyExtractor={item => item.id}
           refreshControl={
             <RefreshControl
-              refreshing={this.state.loading}
+              refreshing={state.loading}
               onRefresh={this.refreshHandler}
             />
           }

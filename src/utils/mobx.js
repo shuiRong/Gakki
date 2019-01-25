@@ -9,10 +9,12 @@ class Globe {
   @observable mentions = [] // 当前嘟文提到的账号
   @observable account = {} // 当前用户的账户信息
   @observable cw = false // 输入框的CW模式
+  @observable NSFW = false // 针对媒体内容的模式 not safe for work
   @observable spoiler_text = undefined // CW模式的警告语
   @observable inputValue = '' // 输入框内容
   @observable theme = 'white' // 当前用户选择主题
   @observable visibility = 'public' // 当前用户选择主题
+  @observable emojiObj = {} // 当前实例的emoji对象
 
   updateReply({
     reply_to_username,
@@ -46,7 +48,17 @@ class Globe {
 
   exchangeCW() {
     this.cw = !this.cw
+    this.NSFW = true
   }
+
+  exchangeNSFW() {
+    // 在CW生效的情况下，不允许关闭NSFW
+    if (this.cw) {
+      return
+    }
+    this.NSFW = !this.NSFW
+  }
+
   updateSpoilerText(text) {
     this.spoiler_text = text
   }
@@ -88,6 +100,10 @@ class Globe {
 
   updateVisibility(visibility) {
     this.visibility = visibility
+  }
+
+  updateEmojiObj(emojiObj) {
+    this.emojiObj = emojiObj
   }
 }
 

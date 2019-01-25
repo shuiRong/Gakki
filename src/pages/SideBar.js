@@ -28,7 +28,6 @@ export default class SideBar extends Component {
       header: '',
       host: 'cmx.im',
       display_name: '',
-      emojiObj: {},
       id: '',
       black: false,
       white: true,
@@ -50,15 +49,6 @@ export default class SideBar extends Component {
       .catch(err => {
         alert(JSON.stringify(err.response))
       })
-
-    fetch('emojiObj').then(res => {
-      if (!res) {
-        return
-      }
-      this.setState({
-        emojiObj: res
-      })
-    })
   }
 
   /**
@@ -136,7 +126,6 @@ export default class SideBar extends Component {
             <View style={styles.info}>
               <HTMLView
                 data={state.display_name}
-                emojiObj={state.emojiObj}
                 pTagStyle={{ color: color.themeColor, fontWeight: 'bold' }}
               />
               <Text style={{ color: color.themeColor }}>

@@ -273,7 +273,8 @@ export default class ReplyInput extends Component {
       rotateValue: new Animated.Value(0),
       stopRotate: true,
       customEmojis: [],
-      emojiBoxIsShown: false // 显示emojiBox吗？
+      emojiBoxIsShown: false, // 显示emojiBox吗？
+      showNSFW: false // 显示NSFW按钮？（仅在存在媒体内容时显示）
     }
   }
 
@@ -319,6 +320,7 @@ export default class ReplyInput extends Component {
     })
 
     save('emojiObj', emojiObj)
+    mobx.updateEmojiObj('emojiObj', emojiObj)
   }
 
   pickImage = () => {
@@ -327,6 +329,7 @@ export default class ReplyInput extends Component {
       takePhotoButtonTitle: '拍照',
       chooseFromLibraryButtonTitle: '从相册中选择',
       cancelButtonTitle: '取消',
+      quality: 1,
       storageOptions: {
         skipBackup: true,
         path: 'images'
@@ -360,7 +363,8 @@ export default class ReplyInput extends Component {
                 uri: res.preview_url,
                 id: res.id
               }),
-              stopRotate: true
+              stopRotate: true,
+              showNSFW: true
             })
           })
           .catch(() => {
@@ -380,7 +384,7 @@ export default class ReplyInput extends Component {
       status: mobx.inputValue,
       spoiler_text: mobx.cw ? mobx.spoiler_text : '',
       visibility: this.state.visibility,
-      sensitive: false,
+      sensitive: mobx.NSFW,
       media_ids: this.state.mediaList.map(media => media.id)
     }).then(res => {
       if (props.appendReply) {
@@ -487,8 +491,12 @@ export default class ReplyInput extends Component {
   }
 
   removeMedia = mediaIndex => {
+    const mediaList = this.state.mediaList.filter(
+      (_, index) => index !== mediaIndex
+    )
     this.setState({
-      mediaList: this.state.mediaList.filter((_, index) => index !== mediaIndex)
+      mediaList: mediaList,
+      showNSFW: mediaList.length !== 0
     })
   }
 
@@ -707,6 +715,17 @@ export default class ReplyInput extends Component {
               style={styles.icon}
             />
           </TouchableOpacity>
+          {state.showNSFW && (
+            <TouchableOpacity onPress={() => mobx.exchangeNSFW()}>
+              {mobx.NSFW ? (
+                <Text style={[styles.enableCW, { color: color.contrastColor }]}>
+                  NSFW
+                </Text>
+              ) : (
+                <Text style={styles.disenableCW}>NSFW</Text>
+              )}
+            </TouchableOpacity>
+          )}
           <TouchableOpacity
             ref={ref => (this.refOption = ref)}
             onPress={() => mobx.exchangeCW()}

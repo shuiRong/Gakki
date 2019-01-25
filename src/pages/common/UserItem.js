@@ -150,10 +150,7 @@ export default class UserList extends Component {
             })
           }
         >
-          <HTMLView
-            data={account.display_name || account.username}
-            emojiObj={state.emojiObj}
-          />
+          <HTMLView data={account.display_name || account.username} />
           <Text>@{account.username}</Text>
         </TouchableOpacity>
         <View

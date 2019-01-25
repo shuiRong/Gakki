@@ -27,7 +27,8 @@ export default class Home extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      headerTop: new Animated.Value(0)
+      headerTop: new Animated.Value(0),
+      emojiObj: {}
     }
   }
   componentWillMount() {
@@ -45,11 +46,12 @@ export default class Home extends Component {
   }
 
   componentDidMount() {
+    // 设置顶部状态栏状态
     this._navListener = this.props.navigation.addListener('didFocus', () => {
       StatusBar.setBarStyle('dark-content')
       StatusBar.setBackgroundColor(color.themeColor)
     })
-    // this.openDrawer()
+
     fetch('emojis').then(res => {
       // 检测是否保存有emoji数据，如果没有的话，从网络获取
       if (!res || !res.length) {
@@ -74,7 +76,13 @@ export default class Home extends Component {
       // 如果不存在，重新根据emoji数据生成字典
       if (!res || Object.keys(res).length) {
         this.translateEmoji()
+        return
       }
+
+      // 如果存在，保存一份到state中
+      this.setState({
+        emojiObj: res
+      })
     })
   }
 
@@ -101,6 +109,7 @@ export default class Home extends Component {
       })
 
       save('emojiObj', emojiObj)
+      mobx.updateEmojiObj(emojiObj)
     }
 
     if (!emojis) {
@@ -121,6 +130,7 @@ export default class Home extends Component {
   }
 
   render() {
+    const state = this.state
     color = themeData[mobx.theme]
 
     return (
@@ -159,16 +169,19 @@ export default class Home extends Component {
               >
                 <LocalScreen
                   tabLabel={'本站'}
+                  emojiObj={state.emojiObj}
                   onScroll={this.animatedEvent}
                   navigation={this.props.navigation}
                 />
                 <HomeScreen
                   tabLabel={'主页'}
+                  emojiObj={state.emojiObj}
                   onScroll={this.animatedEvent}
                   navigation={this.props.navigation}
                 />
                 <PublicScreen
                   tabLabel={'跨站'}
+                  emojiObj={state.emojiObj}
                   onScroll={this.animatedEvent}
                   navigation={this.props.navigation}
                 />

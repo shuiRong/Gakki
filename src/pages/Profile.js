@@ -40,8 +40,7 @@ export default class Profile extends Component {
     this.state = {
       profile: {},
       relationship: {},
-      headerTop: new Animated.Value(0),
-      emojiObj: {}
+      headerTop: new Animated.Value(0)
     }
   }
 
@@ -77,14 +76,6 @@ export default class Profile extends Component {
     const id = this.props.navigation.getParam('id')
     this.getAccountData(id)
     this.getRelationship(id)
-    fetch('emojiObj').then(res => {
-      if (!res) {
-        return
-      }
-      this.setState({
-        emojiObj: res
-      })
-    })
   }
 
   /**
@@ -234,7 +225,6 @@ export default class Profile extends Component {
             <View style={styles.headerView}>
               <HTMLView
                 data={profile.display_name}
-                emojiObj={state.emojiObj}
                 pTagStyle={{ color: color.themeColor, fontWeight: 'bold' }}
               />
               <Text
@@ -276,7 +266,6 @@ export default class Profile extends Component {
                 <Image source={{ uri: profile.avatar }} style={styles.image} />
                 <HTMLView
                   data={profile.display_name}
-                  emojiObj={state.emojiObj}
                   pTagStyle={{ color: color.themeColor }}
                 />
                 <Text style={[styles.userName, { color: color.subColor }]}>
@@ -286,7 +275,6 @@ export default class Profile extends Component {
               </View>
               <HTMLView
                 data={profile.note}
-                emojiObj={state.emojiObj}
                 pTagStyle={{
                   color: color.themeColor,
                   fontSize: 11,

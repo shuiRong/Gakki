@@ -29,7 +29,6 @@ class TootContent extends Component {
     super(props)
     this.state = {
       hide: true, // CW模式隐藏敏感内容
-      emojiObj: {},
       toot: {}
     }
   }
@@ -40,30 +39,15 @@ class TootContent extends Component {
       hide: props.sensitive,
       toot: props.data
     })
-    fetch('emojiObj').then(res => {
-      if (!res) {
-        return
-      }
-      this.setState({
-        emojiObj: res
-      })
-    })
   }
 
   render() {
     const state = this.state
     const toot = state.toot
     const hide = state.hide
-    const emojiObj = state.emojiObj
 
     if (!toot.sensitive) {
-      return (
-        <HTMLView
-          data={this.props.data.content}
-          hide={hide}
-          emojiObj={emojiObj}
-        />
-      )
+      return <HTMLView data={this.props.data.content} hide={hide} />
     }
 
     return (
@@ -94,7 +78,7 @@ class TootContent extends Component {
               {hide ? '显示内容' : '隐藏内容'}
             </Text>
           </TouchableOpacity>
-          <HTMLView data={toot.content} hide={hide} emojiObj={emojiObj} />
+          <HTMLView data={toot.content} hide={hide} />
         </View>
       </View>
     )

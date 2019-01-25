@@ -9,15 +9,14 @@ let color = {}
 @observer
 export default class HTMLView extends Component {
   static defaultProps = {
-    hide: false,
-    emojiObj: {}
+    hide: false
   }
   constructor(props) {
     super(props)
     this.state = {
       content: '',
       hide: false, //当前内容是否被隐藏
-      emojiObj: {}
+      emojiObj: mobx.emojiObj
     }
   }
 
@@ -25,16 +24,14 @@ export default class HTMLView extends Component {
     const props = this.props
     this.setState({
       content: props.data,
-      hide: props.hide,
-      emojiObj: props.emojiObj
+      hide: props.hide
     })
   }
 
-  componentWillReceiveProps({ data, hide, emojiObj }) {
+  componentWillReceiveProps({ data, hide }) {
     this.setState({
       content: data,
-      hide,
-      emojiObj
+      hide
     })
   }
 
@@ -69,8 +66,9 @@ export default class HTMLView extends Component {
         // 没有匹配到换行符号，说明是一行内容，那么将此行内容包含在div标签中，当然，最外层还是p标签
         content = content.replace(/^<p>(.*)<\/p>$/, '<p><div>$1</div></p>')
       }
-
       const match = content.match(/:[A-Za-z0-9].*?:/g)
+      // console.log('match', match)
+
       // 如果的确匹配到了任何表情包的shortcode
       if (match) {
         match.forEach(item => {
@@ -85,6 +83,8 @@ export default class HTMLView extends Component {
         })
       }
     }
+
+    console.log('____', content)
 
     // 如果开头没有<p>，说明是用户的displayName，内容没有包裹在p标签内，手动加上
     if (!/^<p>/.test(content)) {

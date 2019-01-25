@@ -24,7 +24,6 @@ import MediaBox from './MediaBox'
 import { themeData } from '../../utils/color'
 import { Menu } from 'teaset'
 import mobx from '../../utils/mobx'
-import { fetch } from '../../utils/store'
 import HTMLView from './HTMLView'
 import { observer } from 'mobx-react'
 
@@ -33,8 +32,7 @@ class TootContent extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      hide: true, // CW模式隐藏敏感内容
-      emojiObj: {},
+      hide: true, // CW模式隐藏敏感内容 or NSFW模式隐藏图片，但展示content
       toot: {},
       isNotificationPage: false
     }
@@ -45,16 +43,14 @@ class TootContent extends Component {
     this.setState({
       hide: props.sensitive,
       toot: props.data,
-      emojiObj: props.emojiObj,
       isNotificationPage: props.isNotificationPage
     })
   }
 
-  componentWillReceiveProps({ data, sensitive, emojiObj, isNotificationPage }) {
+  componentWillReceiveProps({ data, sensitive, isNotificationPage }) {
     this.setState({
       toot: data,
       hide: sensitive,
-      emojiObj,
       isNotificationPage
     })
   }
@@ -63,7 +59,6 @@ class TootContent extends Component {
     const state = this.state
     const toot = state.toot
     const hide = state.hide
-    const emojiObj = state.emojiObj
     let pTagStyle = {}
 
     if (state.isNotificationPage) {
@@ -78,24 +73,27 @@ class TootContent extends Component {
         <HTMLView
           data={this.props.data.content}
           hide={hide}
-          emojiObj={emojiObj}
           pTagStyle={pTagStyle}
         />
       )
     }
 
+    // 如果是NSFW模式，直接展示content（因为没有spoiler_text，有的话就是CW模式了）
+    if (!toot.spoiler_text) {
+      return <HTMLView data={toot.content} hide={false} pTagStyle={pTagStyle} />
+    }
+
     return (
       <View>
         <View>
-          <Text
-            style={{
+          <HTMLView
+            data={toot.spoiler_text}
+            pTagStyle={{
               color: color.contrastColor,
               fontSize: 16,
               ...pTagStyle
             }}
-          >
-            {toot.spoiler_text}
-          </Text>
+          />
           <TouchableOpacity
             style={[styles.sensitiveSwitch, { color: color.subColor }]}
             onPress={() => this.setState({ hide: !hide })}
@@ -109,12 +107,7 @@ class TootContent extends Component {
               {hide ? '显示内容' : '隐藏内容'}
             </Text>
           </TouchableOpacity>
-          <HTMLView
-            data={toot.content}
-            hide={hide}
-            emojiObj={emojiObj}
-            pTagStyle={pTagStyle}
-          />
+          <HTMLView data={toot.content} hide={hide} pTagStyle={pTagStyle} />
         </View>
       </View>
     )
@@ -136,7 +129,6 @@ export default class TootBox extends Component {
       timezone: jstz.determine().name(), // 获得当前用户所在的时区
       locale: zh,
       toot: null, // 嘟文数据，数据格式参考Mastodon文档
-      emojiObj: {},
       isNotificationPage: false, // 当前组件是否使用在通知页面，因为通知接口返回的数据格式稍有不同
       notification: null // 存储notification接口返回的嘟文数据
     }
@@ -149,15 +141,6 @@ export default class TootBox extends Component {
       toot: data.type ? data.status : data, // 有type属性，表示是Notification entity
       isNotificationPage: Boolean(data.type),
       notification: data
-    })
-
-    fetch('emojiObj').then(res => {
-      if (!res) {
-        return
-      }
-      this.setState({
-        emojiObj: res
-      })
     })
   }
 
@@ -725,7 +708,6 @@ export default class TootBox extends Component {
         >
           <HTMLView
             data={account.display_name || account.username}
-            emojiObj={state.emojiObj}
             pTagStyle={pTagStyle}
           />
         </TouchableOpacity>
@@ -799,7 +781,6 @@ export default class TootBox extends Component {
               >
                 <HTMLView
                   data={data.account.display_name || data.account.username}
-                  emojiObj={state.emojiObj}
                   pTagStyle={{
                     color: color.contrastColor,
                     fontWeight: 'bold',

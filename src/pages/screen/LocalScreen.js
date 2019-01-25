@@ -8,7 +8,6 @@ import Loading from '../common/Loading'
 import { getHomeTimelines } from '../../utils/api'
 import TootBox from '../common/TootBox'
 import ListFooterComponent from '../common/ListFooterComponent'
-import { color } from '../../utils/color'
 import Divider from '../common/Divider'
 
 export default class LocalScreen extends Component {
@@ -29,7 +28,7 @@ export default class LocalScreen extends Component {
    * @description 检测其他页面跳转过来的动作，比如发嘟页面跳转过来时可能带有toot数据，塞入数据流中
    * 如果带有一些参数；根据参数更新数据状态
    */
-  componentWillReceiveProps({ tab, navigation }) {
+  componentWillReceiveProps({ navigation }) {
     if (!navigation) {
       return
     }
@@ -130,7 +129,9 @@ export default class LocalScreen extends Component {
   }
 
   render() {
-    if (this.state.loading) {
+    const state = this.state
+
+    if (state.loading) {
       return <Loading />
     }
     return (
@@ -138,14 +139,14 @@ export default class LocalScreen extends Component {
         <FlatList
           ItemSeparatorComponent={() => <Divider />}
           showsVerticalScrollIndicator={false}
-          data={this.state.list}
+          data={state.list}
           onEndReachedThreshold={0.1}
           onEndReached={this.onEndReached}
           onScroll={this.props.onScroll}
           keyExtractor={item => item.id}
           refreshControl={
             <RefreshControl
-              refreshing={this.state.loading}
+              refreshing={state.loading}
               onRefresh={this.refreshHandler}
             />
           }
@@ -168,7 +169,6 @@ export default class LocalScreen extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 0,
-    backgroundColor: color.white
+    paddingTop: 0
   }
 })
