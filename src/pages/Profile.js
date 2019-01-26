@@ -24,7 +24,6 @@ import MediaScreen from './screen/MediaScreen'
 import Fab from './common/Fab'
 import { themeData } from '../utils/color'
 import mobx from '../utils/mobx'
-import { fetch } from '../utils/store'
 import HTMLView from './common/HTMLView'
 import { observer } from 'mobx-react'
 
@@ -236,11 +235,11 @@ export default class Profile extends Component {
             </View>
           </Animated.View>
           <TouchableOpacity
-            style={{ marginLeft: 20, borderColor: color.contrastColor }}
+            style={{ marginLeft: 20 }}
             onPress={() => this.props.navigation.goBack()}
           >
             <Icon
-              style={{ fontSize: 20, color: color.contrastColor }}
+              style={{ fontSize: 20, color: color.themeColor }}
               name="arrow-left"
             />
           </TouchableOpacity>
@@ -266,14 +265,19 @@ export default class Profile extends Component {
                 <Image source={{ uri: profile.avatar }} style={styles.image} />
                 <HTMLView
                   data={profile.display_name}
-                  pTagStyle={{ color: color.themeColor }}
+                  pTagStyle={{ color: color.themeColor, fontWeight: 'bold' }}
                 />
-                <Text style={[styles.userName, { color: color.subColor }]}>
+                <Text
+                  style={[styles.userName, { color: color.lightThemeColor }]}
+                >
                   @{profile.username}
                 </Text>
-                <TouchableOpacity>{this.getRelationshop()}</TouchableOpacity>
+                {profile.id !== mobx.account.id && (
+                  <TouchableOpacity>{this.getRelationshop()}</TouchableOpacity>
+                )}
               </View>
               <HTMLView
+                navigation={this.props.navigation}
                 data={profile.note}
                 pTagStyle={{
                   color: color.themeColor,

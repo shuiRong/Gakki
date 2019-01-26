@@ -59,6 +59,7 @@ class TootContent extends Component {
     const state = this.state
     const toot = state.toot
     const hide = state.hide
+    const props = this.props
     let pTagStyle = {}
 
     if (state.isNotificationPage) {
@@ -71,7 +72,9 @@ class TootContent extends Component {
     if (!toot.sensitive) {
       return (
         <HTMLView
-          data={this.props.data.content}
+          navigation={props.navigation}
+          data={props.data.content}
+          mentions={props.data.mentions}
           hide={hide}
           pTagStyle={pTagStyle}
         />
@@ -80,14 +83,24 @@ class TootContent extends Component {
 
     // 如果是NSFW模式，直接展示content（因为没有spoiler_text，有的话就是CW模式了）
     if (!toot.spoiler_text) {
-      return <HTMLView data={toot.content} hide={false} pTagStyle={pTagStyle} />
+      return (
+        <HTMLView
+          navigation={this.props.navigation}
+          data={toot.content}
+          mentions={toot.mentions}
+          hide={false}
+          pTagStyle={pTagStyle}
+        />
+      )
     }
 
     return (
       <View>
         <View>
           <HTMLView
+            navigation={this.props.navigation}
             data={toot.spoiler_text}
+            mentions={toot.mentions}
             pTagStyle={{
               color: color.contrastColor,
               fontSize: 16,
@@ -107,7 +120,13 @@ class TootContent extends Component {
               {hide ? '显示内容' : '隐藏内容'}
             </Text>
           </TouchableOpacity>
-          <HTMLView data={toot.content} hide={hide} pTagStyle={pTagStyle} />
+          <HTMLView
+            navigation={this.props.navigation}
+            data={toot.content}
+            mentions={toot.mentions}
+            hide={hide}
+            pTagStyle={pTagStyle}
+          />
         </View>
       </View>
     )
@@ -403,6 +422,7 @@ export default class TootBox extends Component {
     return (
       <View style={styles.htmlBox}>
         <TootContent
+          navigation={this.props.navigation}
           data={data}
           sensitive={data.sensitive}
           isNotificationPage={isNotificationPage}
@@ -707,7 +727,9 @@ export default class TootBox extends Component {
           }
         >
           <HTMLView
+            navigation={this.props.navigation}
             data={account.display_name || account.username}
+            mentions={toot.mentions}
             pTagStyle={pTagStyle}
           />
         </TouchableOpacity>
@@ -780,7 +802,9 @@ export default class TootBox extends Component {
                 }
               >
                 <HTMLView
+                  navigation={this.props.navigation}
                   data={data.account.display_name || data.account.username}
+                  mentions={data.mentions}
                   pTagStyle={{
                     color: color.contrastColor,
                     fontWeight: 'bold',

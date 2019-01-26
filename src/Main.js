@@ -30,7 +30,7 @@ export default createStackNavigator(
     Test
   },
   {
-    initialRouteName: 'SendToot',
+    initialRouteName: 'Home',
     headerMode: 'none'
   }
 )

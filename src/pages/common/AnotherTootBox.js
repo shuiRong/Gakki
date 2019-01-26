@@ -19,7 +19,6 @@ import MediaBox from './MediaBox'
 import { themeData } from '../../utils/color'
 import { Menu } from 'teaset'
 import mobx from '../../utils/mobx'
-import { fetch } from '../../utils/store'
 import HTMLView from './HTMLView'
 import { observer } from 'mobx-react'
 
@@ -45,9 +44,17 @@ class TootContent extends Component {
     const state = this.state
     const toot = state.toot
     const hide = state.hide
+    const props = this.props
 
     if (!toot.sensitive) {
-      return <HTMLView data={this.props.data.content} hide={hide} />
+      return (
+        <HTMLView
+          navigation={this.props.navigation}
+          data={props.data.content}
+          mentions={props.mentions}
+          hide={hide}
+        />
+      )
     }
 
     return (
@@ -78,7 +85,12 @@ class TootContent extends Component {
               {hide ? '显示内容' : '隐藏内容'}
             </Text>
           </TouchableOpacity>
-          <HTMLView data={toot.content} hide={hide} />
+          <HTMLView
+            navigation={this.props.navigation}
+            data={toot.content}
+            mentions={toot.mentions}
+            hide={hide}
+          />
         </View>
       </View>
     )
@@ -453,7 +465,11 @@ export default class AnotherTootBox extends Component {
               </Text>
             </View>
             <View style={styles.htmlBox}>
-              <TootContent data={data} sensitive={data.sensitive} />
+              <TootContent
+                navigation={this.props.navigation}
+                data={data}
+                sensitive={data.sensitive}
+              />
             </View>
             <MediaBox
               data={data.media_attachments}

@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Dimensions } from 'react-native'
+import { Dimensions, Linking } from 'react-native'
 import { themeData } from '../../utils/color'
 import mobx from '../../utils/mobx'
 import HTML from 'react-native-render-html'
@@ -9,7 +9,8 @@ let color = {}
 @observer
 export default class HTMLView extends Component {
   static defaultProps = {
-    hide: false
+    hide: false,
+    mentions: {}
   }
   constructor(props) {
     super(props)
@@ -33,6 +34,46 @@ export default class HTMLView extends Component {
       content: data,
       hide
     })
+  }
+
+  /**
+   * @description 识别几种类型的链接，分别做单独处理
+   * 1. https://cmx.im/tags/test 站内Tag
+   * 2. https://cmx.im/@shuiRong 站内用户
+   * 3. https://cmx.im/web/statuses/101481412010558879 站内嘟文
+   * 4. http://bing.com 站外链接
+   * @param {link}: 点击的链接
+   */
+  onLinkPress = (_, link) => {
+    const navigate = this.props.navigation.navigate
+    let target
+    if (/https:\/\/cmx\.im\/tags\//.test(link)) {
+      target = link.match(/https:\/\/cmx\.im\/tags\/(.*)/)[1]
+
+      navigate('Tag', {
+        id: target
+      })
+    } else if (/https:\/\/cmx\.im\/@/.test(link)) {
+      const mentions = this.props.mentions
+      target = link.match(/https:\/\/cmx\.im\/@(.*)/)[1]
+      const user = mentions.filter(user => user.username === target)[0]
+
+      if (!user) return
+      navigate('Profile', {
+        id: user.id
+      })
+    } else if (/https:\/\/cmx\.im\/web\/statuses\//.test(link)) {
+      target = link.match(/https:\/\/cmx\.im\/web\/statuses\/(.*)/)[1]
+
+      navigate('TootDetail', {
+        id: target
+      })
+    } else if (!/https:\/\/cmx\.im/.test(link)) {
+      Linking.openURL(link).then(err => {
+        console.log('Linking.openURL error:', err)
+      })
+      return
+    }
   }
 
   /**
@@ -84,14 +125,13 @@ export default class HTMLView extends Component {
       }
     }
 
-    console.log('____', content)
-
     // 如果开头没有<p>，说明是用户的displayName，内容没有包裹在p标签内，手动加上
     if (!/^<p>/.test(content)) {
       content = `<p><div>${content}</div></p>`
     }
     return (
       <HTML
+        onLinkPress={this.onLinkPress}
         html={content}
         tagsStyles={{
           ...tagsStyles,
