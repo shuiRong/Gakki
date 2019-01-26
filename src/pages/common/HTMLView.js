@@ -10,7 +10,7 @@ let color = {}
 export default class HTMLView extends Component {
   static defaultProps = {
     hide: false,
-    mentions: {}
+    mentions: []
   }
   constructor(props) {
     super(props)
@@ -58,7 +58,13 @@ export default class HTMLView extends Component {
       target = link.match(/https:\/\/cmx\.im\/@(.*)/)[1]
       const user = mentions.filter(user => user.username === target)[0]
 
-      if (!user) return
+      if (!user) {
+        // 如果拿不到用户的id数据，那么就直接通过浏览器内打开该用户主页（比如个人主页时获取用户详情的接口没有返回mentions数据）
+        Linking.openURL(link).then(err => {
+          console.log('Linking.openURL error:', err)
+        })
+        return
+      }
       navigate('Profile', {
         id: user.id
       })
