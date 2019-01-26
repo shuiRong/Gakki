@@ -108,7 +108,10 @@ class TootContent extends Component {
             }}
           />
           <TouchableOpacity
-            style={[styles.sensitiveSwitch, { color: color.subColor }]}
+            style={[
+              styles.sensitiveSwitch,
+              { backgroundColor: color.subColor }
+            ]}
             onPress={() => this.setState({ hide: !hide })}
           >
             <Text
