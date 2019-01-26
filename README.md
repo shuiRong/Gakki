@@ -1,4 +1,4 @@
-# gakki
+# Gakki
 
 > 这是一个用`React Native`写的 [Mastodon](https://joinmastodon.org/) 客户端（近期只考虑 Android）
 >
@@ -13,8 +13,8 @@
 **下载项目：**
 
 ```bash
-git clone https://github.com/shuiRong/gakki
-cd ./gakki
+git clone https://github.com/shuiRong/Gakki
+cd ./Gakki
 yarn // or npm i
 ```
 
@@ -47,7 +47,7 @@ export default {
 react-native run-android
 ```
 
-P.S. 如果遇到任何项目上的问题都可以在[issue](https://github.com/shuiRong/gakki/issues)区提出，或者来Mastodon找[我](https://cmx.im/web/accounts/81232)
+P.S. 如果遇到任何项目上的问题都可以在[issue](https://github.com/shuiRong/Gakki/issues)区提出，或者来Mastodon找[我](https://cmx.im/web/accounts/81232)
 
 
 
