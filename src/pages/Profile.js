@@ -288,7 +288,7 @@ export default class Profile extends Component {
               style={{
                 width: 80,
                 height: 80,
-                borderRadius: 5,
+                borderRadius: 10,
                 position: 'absolute',
                 left: 15,
                 top: -40
