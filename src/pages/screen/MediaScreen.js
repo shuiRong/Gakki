@@ -14,7 +14,6 @@ import {
 import { getUserStatuses } from '../../utils/api'
 import Loading from '../common/Loading'
 import ListFooterComponent from '../common/ListFooterComponent'
-import { color } from '../../utils/color'
 import mobx from '../../utils/mobx'
 
 let deviceWidth = require('Dimensions').get('window').width
@@ -87,7 +86,8 @@ export default class TootScreen extends Component {
    * @param {params}: 参数
    */
   getUserMediaStatuses = (cb, params) => {
-    getUserStatuses(this.props.navigation.getParam('id'), {
+    const id = this.props.navigation.getParam('id')
+    getUserStatuses(id, {
       only_media: true,
       ...params
     }).then(res => {

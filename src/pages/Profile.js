@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Image,
   ImageBackground,
+  ScrollView,
   TouchableOpacity,
   Animated
 } from 'react-native'
@@ -62,17 +63,28 @@ export default class Profile extends Component {
 
     this.distanceFromTop = headerTop.interpolate({
       inputRange: [0, 800, 801, 802],
-      outputRange: [0, -370, -370, -370]
+      outputRange: [0, -470, -470, -470]
     })
 
     this.opacity = headerTop.interpolate({
       inputRange: [0, 456, 690, 691, 692],
       outputRange: [0, 0, 1, 1, 1]
     })
+
+    this.colorInterpolate = headerTop.interpolate({
+      inputRange: [0, 456, 690, 691],
+      outputRange: [
+        color.themeColor,
+        color.themeColor,
+        color.subColor,
+        color.subColor
+      ]
+    })
   }
 
   componentDidMount() {
     const id = this.props.navigation.getParam('id')
+    // const id = '81232'
     this.getAccountData(id)
     this.getRelationship(id)
   }
@@ -167,29 +179,35 @@ export default class Profile extends Component {
   /**
    * @description 返回是否已经关注对方的relationship
    */
-  getRelationshop = () => {
+  getRelationshop = profile => {
     let configStyle = {
-      backgroundColor: color.themeColor,
+      backgroundColor: color.contrastColor,
       iconName: 'user',
-      iconColor: color.contrastColor,
+      iconColor: color.themeColor,
       text: '已关注',
       textColor: color.themeColor
     }
     if (!this.state.relationship.following) {
       configStyle = {
-        backgroundColor: color.themeColor,
+        backgroundColor: color.contrastColor,
         iconName: 'user-plus',
-        iconColor: color.contrastColor,
+        iconColor: color.themeColor,
         text: '关注',
-        textColor: color.contrastColor
+        textColor: color.themeColor
       }
+    }
+
+    // 如果是自己的个人页面
+    if (profile.id === mobx.account.id) {
+      return <View style={{ height: 43 }} />
     }
 
     return (
       <View
         style={{
           ...styles.followButton,
-          backgroundColor: configStyle.backgroundColor
+          backgroundColor: configStyle.backgroundColor,
+          alignSelf: 'flex-end'
         }}
       >
         <Icon
@@ -216,7 +234,8 @@ export default class Profile extends Component {
           <Animated.View
             scrollEventThrottle={20}
             style={{
-              color: color.themeColor,
+              backgroundColor: color.themeColor,
+              color: color.contrastColor,
               ...styles.headerStyle,
               opacity: this.opacity
             }}
@@ -224,11 +243,11 @@ export default class Profile extends Component {
             <View style={styles.headerView}>
               <HTMLView
                 data={profile.display_name}
-                pTagStyle={{ color: color.themeColor, fontWeight: 'bold' }}
+                pTagStyle={{ color: color.contrastColor, fontWeight: 'bold' }}
               />
               <Text
                 numberOfLines={1}
-                style={{ fontSize: 14, color: color.lightThemeColor }}
+                style={{ fontSize: 14, color: color.contrastColor }}
               >
                 &nbsp;@{profile.username}
               </Text>
@@ -239,7 +258,7 @@ export default class Profile extends Component {
             onPress={() => this.props.navigation.goBack()}
           >
             <Icon
-              style={{ fontSize: 20, color: color.themeColor }}
+              style={{ fontSize: 20, color: color.subColor }}
               name="arrow-left"
             />
           </TouchableOpacity>
@@ -248,7 +267,7 @@ export default class Profile extends Component {
             onPress={() => alert('v1')}
           >
             <Icon
-              style={{ fontSize: 20, color: color.themeColor }}
+              style={{ fontSize: 20, color: color.subColor }}
               name="ellipsis-v"
             />
           </TouchableOpacity>
@@ -259,66 +278,74 @@ export default class Profile extends Component {
             top: this.distanceFromTop
           }}
         >
-          <ImageBackground source={{ uri: profile.header }} style={styles.bg}>
-            <View style={styles.bgBox}>
-              <View style={styles.avatarBox}>
-                <Image source={{ uri: profile.avatar }} style={styles.image} />
-                <HTMLView
-                  data={profile.display_name}
-                  pTagStyle={{ color: color.themeColor, fontWeight: 'bold' }}
-                />
-                <Text
-                  style={[styles.userName, { color: color.lightThemeColor }]}
-                >
-                  @{profile.username}
-                </Text>
-                {profile.id !== mobx.account.id && (
-                  <TouchableOpacity>{this.getRelationshop()}</TouchableOpacity>
-                )}
-              </View>
+          <Image
+            source={{ uri: profile.header }}
+            style={{ width: '100%', height: 155 }}
+          />
+          <View style={{ padding: 15 }}>
+            <Image
+              source={{ uri: profile.avatar }}
+              style={{
+                width: 80,
+                height: 80,
+                borderRadius: 5,
+                position: 'absolute',
+                left: 15,
+                top: -40
+              }}
+            />
+            {this.getRelationshop(profile)}
+            <View>
               <HTMLView
-                navigation={this.props.navigation}
-                data={profile.note}
-                pTagStyle={{
-                  color: color.themeColor,
-                  fontSize: 11,
-                  textAlign: 'center',
-                  lineHeight: 13
-                }}
+                data={profile.display_name}
+                pTagStyle={{ color: color.contrastColor, fontWeight: 'bold' }}
               />
-              <View style={styles.followInfoBox}>
-                <View style={styles.sideInfoBox}>
-                  <Text
-                    style={[styles.followCount, { color: color.themeColor }]}
-                  >
-                    {profile.followers_count}
-                  </Text>
-                  <Text style={{ color: color.themeColor }}>关注者</Text>
-                </View>
-                <View style={styles.insideInfoBox}>
-                  <Text
-                    style={[styles.followCount, { color: color.themeColor }]}
-                  >
-                    {profile.following_count}
-                  </Text>
-                  <Text style={{ color: color.themeColor }}>正在关注</Text>
-                </View>
-                <View style={styles.insideInfoBox}>
-                  <Text
-                    style={[styles.followCount, { color: color.themeColor }]}
-                  >
-                    {profile.statuses_count}
-                  </Text>
-                  <Text style={{ color: color.themeColor }}>嘟文</Text>
-                </View>
+              <Text style={[styles.userName, { color: color.contrastColor }]}>
+                @{profile.username}
+              </Text>
+            </View>
+            <HTMLView
+              navigation={this.props.navigation}
+              data={profile.note}
+              pTagStyle={{
+                color: color.contrastColor,
+                fontSize: 14,
+                textAlign: 'center',
+                lineHeight: 18
+              }}
+            />
+            <View style={styles.followInfoBox}>
+              <View style={styles.sideInfoBox}>
+                <Text
+                  style={[styles.followCount, { color: color.contrastColor }]}
+                >
+                  {profile.followers_count}
+                </Text>
+                <Text style={{ color: color.contrastColor }}>关注者</Text>
+              </View>
+              <View style={styles.insideInfoBox}>
+                <Text
+                  style={[styles.followCount, { color: color.contrastColor }]}
+                >
+                  {profile.following_count}
+                </Text>
+                <Text style={{ color: color.contrastColor }}>正在关注</Text>
+              </View>
+              <View style={styles.insideInfoBox}>
+                <Text
+                  style={[styles.followCount, { color: color.contrastColor }]}
+                >
+                  {profile.statuses_count}
+                </Text>
+                <Text style={{ color: color.contrastColor }}>嘟文</Text>
               </View>
             </View>
-          </ImageBackground>
+          </View>
         </Animated.View>
         <Animated.View
           scrollEventThrottle={20}
           style={{
-            height: deviceHeight,
+            height: deviceHeight + 200,
             top: this.distanceFromTop
           }}
         >
@@ -357,7 +384,7 @@ const styles = StyleSheet.create({
   },
   bg: {
     width: '100%',
-    height: 370
+    height: 200
   },
   image: {
     height: 60,
@@ -425,8 +452,9 @@ const styles = StyleSheet.create({
     marginBottom: 5
   },
   followInfoBox: {
+    marginTop: 20,
     flexDirection: 'row',
-    alignItems: 'center',
+    alignSelf: 'center',
     width: '70%',
     justifyContent: 'space-around'
   },

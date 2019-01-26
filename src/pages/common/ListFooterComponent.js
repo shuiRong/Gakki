@@ -6,12 +6,14 @@ export default class ListFooterComponent extends Component {
     return (
       <View
         style={{
-          height: 100,
-          justifyContent: 'center',
+          height: 300,
+          justifyContent: 'flex-start',
           alignItems: 'center'
         }}
       >
-        <Text>{this.props.info || '没有更多了...'}</Text>
+        <Text style={{ marginTop: 50 }}>
+          {this.props.info || '没有更多了...'}
+        </Text>
       </View>
     )
   }

@@ -4,7 +4,6 @@
 
 import React, { Component } from 'react'
 import { View, StyleSheet, FlatList, RefreshControl } from 'react-native'
-import loading from '../common/Loading'
 import { getUserStatuses } from '../../utils/api'
 import ListFooterComponent from '../common/ListFooterComponent'
 import TootBox from '../common/TootBox'
@@ -83,7 +82,8 @@ export default class TootScreen extends Component {
    * @param {params}: 参数
    */
   getUserStatuses = (cb, params) => {
-    getUserStatuses(this.props.navigation.getParam('id'), {
+    const id = this.props.navigation.getParam('id')
+    getUserStatuses(id, {
       exclude_replies: true,
       ...params
     }).then(res => {
