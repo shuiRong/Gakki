@@ -45,19 +45,13 @@ export default class Profile extends Component {
   }
 
   componentWillMount() {
-    this.animatedEvent = Animated.event(
-      [
-        {
-          nativeEvent: {
-            contentOffset: { y: this.state.headerTop }
-          }
-        }
-      ],
+    this.animatedEvent = Animated.event([
       {
-        listener: (event, gestureState) =>
-          console.log(event, gestureState, event.nativeEvent.contentOffset.y)
+        nativeEvent: {
+          contentOffset: { y: this.state.headerTop }
+        }
       }
-    )
+    ])
 
     const headerTop = this.state.headerTop
 
@@ -315,22 +309,38 @@ export default class Profile extends Component {
               }}
             />
             <View style={styles.followInfoBox}>
-              <View style={styles.sideInfoBox}>
+              <TouchableOpacity
+                onPress={() =>
+                  this.props.navigation.navigate('Followers', {
+                    id: profile.id,
+                    limit: profile.followers_count
+                  })
+                }
+                style={styles.sideInfoBox}
+              >
                 <Text
                   style={[styles.followCount, { color: color.contrastColor }]}
                 >
                   {profile.followers_count}
                 </Text>
                 <Text style={{ color: color.contrastColor }}>关注者</Text>
-              </View>
-              <View style={styles.insideInfoBox}>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() =>
+                  this.props.navigation.navigate('Followers', {
+                    id: profile.id,
+                    limit: profile.following_count
+                  })
+                }
+                style={styles.insideInfoBox}
+              >
                 <Text
                   style={[styles.followCount, { color: color.contrastColor }]}
                 >
                   {profile.following_count}
                 </Text>
                 <Text style={{ color: color.contrastColor }}>正在关注</Text>
-              </View>
+              </TouchableOpacity>
               <View style={styles.insideInfoBox}>
                 <Text
                   style={[styles.followCount, { color: color.contrastColor }]}

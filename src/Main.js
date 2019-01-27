@@ -6,6 +6,8 @@ import Notifications from './pages/Notifications'
 import Envelope from './pages/Envelope'
 import BlockedUsers from './pages/BlockedUsers'
 import MutedUsers from './pages/MutedUsers'
+import Followers from './pages/Followers'
+import Following from './pages/Following'
 import About from './pages/About'
 import OpenSource from './pages/OpenSource'
 import EditProfile from './pages/EditProfile'
@@ -22,6 +24,8 @@ export default createStackNavigator(
     Envelope,
     BlockedUsers,
     MutedUsers,
+    Followers,
+    Following,
     About,
     OpenSource,
     EditProfile,

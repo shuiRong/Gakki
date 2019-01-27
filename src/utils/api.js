@@ -268,3 +268,27 @@ export const getMutes = () => {
     headers
   })
 }
+
+// 正在关注
+export const following = (id, limit) => {
+  return request({
+    url: `api/v1/accounts/${id}/following`,
+    method: 'get',
+    params: {
+      limit: limit || 1
+    },
+    headers
+  })
+}
+
+// 关注者
+export const followers = (id, limit) => {
+  return request({
+    url: `api/v1/accounts/${id}/followers`,
+    method: 'get',
+    params: {
+      limit: limit || 1
+    },
+    headers
+  })
+}
