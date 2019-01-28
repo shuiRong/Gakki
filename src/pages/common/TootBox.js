@@ -483,7 +483,7 @@ export default class TootBox extends Component {
       >
         {data.reblogged ? (
           <Icon
-            style={{ fontSize: 15, color: color.contrastColor }}
+            style={{ fontSize: 15, color: color.lightBlue }}
             name="retweet"
           />
         ) : (
@@ -670,7 +670,7 @@ export default class TootBox extends Component {
     const iconColor = {
       favourite: color.gold,
       follow: color.lightgreen,
-      reblog: color.subColor
+      reblog: color.lightBlue
     }
 
     if (state.isNotificationPage) {
@@ -714,7 +714,7 @@ export default class TootBox extends Component {
           <HTMLView
             navigation={this.props.navigation}
             data={account.display_name || account.username}
-            mentions={toot.mentions}
+            mentions={toot ? toot.mentions : []}
             pTagStyle={pTagStyle}
           />
         </TouchableOpacity>

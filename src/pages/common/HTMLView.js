@@ -134,6 +134,7 @@ export default class HTMLView extends Component {
     if (!/^<p>/.test(content)) {
       content = `<p><div>${content}</div></p>`
     }
+
     return (
       <HTML
         onLinkPress={this.onLinkPress}

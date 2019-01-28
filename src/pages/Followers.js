@@ -58,9 +58,7 @@ export default class Followers extends Component {
   render() {
     const state = this.state
     color = themeData[mobx.theme]
-    if (state.loading) {
-      return <Loading />
-    }
+
     return (
       <View style={[styles.container, { backgroundColor: color.themeColor }]}>
         <Header
@@ -75,22 +73,26 @@ export default class Followers extends Component {
           title={'关注者'}
           right={'none'}
         />
-        <FlatList
-          ItemSeparatorComponent={() => <Divider />}
-          ListFooterComponent={<Divider />}
-          showsVerticalScrollIndicator={false}
-          data={state.list}
-          keyExtractor={item => item.id}
-          refreshControl={
-            <RefreshControl
-              refreshing={state.loading}
-              onRefresh={this.refreshHandler}
-            />
-          }
-          renderItem={({ item }) => (
-            <UserItem data={item} navigation={this.props.navigation} />
-          )}
-        />
+        {state.loading ? (
+          <Loading />
+        ) : (
+          <FlatList
+            ItemSeparatorComponent={() => <Divider />}
+            ListFooterComponent={<Divider />}
+            showsVerticalScrollIndicator={false}
+            data={state.list}
+            keyExtractor={item => item.id}
+            refreshControl={
+              <RefreshControl
+                refreshing={state.loading}
+                onRefresh={this.refreshHandler}
+              />
+            }
+            renderItem={({ item }) => (
+              <UserItem data={item} navigation={this.props.navigation} />
+            )}
+          />
+        )}
       </View>
     )
   }

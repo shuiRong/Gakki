@@ -58,9 +58,7 @@ export default class FollowRequests extends Component {
   render() {
     const state = this.state
     color = themeData[mobx.theme]
-    if (state.loading) {
-      return <Loading />
-    }
+
     return (
       <View style={[styles.container, { backgroundColor: color.themeColor }]}>
         <Header
@@ -75,27 +73,31 @@ export default class FollowRequests extends Component {
           title={'关注请求列表'}
           right={'none'}
         />
-        <FlatList
-          ItemSeparatorComponent={() => <Divider />}
-          ListFooterComponent={<Divider />}
-          showsVerticalScrollIndicator={false}
-          data={state.list}
-          keyExtractor={item => item.id}
-          refreshControl={
-            <RefreshControl
-              refreshing={state.loading}
-              onRefresh={this.refreshHandler}
-            />
-          }
-          renderItem={({ item }) => (
-            <UserItem
-              data={item}
-              model={'request'}
-              navigation={this.props.navigation}
-              deleteUser={this.deleteUser}
-            />
-          )}
-        />
+        {state.loading ? (
+          <Loading />
+        ) : (
+          <FlatList
+            ItemSeparatorComponent={() => <Divider />}
+            ListFooterComponent={<Divider />}
+            showsVerticalScrollIndicator={false}
+            data={state.list}
+            keyExtractor={item => item.id}
+            refreshControl={
+              <RefreshControl
+                refreshing={state.loading}
+                onRefresh={this.refreshHandler}
+              />
+            }
+            renderItem={({ item }) => (
+              <UserItem
+                data={item}
+                model={'request'}
+                navigation={this.props.navigation}
+                deleteUser={this.deleteUser}
+              />
+            )}
+          />
+        )}
       </View>
     )
   }

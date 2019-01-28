@@ -88,9 +88,6 @@ export default class MutedUsers extends Component {
     const state = this.state
     color = themeData[mobx.theme]
 
-    if (state.loading) {
-      return <Loading />
-    }
     return (
       <View style={[styles.container, { backgroundColor: color.themeColor }]}>
         <Header
@@ -105,29 +102,33 @@ export default class MutedUsers extends Component {
           title={'已隐藏用户'}
           right={'none'}
         />
-        <FlatList
-          ItemSeparatorComponent={() => <Divider />}
-          ListFooterComponent={<Divider />}
-          showsVerticalScrollIndicator={false}
-          data={state.list}
-          onScroll={this.props.onScroll}
-          keyExtractor={item => item.id}
-          refreshControl={
-            <RefreshControl
-              refreshing={state.loading}
-              onRefresh={this.refreshHandler}
-            />
-          }
-          renderItem={({ item }) => (
-            <UserItem
-              data={item}
-              model={'mute'}
-              relationship={this.findOne(item.id)}
-              navigation={this.props.navigation}
-              deleteUser={this.deleteUser}
-            />
-          )}
-        />
+        {state.loading ? (
+          <Loading />
+        ) : (
+          <FlatList
+            ItemSeparatorComponent={() => <Divider />}
+            ListFooterComponent={<Divider />}
+            showsVerticalScrollIndicator={false}
+            data={state.list}
+            onScroll={this.props.onScroll}
+            keyExtractor={item => item.id}
+            refreshControl={
+              <RefreshControl
+                refreshing={state.loading}
+                onRefresh={this.refreshHandler}
+              />
+            }
+            renderItem={({ item }) => (
+              <UserItem
+                data={item}
+                model={'mute'}
+                relationship={this.findOne(item.id)}
+                navigation={this.props.navigation}
+                deleteUser={this.deleteUser}
+              />
+            )}
+          />
+        )}
       </View>
     )
   }

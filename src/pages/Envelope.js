@@ -80,9 +80,7 @@ export default class Envelope extends Component {
 
   render() {
     const state = this.state
-    if (state.loading) {
-      return <Loading />
-    }
+
     return (
       <View style={styles.container}>
         <Header
@@ -98,36 +96,40 @@ export default class Envelope extends Component {
           title={'私信'}
           right={'none'}
         />
-        <FlatList
-          ItemSeparatorComponent={() => <Divider />}
-          showsVerticalScrollIndicator={false}
-          data={state.list}
-          onEndReachedThreshold={0.3}
-          onEndReached={this.onEndReached}
-          onScroll={this.props.onScroll}
-          keyExtractor={item => item.id}
-          refreshControl={
-            <RefreshControl
-              refreshing={state.loading}
-              onRefresh={this.refreshHandler}
-            />
-          }
-          ListFooterComponent={() => (
-            <ListFooterComponent info={'没有更多了...'} />
-          )}
-          renderItem={({ item }) => (
-            <TootBox
-              data={{
-                ...item.last_status,
-                accounts: item.accounts
-              }}
-              navigation={this.props.navigation}
-              deleteToot={this.deleteToot}
-              muteAccount={this.muteAccount}
-              blockAccount={this.blockAccount}
-            />
-          )}
-        />
+        {state.loading ? (
+          <Loading />
+        ) : (
+          <FlatList
+            ItemSeparatorComponent={() => <Divider />}
+            showsVerticalScrollIndicator={false}
+            data={state.list}
+            onEndReachedThreshold={0.3}
+            onEndReached={this.onEndReached}
+            onScroll={this.props.onScroll}
+            keyExtractor={item => item.id}
+            refreshControl={
+              <RefreshControl
+                refreshing={state.loading}
+                onRefresh={this.refreshHandler}
+              />
+            }
+            ListFooterComponent={() => (
+              <ListFooterComponent info={'没有更多了...'} />
+            )}
+            renderItem={({ item }) => (
+              <TootBox
+                data={{
+                  ...item.last_status,
+                  accounts: item.accounts
+                }}
+                navigation={this.props.navigation}
+                deleteToot={this.deleteToot}
+                muteAccount={this.muteAccount}
+                blockAccount={this.blockAccount}
+              />
+            )}
+          />
+        )}
       </View>
     )
   }

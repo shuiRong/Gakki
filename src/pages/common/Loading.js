@@ -11,7 +11,7 @@ export default class Loading extends Component {
     color = themeData[mobx.theme]
     return (
       <Spinner
-        style={{ backgroundColor: color.themeColor, flex: 1 }}
+        style={{ backgroundColor: color.themeColor, flex: 1, marginTop: 5 }}
         color={color.contrastColor}
       />
     )

@@ -14,7 +14,8 @@ export const themeData = {
     moreBlack: '#2F2F2F',
     black: '#000000',
     gold: '#F3AB27',
-    lightgreen: '#1FC966'
+    lightgreen: '#1FC966',
+    lightBlue: '#3F51B5'
   },
   black: {
     themeColor: '#333333', // 主色
@@ -31,7 +32,8 @@ export const themeData = {
     moreBlack: '#2F2F2F',
     black: '#000000',
     gold: '#F3AB27',
-    lightgreen: '#1FC966'
+    lightgreen: '#1FC966',
+    lightBlue: '#3F51B5'
   }
 }
 

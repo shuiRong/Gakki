@@ -102,9 +102,6 @@ export default class Notifications extends Component {
     const state = this.state
     color = themeData[mobx.theme]
 
-    if (state.loading) {
-      return <Loading />
-    }
     return (
       <View style={[styles.container, { backgroundColor: color.themeColor }]}>
         <Header
@@ -127,33 +124,37 @@ export default class Notifications extends Component {
             </Button>
           }
         />
-        <FlatList
-          ItemSeparatorComponent={() => <Divider />}
-          showsVerticalScrollIndicator={false}
-          data={state.list}
-          onEndReachedThreshold={0.1}
-          onEndReached={this.onEndReached}
-          onScroll={this.props.onScroll}
-          keyExtractor={item => item.id}
-          refreshControl={
-            <RefreshControl
-              refreshing={state.loading}
-              onRefresh={this.refreshHandler}
-            />
-          }
-          ListFooterComponent={() => (
-            <ListFooterComponent info={'你还没有收到任何通知'} />
-          )}
-          renderItem={({ item }) => (
-            <TootBox
-              data={item}
-              navigation={this.props.navigation}
-              deleteToot={this.deleteToot}
-              muteAccount={this.muteAccount}
-              blockAccount={this.blockAccount}
-            />
-          )}
-        />
+        {state.loading ? (
+          <Loading />
+        ) : (
+          <FlatList
+            ItemSeparatorComponent={() => <Divider />}
+            showsVerticalScrollIndicator={false}
+            data={state.list}
+            onEndReachedThreshold={0.1}
+            onEndReached={this.onEndReached}
+            onScroll={this.props.onScroll}
+            keyExtractor={item => item.id}
+            refreshControl={
+              <RefreshControl
+                refreshing={state.loading}
+                onRefresh={this.refreshHandler}
+              />
+            }
+            ListFooterComponent={() => (
+              <ListFooterComponent info={'你还没有收到任何通知'} />
+            )}
+            renderItem={({ item }) => (
+              <TootBox
+                data={item}
+                navigation={this.props.navigation}
+                deleteToot={this.deleteToot}
+                muteAccount={this.muteAccount}
+                blockAccount={this.blockAccount}
+              />
+            )}
+          />
+        )}
       </View>
     )
   }
