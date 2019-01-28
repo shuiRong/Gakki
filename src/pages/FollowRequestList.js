@@ -1,11 +1,11 @@
 /**
- * 关注者页面
+ * 关注请求列表页面
  */
 
 import React, { Component } from 'react'
 import { View, StyleSheet, FlatList, RefreshControl } from 'react-native'
 import { Button } from 'native-base'
-import { followers } from '../utils/api'
+import { followRequests } from '../utils/api'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import Header from './common/Header'
 import Loading from './common/Loading'
@@ -17,7 +17,7 @@ import { observer } from 'mobx-react'
 
 let color = {}
 @observer
-export default class Followers extends Component {
+export default class FollowRequests extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -26,24 +26,24 @@ export default class Followers extends Component {
     }
   }
   componentDidMount() {
-    const { navigation } = this.props
-    const id = navigation.getParam('id')
-    const limit = navigation.getParam('limit')
-    this.followers(id, limit)
+    this.followRequests()
   }
 
   /**
-   * @description 获取时间线数据
-   * @param {id}: 用户id
-   * @param {limit}: 获取数据数量
+   * @description 获取关注请求列表
    */
-  followers = (id, limit) => {
-    followers(id, limit).then(res => {
-      // 同时将数据更新到state数据中，刷新视图
+  followRequests = () => {
+    followRequests().then(res => {
       this.setState({
         list: this.state.list.concat(res),
         loading: false
       })
+    })
+  }
+
+  deleteUser = id => {
+    this.setState({
+      list: this.state.list.filter(item => item.id !== id)
     })
   }
 
@@ -52,7 +52,7 @@ export default class Followers extends Component {
       loading: true,
       list: []
     })
-    this.followers()
+    this.followRequests()
   }
 
   render() {
@@ -72,7 +72,7 @@ export default class Followers extends Component {
               />
             </Button>
           }
-          title={'关注者'}
+          title={'关注请求列表'}
           right={'none'}
         />
         <FlatList
@@ -88,7 +88,12 @@ export default class Followers extends Component {
             />
           }
           renderItem={({ item }) => (
-            <UserItem data={item} navigation={this.props.navigation} />
+            <UserItem
+              data={item}
+              model={'request'}
+              navigation={this.props.navigation}
+              deleteUser={this.deleteUser}
+            />
           )}
         />
       </View>

@@ -4,8 +4,6 @@ import {
   View,
   StyleSheet,
   Image,
-  ImageBackground,
-  ScrollView,
   TouchableOpacity,
   Animated
 } from 'react-native'
@@ -15,7 +13,8 @@ import {
   reblog,
   mute,
   getAccountData,
-  getRelationship
+  getRelationship,
+  follow
 } from '../utils/api'
 import ScrollableTabView, {
   DefaultTabBar
@@ -79,6 +78,12 @@ export default class Profile extends Component {
   componentDidMount() {
     const id = this.props.navigation.getParam('id')
     // const id = '81232'
+    this.getAccountData(id)
+    this.getRelationship(id)
+  }
+
+  componentWillReceiveProps({ navigation }) {
+    const id = navigation.getParam('id')
     this.getAccountData(id)
     this.getRelationship(id)
   }
@@ -171,6 +176,18 @@ export default class Profile extends Component {
   }
 
   /**
+   * @description 关注或者取关用户
+   * @param {following}: 正在关注该用户
+   */
+  followTheAccount = following => {
+    follow(this.state.profile.id, !following).then(res => {
+      this.setState({
+        relationship: res
+      })
+    })
+  }
+
+  /**
    * @description 返回是否已经关注对方的relationship
    */
   getRelationshop = profile => {
@@ -181,12 +198,26 @@ export default class Profile extends Component {
       text: '已关注',
       textColor: color.themeColor
     }
-    if (!this.state.relationship.following) {
+
+    const relationship = this.state.relationship
+    const following = relationship.following
+    if (!following) {
       configStyle = {
         backgroundColor: color.contrastColor,
         iconName: 'user-plus',
         iconColor: color.themeColor,
         text: '关注',
+        textColor: color.themeColor
+      }
+    }
+
+    const requested = relationship.requested
+    if (requested) {
+      configStyle = {
+        backgroundColor: color.contrastColor,
+        iconName: 'hourglass-half',
+        iconColor: color.themeColor,
+        text: '请求中',
         textColor: color.themeColor
       }
     }
@@ -197,7 +228,8 @@ export default class Profile extends Component {
     }
 
     return (
-      <View
+      <TouchableOpacity
+        onPress={() => this.followTheAccount(following)}
         style={{
           ...styles.followButton,
           backgroundColor: configStyle.backgroundColor,
@@ -213,7 +245,7 @@ export default class Profile extends Component {
           }}
         />
         <Text style={{ color: configStyle.textColor }}>{configStyle.text}</Text>
-      </View>
+      </TouchableOpacity>
     )
   }
 
@@ -327,7 +359,7 @@ export default class Profile extends Component {
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() =>
-                  this.props.navigation.navigate('Followers', {
+                  this.props.navigation.navigate('Following', {
                     id: profile.id,
                     limit: profile.following_count
                   })

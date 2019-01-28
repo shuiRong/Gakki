@@ -1,8 +1,6 @@
 import React, { Component } from 'react'
 import { View, Animated, StatusBar } from 'react-native'
-import { Drawer } from 'native-base'
 import HeaderItem from './common/Header'
-import SideBar from './SideBar'
 import HomeScreen from './screen/HomeScreen'
 import LocalScreen from './screen/LocalScreen'
 import PublicScreen from './screen/PublicScreen'
@@ -122,74 +120,55 @@ export default class Home extends Component {
     start(emojis)
   }
 
-  closeDrawer = () => {
-    this.drawer._root.close()
-  }
-  openDrawer = () => {
-    this.drawer._root.open()
-  }
-
   render() {
     const state = this.state
     color = themeData[mobx.theme]
 
     return (
       <View style={{ flex: 1, backgroundColor: color.themeColor }}>
-        <Drawer
-          ref={ref => {
-            this.drawer = ref
-          }}
-          styles={{ mainOverlay: 0 }}
-          content={<SideBar navigation={this.props.navigation} />}
-          onClose={this.closeDrawer}
-        >
-          <View style={{ flex: 1 }}>
-            <Animated.View style={{ top: this.top }}>
-              <HeaderItem
-                openDrawer={this.openDrawer}
+        <View style={{ flex: 1 }}>
+          <Animated.View style={{ top: this.top }}>
+            <HeaderItem navigation={this.props.navigation} />
+          </Animated.View>
+          <Animated.View
+            style={{
+              height: deviceHeight,
+              top: this.top
+            }}
+          >
+            <ScrollableTabView
+              initialPage={1}
+              renderTabBar={() => (
+                <DefaultTabBar
+                  backgroundColor={color.themeColor}
+                  activeTextColor={color.contrastColor}
+                  inactiveTextColor={color.subColor}
+                  underlineStyle={{ backgroundColor: color.contrastColor }}
+                />
+              )}
+            >
+              <LocalScreen
+                tabLabel={'本站'}
+                emojiObj={state.emojiObj}
+                onScroll={this.animatedEvent}
                 navigation={this.props.navigation}
               />
-            </Animated.View>
-            <Animated.View
-              style={{
-                height: deviceHeight,
-                top: this.top
-              }}
-            >
-              <ScrollableTabView
-                initialPage={1}
-                renderTabBar={() => (
-                  <DefaultTabBar
-                    backgroundColor={color.themeColor}
-                    activeTextColor={color.contrastColor}
-                    inactiveTextColor={color.subColor}
-                    underlineStyle={{ backgroundColor: color.contrastColor }}
-                  />
-                )}
-              >
-                <LocalScreen
-                  tabLabel={'本站'}
-                  emojiObj={state.emojiObj}
-                  onScroll={this.animatedEvent}
-                  navigation={this.props.navigation}
-                />
-                <HomeScreen
-                  tabLabel={'主页'}
-                  emojiObj={state.emojiObj}
-                  onScroll={this.animatedEvent}
-                  navigation={this.props.navigation}
-                />
-                <PublicScreen
-                  tabLabel={'跨站'}
-                  emojiObj={state.emojiObj}
-                  onScroll={this.animatedEvent}
-                  navigation={this.props.navigation}
-                />
-              </ScrollableTabView>
-            </Animated.View>
-            <Fab navigation={this.props.navigation} />
-          </View>
-        </Drawer>
+              <HomeScreen
+                tabLabel={'主页'}
+                emojiObj={state.emojiObj}
+                onScroll={this.animatedEvent}
+                navigation={this.props.navigation}
+              />
+              <PublicScreen
+                tabLabel={'跨站'}
+                emojiObj={state.emojiObj}
+                onScroll={this.animatedEvent}
+                navigation={this.props.navigation}
+              />
+            </ScrollableTabView>
+          </Animated.View>
+          <Fab navigation={this.props.navigation} />
+        </View>
       </View>
     )
   }

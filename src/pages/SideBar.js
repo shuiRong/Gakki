@@ -6,7 +6,8 @@ import {
   Image,
   StyleSheet,
   ImageBackground,
-  TouchableOpacity
+  TouchableOpacity,
+  Dimensions
 } from 'react-native'
 import { getCurrentUser } from '../utils/api'
 import mobx from '../utils/mobx'
@@ -14,10 +15,10 @@ import { themeData } from '../utils/color'
 import HTMLView from './common/HTMLView'
 import Divider from './common/Divider'
 import { Radio } from './common/Notice'
-import { fetch } from '../utils/store'
 import { observer } from 'mobx-react'
 
 let color = {}
+let deviceWidth = Dimensions.get('window').width
 @observer
 export default class SideBar extends Component {
   constructor(props) {
@@ -115,11 +116,12 @@ export default class SideBar extends Component {
           <View style={styles.infoBox}>
             <TouchableOpacity
               activeOpacity={0.5}
-              onPress={() =>
+              onPress={() => {
+                this.props.closeDrawer()
                 this.props.navigation.navigate('Profile', {
                   id: state.id
                 })
-              }
+              }}
             >
               <Image source={{ uri: state.avatar }} style={styles.image} />
             </TouchableOpacity>
@@ -144,7 +146,10 @@ export default class SideBar extends Component {
             </View>
             <TouchableOpacity
               activeOpacity={0.5}
-              onPress={() => this.props.navigation.navigate('Envelope')}
+              onPress={() => {
+                this.props.closeDrawer()
+                this.props.navigation.navigate('Envelope')
+              }}
             >
               <Text style={[styles.text, { color: color.contrastColor }]}>
                 私信
@@ -160,7 +165,10 @@ export default class SideBar extends Component {
             </View>
             <TouchableOpacity
               activeOpacity={0.5}
-              onPress={() => this.props.navigation.navigate('MutedUsers')}
+              onPress={() => {
+                this.props.closeDrawer()
+                this.props.navigation.navigate('BlockedUsers')
+              }}
             >
               <Text style={[styles.text, { color: color.contrastColor }]}>
                 被屏蔽用户
@@ -176,10 +184,32 @@ export default class SideBar extends Component {
             </View>
             <TouchableOpacity
               activeOpacity={0.5}
-              onPress={() => this.props.navigation.navigate('BlockedUsers')}
+              onPress={() => {
+                this.props.closeDrawer()
+                this.props.navigation.navigate('MutedUsers')
+              }}
             >
               <Text style={[styles.text, { color: color.contrastColor }]}>
                 被隐藏用户
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.list}>
+            <View style={styles.iconBox}>
+              <Icon
+                name="users"
+                style={[styles.icon, { color: color.contrastColor }]}
+              />
+            </View>
+            <TouchableOpacity
+              activeOpacity={0.5}
+              onPress={() => {
+                this.props.closeDrawer()
+                this.props.navigation.navigate('FollowRequestList')
+              }}
+            >
+              <Text style={[styles.text, { color: color.contrastColor }]}>
+                请求关注列表
               </Text>
             </TouchableOpacity>
           </View>
@@ -224,6 +254,7 @@ export default class SideBar extends Component {
             <TouchableOpacity
               activeOpacity={0.5}
               onPress={() => {
+                this.props.closeDrawer()
                 this.props.navigation.navigate('Profile', {
                   id: '81232'
                 })
@@ -244,6 +275,7 @@ export default class SideBar extends Component {
             <TouchableOpacity
               activeOpacity={0.5}
               onPress={() => {
+                this.props.closeDrawer()
                 this.props.navigation.navigate('About')
               }}
             >
@@ -271,6 +303,7 @@ export default class SideBar extends Component {
 
 const styles = StyleSheet.create({
   main: {
+    width: deviceWidth * 0.78,
     flex: 1
   },
   bg: {

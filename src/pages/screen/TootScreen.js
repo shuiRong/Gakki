@@ -15,13 +15,13 @@ export default class TootScreen extends Component {
   constructor(props) {
     super(props)
     this.state = {
+      pinnedList: [], // 置顶嘟文列表
       list: [],
       loading: true,
       url: 'home'
     }
   }
   componentDidMount() {
-    this.getUserStatuses()
     this.getUserPinnedStatuses()
   }
 
@@ -88,7 +88,10 @@ export default class TootScreen extends Component {
       ...params
     }).then(res => {
       // 手动移除已经被置顶的嘟文
-      res = res.filter(toot => !toot.pinned)
+      // P.S. mastodon2.7.0的接口返回的status不存在pinned属性，疑似bug
+      // res = res.filter(toot => !toot.pinned)
+      res = res.filter(item => !this.isExist(this.state.pinnedList, item))
+
       // 同时将数据更新到state数据中，刷新视图
       this.setState({
         list: this.state.list.concat(res),
@@ -98,15 +101,39 @@ export default class TootScreen extends Component {
     })
   }
 
+  /**
+   * @description 判断数据中是否已经包含对应数据
+   * @param {data}: 数组
+   * @param {item}: 特定数据
+   */
+  isExist = (data, item) => {
+    const result = false
+    let done = false
+    data.forEach(toot => {
+      if (done) return
+      if (toot.id === item.id) {
+        retult = true
+        done = true
+      }
+    })
+
+    return result
+  }
+
   getUserPinnedStatuses = () => {
     getUserStatuses(this.props.navigation.getParam('id'), {
       pinned: true
     }).then(res => {
       const newList = res.concat(this.state.list)
-      this.setState({
-        list: newList,
-        loading: false
-      })
+      this.setState(
+        {
+          pinnedList: newList,
+          loading: false
+        },
+        () => {
+          this.getUserStatuses()
+        }
+      )
     })
   }
 
@@ -121,7 +148,12 @@ export default class TootScreen extends Component {
   // 滚动到了底部，加载数据
   onEndReached = () => {
     const state = this.state
-    this.getUserStatuses(null, { max_id: state.list[state.list.length - 1].id })
+    // P.S. 奇怪的Bug,如果吧state.list.length单独提取成一个length变量，那么就会报错:length of undefined
+    const lastToot = state.list[state.list.length - 1]
+    if (!lastToot) {
+      return
+    }
+    this.getUserStatuses(null, { max_id: lastToot.id })
   }
 
   deleteToot = id => {
@@ -166,6 +198,7 @@ export default class TootScreen extends Component {
   }
 
   render() {
+    const state = this.state
     if (this.state.loading) {
       return <Loading />
     }
@@ -174,7 +207,7 @@ export default class TootScreen extends Component {
         <FlatList
           ItemSeparatorComponent={() => <Divider />}
           showsVerticalScrollIndicator={false}
-          data={this.state.list}
+          data={state.pinnedList.concat(state.list)}
           onEndReachedThreshold={0.1}
           onEndReached={this.onEndReached}
           onScroll={this.props.onScroll}

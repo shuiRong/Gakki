@@ -29,6 +29,15 @@ export const getHomeTimelines = (url, params) => {
   })
 }
 
+export const getFavourites = params => {
+  return request({
+    url: `api/v1/favourites`,
+    method: 'get',
+    headers,
+    params
+  })
+}
+
 export const getCurrentUser = () => {
   return request({
     url: '/api/v1/accounts/verify_credentials',
@@ -289,6 +298,36 @@ export const followers = (id, limit) => {
     params: {
       limit: limit || 1
     },
+    headers
+  })
+}
+
+// 关注/取关
+export const follow = (id, follow) => {
+  return request({
+    url: `/api/v1/accounts/${id}/${follow ? 'follow' : 'unfollow'}`,
+    method: 'post',
+    data: {
+      reblogs: true // 是否在你的时间线展示该用户转嘟的数据
+    },
+    headers
+  })
+}
+
+// 关注请求列表
+export const followRequests = () => {
+  return request({
+    url: `/api/v1/follow_requests`,
+    method: 'get',
+    headers
+  })
+}
+
+// 审核关注请求
+export const checkRequest = (id, status) => {
+  return request({
+    url: `/api/v1/follow_requests/${id}/${status ? 'authorize' : 'reject'}`,
+    method: 'post',
     headers
   })
 }

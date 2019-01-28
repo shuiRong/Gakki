@@ -180,16 +180,9 @@ export default class TootBox extends Component {
    * @param {favourited}: 应该点赞？
    */
   favourite = (id, favourited) => {
-    favourite(id, favourited).then(() => {
-      const toot = this.state.toot
+    favourite(id, favourited).then(res => {
       this.setState({
-        toot: {
-          ...toot,
-          favourited: favourited,
-          favourites_count: favourited
-            ? toot.favourites_count + 1
-            : toot.favourites_count - 1
-        }
+        toot: res
       })
     })
   }
@@ -201,15 +194,8 @@ export default class TootBox extends Component {
    */
   reblog = (id, reblogged) => {
     reblog(id, reblogged).then(res => {
-      const toot = this.state.toot
       this.setState({
-        toot: {
-          ...toot,
-          reblogged: reblogged,
-          reblogs_count: reblogged
-            ? toot.reblogs_count + 1
-            : toot.reblogs_count - 1
-        }
+        toot: res
       })
     })
   }
@@ -723,11 +709,7 @@ export default class TootBox extends Component {
             width: '60%'
           }}
           activeOpacity={0.5}
-          onPress={() =>
-            this.props.navigation.navigate('Profile', {
-              id: account.id
-            })
-          }
+          onPress={() => this.goProfile(account.id)}
         >
           <HTMLView
             navigation={this.props.navigation}

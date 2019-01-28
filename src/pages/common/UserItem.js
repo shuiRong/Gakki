@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { View, Image, Text, TouchableOpacity } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
-import { muteAccount, blockAccount } from '../../utils/api'
+import { muteAccount, blockAccount, checkRequest } from '../../utils/api'
 import { themeData } from '../../utils/color'
 import mobx from '../../utils/mobx'
 import HTMLView from './HTMLView'
@@ -10,6 +10,10 @@ import { observer } from 'mobx-react'
 let color = {}
 @observer
 export default class UserList extends Component {
+  static defaultProps = {
+    model: '' // 当前组件使用的模式，模式不同展示的右侧图标不同
+  }
+
   constructor(props) {
     super(props)
     this.state = {
@@ -67,14 +71,38 @@ export default class UserList extends Component {
     })
   }
 
-  /**
-   * @description 获取
-   * @param {}:
-   */
-  getNotificationIcon = () => {
-    const relationship = this.state.relationship
+  checkRequest = status => {
+    const id = this.state.account.id
+    checkRequest(id, status).then(() => {
+      this.props.deleteUser(id)
+    })
+  }
 
-    if (this.props.model === 'block') {
+  /**
+   * @description 获取右侧图标
+   */
+  getRightIcon = () => {
+    const model = this.props.model
+    const relationship = this.state.relationship
+    if (!model) {
+      return null
+    } else if (model === 'request') {
+      return (
+        <TouchableOpacity
+          activeOpacity={0.5}
+          onPress={() => this.checkRequest(false)}
+        >
+          <Icon
+            name={'times'}
+            style={{
+              fontSize: 18,
+              color: color.contrastColor,
+              marginRight: 15
+            }}
+          />
+        </TouchableOpacity>
+      )
+    } else if (model === 'block') {
       return (
         <TouchableOpacity
           activeOpacity={0.5}
@@ -112,6 +140,45 @@ export default class UserList extends Component {
     )
   }
 
+  getLeftIcon = () => {
+    const model = this.props.model
+    if (!model) {
+      return null
+    } else if (model === 'request') {
+      return (
+        <TouchableOpacity
+          activeOpacity={0.5}
+          onPress={() => this.checkRequest(true)}
+        >
+          <Icon
+            name={'check'}
+            style={{
+              fontSize: 18,
+              color: color.contrastColor,
+              marginRight: 15
+            }}
+          />
+        </TouchableOpacity>
+      )
+    } else if (model === 'mute') {
+      return (
+        <TouchableOpacity
+          activeOpacity={0.5}
+          onPress={() => this.muteAccount(false)}
+        >
+          <Icon
+            name={'volume-up'}
+            style={{
+              fontSize: 18,
+              color: color.contrastColor,
+              marginRight: 15
+            }}
+          />
+        </TouchableOpacity>
+      )
+    }
+  }
+
   render() {
     const state = this.state
     const account = state.account
@@ -130,11 +197,11 @@ export default class UserList extends Component {
       >
         <TouchableOpacity
           activeOpacity={0.5}
-          onPress={() =>
+          onPress={() => {
             this.props.navigation.navigate('Profile', {
               id: account.id
             })
-          }
+          }}
         >
           <Image
             source={{ uri: account.avatar }}
@@ -161,21 +228,7 @@ export default class UserList extends Component {
             width: '18%'
           }}
         >
-          {this.props.model === 'mute' && (
-            <TouchableOpacity
-              activeOpacity={0.5}
-              onPress={() => this.muteAccount(false)}
-            >
-              <Icon
-                name={'volume-up'}
-                style={{
-                  fontSize: 18,
-                  color: color.contrastColor,
-                  marginRight: 15
-                }}
-              />
-            </TouchableOpacity>
-          )}
+          {this.getLeftIcon()}
 
           <View
             style={{
@@ -183,7 +236,7 @@ export default class UserList extends Component {
               alignItems: 'center'
             }}
           >
-            {this.getNotificationIcon()}
+            {this.getRightIcon()}
           </View>
         </View>
       </View>

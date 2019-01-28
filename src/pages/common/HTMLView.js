@@ -114,7 +114,6 @@ export default class HTMLView extends Component {
         content = content.replace(/^<p>(.*)<\/p>$/, '<p><div>$1</div></p>')
       }
       const match = content.match(/:[A-Za-z0-9].*?:/g)
-      // console.log('match', match)
 
       // 如果的确匹配到了任何表情包的shortcode
       if (match) {

@@ -130,16 +130,9 @@ export default class AnotherTootBox extends Component {
    * @param {favourited}: 应该点赞？
    */
   favourite = (id, favourited) => {
-    favourite(id, favourited).then(() => {
-      const toot = this.state.toot
+    favourite(id, favourited).then(res => {
       this.setState({
-        toot: {
-          ...toot,
-          favourited: favourited,
-          favourites_count: favourited
-            ? toot.favourites_count + 1
-            : toot.favourites_count - 1
-        }
+        toot: res
       })
     })
   }
@@ -150,16 +143,9 @@ export default class AnotherTootBox extends Component {
    * @param {reblogged}: 转发状态
    */
   reblog = (id, reblogged) => {
-    reblog(id, reblogged).then(() => {
-      const toot = this.state.toot
+    reblog(id, reblogged).then(res => {
       this.setState({
-        toot: {
-          ...toot,
-          reblogged: reblogged,
-          reblogs_count: reblogged
-            ? toot.reblogs_count + 1
-            : toot.reblogs_count - 1
-        }
+        toot: res
       })
     })
   }
