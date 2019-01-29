@@ -36,7 +36,7 @@ export default createStackNavigator(
     Test
   },
   {
-    initialRouteName: 'Home',
+    initialRouteName: 'Search',
     headerMode: 'none'
   }
 )
