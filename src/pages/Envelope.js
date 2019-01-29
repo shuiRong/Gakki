@@ -88,7 +88,7 @@ export default class Envelope extends Component {
             <Button transparent>
               <Icon
                 style={[styles.icon, { color: color.subColor }]}
-                name="arrow-left"
+                name={'arrow-left'}
                 onPress={() => this.props.navigation.goBack()}
               />
             </Button>

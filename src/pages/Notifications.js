@@ -109,7 +109,7 @@ export default class Notifications extends Component {
             <Button transparent>
               <Icon
                 style={[styles.icon, { color: color.subColor }]}
-                name="arrow-left"
+                name={'arrow-left'}
                 onPress={() => this.props.navigation.goBack()}
               />
             </Button>
@@ -133,7 +133,6 @@ export default class Notifications extends Component {
             data={state.list}
             onEndReachedThreshold={0.1}
             onEndReached={this.onEndReached}
-            onScroll={this.props.onScroll}
             keyExtractor={item => item.id}
             refreshControl={
               <RefreshControl

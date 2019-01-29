@@ -3,98 +3,58 @@
  */
 
 import React, { Component } from 'react'
-import { View, StyleSheet, FlatList, RefreshControl } from 'react-native'
+import {
+  View,
+  ScrollView,
+  StyleSheet,
+  FlatList,
+  RefreshControl,
+  TextInput,
+  Dimensions,
+  Text,
+  TouchableOpacity
+} from 'react-native'
 import { Button } from 'native-base'
-import { getNotifications, clearNotifications } from '../utils/api'
+import { search } from '../utils/api'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import TootBox from './common/TootBox'
+import UserItem from './common/UserItem'
 import Header from './common/Header'
-import Loading from './common/Loading'
-import ListFooterComponent from './common/ListFooterComponent'
 import { themeData } from '../utils/color'
 import mobx from '../utils/mobx'
 import Divider from './common/Divider'
-import { Confirm } from './common/Notice'
 import { observer } from 'mobx-react'
 
 let color = {}
+const deviceWidth = Dimensions.get('window').width
 @observer
 export default class Notifications extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      list: [],
-      loading: true
+      text: '',
+      loading: false,
+      accounts: [],
+      hashtags: [],
+      statuses: []
     }
   }
+
   componentDidMount() {
-    this.getNotifications()
-  }
-
-  deleteToot = id => {
-    this.setState({
-      list: this.state.list.filter(toot => toot.id !== id)
-    })
-  }
-
-  // 清空列表中刚被mute的人的所有消息
-  muteAccount = id => {
-    this.setState({
-      list: this.state.list.filter(toot => toot.account.id !== id)
-    })
-  }
-
-  // 清空列表中刚被mute的人的所有消息
-  blockAccount = id => {
-    this.setState({
-      list: this.state.list.filter(toot => toot.account.id !== id)
-    })
-  }
-
-  /**
-   * @description 获取时间线数据
-   * @param {cb}: 成功后的回调函数
-   * @param {params}: 分页参数
-   */
-  getNotifications = (cb, params) => {
-    getNotifications(params).then(res => {
-      // 同时将数据更新到state数据中，刷新视图
-      this.setState({
-        list: this.state.list.concat(res),
-        loading: false
-      })
-      if (cb) cb()
-    })
-  }
-
-  /**
-   * @description 清空通知
-   * @param {}:
-   */
-  clearNotifications = () => {
-    Confirm.show('确定清空所有通知吗？', () => {
-      clearNotifications().then(() => {
-        this.setState({
-          list: [],
-          loading: false
-        })
-      })
-    })
+    this.search()
   }
 
   refreshHandler = () => {
     this.setState({
-      loading: true,
-      list: []
+      list: [],
+      loading: false
     })
-    this.getNotifications()
+    this.search()
   }
 
-  // 滚动到了底部，加载数据
-  onEndReached = () => {
-    const state = this.state
-    this.getNotifications(null, {
-      max_id: state.list[state.list.length - 1].id
+  search = () => {
+    search(this.state.text).then(res => {
+      this.setState(res)
     })
   }
 
@@ -103,59 +63,192 @@ export default class Notifications extends Component {
     color = themeData[mobx.theme]
 
     return (
-      <View style={[styles.container, { backgroundColor: color.themeColor }]}>
+      <ScrollView
+        style={[styles.container, { backgroundColor: color.themeColor }]}
+      >
         <Header
+          style={{ marginBottom: 2 }}
           left={
             <Button transparent>
               <Icon
                 style={[styles.icon, { color: color.subColor }]}
-                name="arrow-left"
+                name={'arrow-left'}
                 onPress={() => this.props.navigation.goBack()}
               />
             </Button>
           }
-          title={'通知'}
+          title={
+            <TextInput
+              ref={ref => (this.ref = ref)}
+              style={{
+                width: deviceWidth * 0.7,
+                height: 30,
+                fontSize: 17,
+                borderBottomColor: color.subColor,
+                borderBottomWidth: 1,
+                padding: 2,
+                borderRadius: 3
+              }}
+              autoFocus={true}
+              onChangeText={text =>
+                this.setState({
+                  text
+                })
+              }
+              value={state.text}
+              maxLength={20}
+              onSubmitEditing={this.search}
+            />
+          }
           right={
-            <Button transparent onPress={this.clearNotifications}>
+            <Button
+              transparent
+              onPress={() => {
+                this.ref.focus()
+                this.setState({
+                  text: ''
+                })
+              }}
+            >
               <Icon
                 style={[styles.icon, { color: color.subColor }]}
-                name="trash-alt"
+                name="times"
               />
             </Button>
           }
         />
-        {state.loading ? (
-          <Loading />
-        ) : (
-          <FlatList
-            ItemSeparatorComponent={() => <Divider />}
-            showsVerticalScrollIndicator={false}
-            data={state.list}
-            onEndReachedThreshold={0.1}
-            onEndReached={this.onEndReached}
-            onScroll={this.props.onScroll}
-            keyExtractor={item => item.id}
-            refreshControl={
-              <RefreshControl
-                refreshing={state.loading}
-                onRefresh={this.refreshHandler}
+        {state.accounts.length !== 0 && (
+          <View>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                padding: 10,
+                paddingLeft: 15
+              }}
+            >
+              <Icon
+                style={{ color: color.subColor, fontSize: 20 }}
+                name="users"
               />
-            }
-            ListFooterComponent={() => (
-              <ListFooterComponent info={'你还没有收到任何通知'} />
-            )}
-            renderItem={({ item }) => (
-              <TootBox
-                data={item}
-                navigation={this.props.navigation}
-                deleteToot={this.deleteToot}
-                muteAccount={this.muteAccount}
-                blockAccount={this.blockAccount}
-              />
-            )}
-          />
+              <Text
+                style={{ fontSize: 20, marginLeft: 10, color: color.subColor }}
+              >
+                用户
+              </Text>
+            </View>
+            <Divider />
+            <FlatList
+              ItemSeparatorComponent={() => <Divider />}
+              showsVerticalScrollIndicator={false}
+              data={state.accounts}
+              keyExtractor={item => item.id}
+              refreshControl={
+                <RefreshControl
+                  refreshing={state.loading}
+                  onRefresh={this.refreshHandler}
+                />
+              }
+              renderItem={({ item }) => (
+                <UserItem data={item} navigation={this.props.navigation} />
+              )}
+            />
+          </View>
         )}
-      </View>
+        {state.hashtags.length !== 0 && (
+          <View>
+            <Divider />
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                padding: 10,
+                paddingLeft: 15
+              }}
+            >
+              <Icon
+                style={{ color: color.subColor, fontSize: 20 }}
+                name="hashtag"
+              />
+              <Text
+                style={{ fontSize: 20, marginLeft: 10, color: color.subColor }}
+              >
+                标签
+              </Text>
+            </View>
+            <Divider />
+            <FlatList
+              ItemSeparatorComponent={() => <Divider />}
+              showsVerticalScrollIndicator={false}
+              data={state.hashtags}
+              keyExtractor={item => item.name}
+              refreshControl={
+                <RefreshControl
+                  refreshing={state.loading}
+                  onRefresh={this.refreshHandler}
+                />
+              }
+              renderItem={({ item }) => (
+                <TouchableOpacity
+                  style={{ padding: 10, paddingLeft: 15, paddingRight: 15 }}
+                  onPress={() =>
+                    this.props.navigation.navigate('Tag', {
+                      id: item.name
+                    })
+                  }
+                >
+                  <Text>#{item.name}</Text>
+                </TouchableOpacity>
+              )}
+            />
+          </View>
+        )}
+        {state.statuses.length !== 0 && (
+          <View>
+            <Divider />
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                padding: 10,
+                paddingLeft: 15
+              }}
+            >
+              <Icon
+                style={{ color: color.subColor, fontSize: 20 }}
+                name="quote-right"
+              />
+              <Text
+                style={{ fontSize: 20, marginLeft: 10, color: color.subColor }}
+              >
+                嘟文
+              </Text>
+            </View>
+            <Divider />
+            <FlatList
+              ItemSeparatorComponent={() => <Divider />}
+              showsVerticalScrollIndicator={false}
+              data={state.statuses}
+              keyExtractor={item => item.id}
+              refreshControl={
+                <RefreshControl
+                  refreshing={state.loading}
+                  onRefresh={this.refreshHandler}
+                />
+              }
+              renderItem={({ item }) => (
+                <TootBox
+                  data={item}
+                  navigation={this.props.navigation}
+                  deleteToot={this.deleteToot}
+                  muteAccount={this.muteAccount}
+                  blockAccount={this.blockAccount}
+                />
+              )}
+            />
+          </View>
+        )}
+      </ScrollView>
     )
   }
 }

@@ -331,3 +331,25 @@ export const checkRequest = (id, status) => {
     headers
   })
 }
+
+// 搜索
+export const search = q => {
+  return request({
+    url: `/api/v2/search`,
+    method: 'get',
+    params: {
+      q
+    },
+    headers
+  })
+}
+
+// 获取标签内容
+export const getTag = (tag, params) => {
+  return request({
+    url: `/api/v1/timelines/tag/${tag}`,
+    method: 'get',
+    params,
+    headers
+  })
+}

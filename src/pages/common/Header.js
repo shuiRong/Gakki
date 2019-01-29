@@ -80,9 +80,11 @@ export default class HeaderItem extends Component {
           )}
         </Left>
         <Body>
-          <Title style={{ color: color.contrastColor }}>
-            {props.title || 'Gakki'}
-          </Title>
+          {typeof props.title === 'string' ? (
+            <Title style={{ color: color.contrastColor }}>{props.title}</Title>
+          ) : (
+            props.title
+          )}
         </Body>
         {this.getRight(props)}
       </Header>

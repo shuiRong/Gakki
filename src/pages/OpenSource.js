@@ -62,7 +62,7 @@ export default class MutedUsers extends Component {
             <Button transparent onPress={() => this.props.navigation.goBack()}>
               <Icon
                 style={{ color: color.subColor, fontSize: 17 }}
-                name="arrow-left"
+                name={'arrow-left'}
               />
             </Button>
           }

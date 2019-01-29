@@ -1,23 +1,24 @@
 /**
- * 关注者页面
+ * 关注请求列表页面
  */
 
 import React, { Component } from 'react'
 import { View, StyleSheet, FlatList, RefreshControl } from 'react-native'
 import { Button } from 'native-base'
-import { followers } from '../utils/api'
+import { getTag } from '../utils/api'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import Header from './common/Header'
 import Loading from './common/Loading'
+import ListFooterComponent from './common/ListFooterComponent'
 import { themeData } from '../utils/color'
 import mobx from '../utils/mobx'
 import Divider from './common/Divider'
-import UserItem from './common/UserItem'
+import TootBox from './common/TootBox'
 import { observer } from 'mobx-react'
 
 let color = {}
 @observer
-export default class Followers extends Component {
+export default class HashTag extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -26,20 +27,32 @@ export default class Followers extends Component {
     }
   }
   componentDidMount() {
-    const { navigation } = this.props
-    const id = navigation.getParam('id')
-    const limit = navigation.getParam('limit')
-    this.followers(id, limit)
+    this.tag = this.props.navigation.getParam('id')
+    this.getTag()
   }
 
-  /**
-   * @description 获取时间线数据
-   * @param {id}: 用户id
-   * @param {limit}: 获取数据数量
-   */
-  followers = (id, limit) => {
-    followers(id, limit).then(res => {
-      // 同时将数据更新到state数据中，刷新视图
+  deleteToot = id => {
+    this.setState({
+      list: this.state.list.filter(toot => toot.id !== id)
+    })
+  }
+
+  // 清空列表中刚被mute的人的所有消息
+  muteAccount = id => {
+    this.setState({
+      list: this.state.list.filter(toot => toot.account.id !== id)
+    })
+  }
+
+  // 清空列表中刚被mute的人的所有消息
+  blockAccount = id => {
+    this.setState({
+      list: this.state.list.filter(toot => toot.account.id !== id)
+    })
+  }
+
+  getTag = params => {
+    getTag(this.tag, params).then(res => {
       this.setState({
         list: this.state.list.concat(res),
         loading: false
@@ -52,7 +65,13 @@ export default class Followers extends Component {
       loading: true,
       list: []
     })
-    this.followers()
+    this.getTag()
+  }
+
+  // 滚动到了底部，加载数据
+  onEndReached = () => {
+    const state = this.state
+    this.getTag({ max_id: state.list[state.list.length - 1].id })
   }
 
   render() {
@@ -70,7 +89,7 @@ export default class Followers extends Component {
               />
             </Button>
           }
-          title={'关注者'}
+          title={this.tag ? '#' + this.tag : '标签'}
           right={'none'}
         />
         {state.loading ? (
@@ -78,8 +97,10 @@ export default class Followers extends Component {
         ) : (
           <FlatList
             ItemSeparatorComponent={() => <Divider />}
-            ListFooterComponent={<Divider />}
+            ListFooterComponent={() => <ListFooterComponent />}
             showsVerticalScrollIndicator={false}
+            onEndReachedThreshold={0.1}
+            onEndReached={this.onEndReached}
             data={state.list}
             keyExtractor={item => item.id}
             refreshControl={
@@ -89,7 +110,13 @@ export default class Followers extends Component {
               />
             }
             renderItem={({ item }) => (
-              <UserItem data={item} navigation={this.props.navigation} />
+              <TootBox
+                data={item}
+                navigation={this.props.navigation}
+                deleteToot={this.deleteToot}
+                muteAccount={this.muteAccount}
+                blockAccount={this.blockAccount}
+              />
             )}
           />
         )}

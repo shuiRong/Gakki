@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import {
   Text,
   View,
+  ScrollView,
   StyleSheet,
   Image,
   TouchableOpacity,
@@ -255,7 +256,10 @@ export default class Profile extends Component {
     color = themeData[mobx.theme]
 
     return (
-      <View style={{ flex: 1, backgroundColor: color.themeColor }}>
+      <ScrollView
+        contentContainerStyle={{ flex: 1 }}
+        style={{ flex: 1, backgroundColor: color.themeColor }}
+      >
         <View style={styles.header}>
           <Animated.View
             scrollEventThrottle={20}
@@ -285,7 +289,7 @@ export default class Profile extends Component {
           >
             <Icon
               style={{ fontSize: 20, color: color.subColor }}
-              name="arrow-left"
+              name={'arrow-left'}
             />
           </TouchableOpacity>
           <TouchableOpacity
@@ -387,7 +391,7 @@ export default class Profile extends Component {
         <Animated.View
           scrollEventThrottle={20}
           style={{
-            height: deviceHeight + 200,
+            height: deviceHeight + 50,
             top: this.distanceFromTop
           }}
         >
@@ -415,7 +419,7 @@ export default class Profile extends Component {
           </ScrollableTabView>
         </Animated.View>
         <Fab navigation={this.props.navigation} />
-      </View>
+      </ScrollView>
     )
   }
 }

@@ -36,7 +36,7 @@ export default class SendToot extends Component {
             <Button transparent>
               <Icon
                 style={[styles.icon, { color: color.subColor }]}
-                name="arrow-left"
+                name={'arrow-left'}
                 onPress={() => this.navigateToHome()}
               />
             </Button>

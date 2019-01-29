@@ -8,6 +8,7 @@ import BlockedUsers from './pages/BlockedUsers'
 import MutedUsers from './pages/MutedUsers'
 import Followers from './pages/Followers'
 import FollowRequestList from './pages/FollowRequestList'
+import Tag from './pages/Tag'
 import Following from './pages/Following'
 import About from './pages/About'
 import OpenSource from './pages/OpenSource'
@@ -29,6 +30,7 @@ export default createStackNavigator(
     Following,
     FollowRequestList,
     About,
+    Tag,
     OpenSource,
     EditProfile,
     Search,
@@ -36,7 +38,7 @@ export default createStackNavigator(
     Test
   },
   {
-    initialRouteName: 'Search',
+    initialRouteName: 'Home',
     headerMode: 'none'
   }
 )

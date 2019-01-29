@@ -48,7 +48,7 @@ export default class EditProfile extends Component {
             <Button transparent>
               <Icon
                 style={styles.navIcon}
-                name="arrow-left"
+                name={'arrow-left'}
                 onPress={() => this.props.navigation.goBack()}
               />
             </Button>
