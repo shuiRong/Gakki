@@ -32,6 +32,9 @@ export default class HomeScreen extends Component {
     if (!navigation) {
       return
     }
+    console.log('receive: ', navigation.getParam('access_token'))
+    this.fetchTimelines()
+
     const params = navigation.getParam('data')
 
     if (params && params.id) {
@@ -101,10 +104,15 @@ export default class HomeScreen extends Component {
    * @param {params}: 分页参数
    */
   fetchTimelines = (cb, params) => {
-    getHomeTimelines(this.state.url, {
-      ...this.state.baseParams,
-      ...params
-    }).then(res => {
+    const accessToken = this.props.navigation.getParam('access_token')
+    getHomeTimelines(
+      this.state.url,
+      {
+        ...this.state.baseParams,
+        ...params
+      },
+      accessToken
+    ).then(res => {
       // 同时将数据更新到state数据中，刷新视图
       this.setState({
         list: this.state.list.concat(res),

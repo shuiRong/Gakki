@@ -12,11 +12,11 @@ class ConfirmDialog {
   constructor() {
     this.key = undefined
   }
-  show = (title, cb) => {
+  show = (title, cb, options = { style: {}, isModal: true }) => {
     let overlayView = (
       <Overlay.View
         style={{ alignItems: 'center', justifyContent: 'center' }}
-        modal={true}
+        modal={options.isModal}
         overlayOpacity={0.5}
         ref={v => (this.overlayView = v)}
       >
@@ -30,32 +30,46 @@ class ConfirmDialog {
             height: 120,
             borderRadius: 5,
             alignItems: 'flex-start',
-            justifyContent: 'space-around'
+            justifyContent: 'space-between',
+            ...options.style
           }}
         >
-          <Text style={{ fontSize: 18, color: color.contrastColor }}>
-            {title || '确认框信息提示'}
-          </Text>
+          {typeof title === 'string' ? (
+            <Text
+              style={{
+                marginTop: 20,
+                fontSize: 18,
+                color: color.contrastColor
+              }}
+            >
+              {title || '确认框信息提示'}
+            </Text>
+          ) : (
+            title
+          )}
           <View
             style={{
               alignSelf: 'flex-end',
-              flexDirection: 'row'
+              flexDirection: 'row',
+              marginBottom: 20
             }}
           >
-            <TouchableOpacity
-              onPress={() => this.overlayView && this.overlayView.close()}
-            >
-              <Text
-                style={{
-                  color: color.subColor,
-                  fontSize: 15,
-                  fontWeight: 'bold',
-                  marginRight: 20
-                }}
+            {options.hideCancel || (
+              <TouchableOpacity
+                onPress={() => this.overlayView && this.overlayView.close()}
               >
-                取消
-              </Text>
-            </TouchableOpacity>
+                <Text
+                  style={{
+                    color: color.subColor,
+                    fontSize: 15,
+                    fontWeight: 'bold',
+                    marginRight: 20
+                  }}
+                >
+                  取消
+                </Text>
+              </TouchableOpacity>
+            )}
             <TouchableOpacity
               onPress={() => {
                 cb && cb()

@@ -15,6 +15,7 @@ class Globe {
   @observable theme = 'white' // 当前用户选择主题
   @observable visibility = 'public' // 当前用户选择主题
   @observable emojiObj = {} // 当前实例的emoji对象
+  @observable access_token = ''
 
   updateReply({
     reply_to_username,
@@ -104,6 +105,10 @@ class Globe {
 
   updateEmojiObj(emojiObj) {
     this.emojiObj = emojiObj
+  }
+
+  updateAccessToken(access_token) {
+    this.access_token = access_token
   }
 }
 

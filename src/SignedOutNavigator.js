@@ -1,8 +1,14 @@
-import React, { Component } from 'react'
-import { View } from 'react-native'
+import { createStackNavigator } from 'react-navigation'
+import Auth from './pages/Auth'
+import Login from './pages/Login'
 
-export default class SignedOutNavigator extends Component {
-  render() {
-    return <View />
+export default createStackNavigator(
+  {
+    Auth,
+    Login
+  },
+  {
+    initialRouteName: 'Login',
+    headerMode: 'none'
   }
-}
+)

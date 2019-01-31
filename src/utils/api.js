@@ -1,7 +1,14 @@
 import request from './request'
 import config from './config'
-const headers = {
-  Authorization: config.token
+import { fetch } from './store'
+import mobx from './mobx'
+
+export const apps = data => {
+  return request({
+    url: '/api/v1/apps',
+    method: 'post',
+    data
+  })
 }
 
 export const authorize = params => {
@@ -20,11 +27,13 @@ export const getToken = data => {
   })
 }
 
-export const getHomeTimelines = (url, params) => {
+export const getHomeTimelines = (url, params, accessToken) => {
   return request({
     url: `/api/v1/timelines/${url}`,
     method: 'get',
-    headers,
+    headers: {
+      Authorization: accessToken || mobx.access_token
+    },
     params
   })
 }
@@ -33,7 +42,9 @@ export const getFavourites = params => {
   return request({
     url: `api/v1/favourites`,
     method: 'get',
-    headers,
+    headers: {
+      Authorization: mobx.access_token
+    },
     params
   })
 }
@@ -42,7 +53,9 @@ export const getCurrentUser = () => {
   return request({
     url: '/api/v1/accounts/verify_credentials',
     method: 'get',
-    headers
+    headers: {
+      Authorization: mobx.access_token
+    }
   })
 }
 
@@ -51,7 +64,9 @@ export const getStatuses = id => {
   return request({
     url: `/api/v1/statuses/${id}`,
     method: 'get',
-    headers
+    headers: {
+      Authorization: mobx.access_token
+    }
   })
 }
 
@@ -60,7 +75,9 @@ export const getUserStatuses = (id, params) => {
   return request({
     url: `/api/v1/accounts/${id}/statuses`,
     method: 'get',
-    headers,
+    headers: {
+      Authorization: mobx.access_token
+    },
     params
   })
 }
@@ -70,7 +87,9 @@ export const deleteStatuses = id => {
   return request({
     url: `/api/v1/statuses/${id}`,
     method: 'delete',
-    headers
+    headers: {
+      Authorization: mobx.access_token
+    }
   })
 }
 
@@ -87,7 +106,9 @@ export const favourite = (id, favourite) => {
   return request({
     url: `/api/v1/statuses/${id}/${favourite ? 'favourite' : 'unfavourite'}`,
     method: 'post',
-    headers
+    headers: {
+      Authorization: mobx.access_token
+    }
   })
 }
 
@@ -95,7 +116,9 @@ export const reblog = (id, reblog) => {
   return request({
     url: `/api/v1/statuses/${id}/${reblog ? 'reblog' : 'unreblog'}`,
     method: 'post',
-    headers
+    headers: {
+      Authorization: mobx.access_token
+    }
   })
 }
 
@@ -110,7 +133,9 @@ export const muteAccount = (id, mute, notificationStatus) => {
     data: {
       notifications: notificationStatus
     },
-    headers
+    headers: {
+      Authorization: mobx.access_token
+    }
   })
 }
 
@@ -119,7 +144,9 @@ export const blockAccount = (id, block) => {
   return request({
     url: `/api/v1/accounts/${id}/${block ? 'block' : 'unblock'}`,
     method: 'post',
-    headers
+    headers: {
+      Authorization: mobx.access_token
+    }
   })
 }
 
@@ -128,7 +155,9 @@ export const mutesList = () => {
   return request({
     url: '/api/v1/mutes',
     method: 'get',
-    headers
+    headers: {
+      Authorization: mobx.access_token
+    }
   })
 }
 
@@ -138,7 +167,9 @@ export const sendStatuses = data => {
     url: '/api/v1/statuses',
     method: 'post',
     data,
-    headers
+    headers: {
+      Authorization: mobx.access_token
+    }
   })
 }
 
@@ -152,7 +183,9 @@ export const getRelationship = id => {
   return request({
     url: `/api/v1/accounts/relationships?${query}`,
     method: 'get',
-    headers
+    headers: {
+      Authorization: mobx.access_token
+    }
   })
 }
 
@@ -161,7 +194,9 @@ export const getAccountData = id => {
   return request({
     url: `/api/v1/accounts/${id}`,
     method: 'get',
-    headers
+    headers: {
+      Authorization: mobx.access_token
+    }
   })
 }
 
@@ -170,7 +205,9 @@ export const setPin = (id, pinned) => {
   return request({
     url: `/api/v1/statuses/${id}/${pinned ? 'unpin' : 'pin'}`,
     method: 'post',
-    headers
+    headers: {
+      Authorization: mobx.access_token
+    }
   })
 }
 
@@ -190,7 +227,7 @@ export const upload = ({ response, description, focus }) => {
     method: 'post',
     data: data,
     headers: {
-      ...headers,
+      Authorization: mobx.access_token,
       'content-type': 'multipart/form-data'
     }
   })
@@ -202,7 +239,9 @@ export const updateMedia = (id, data) => {
     url: `/api/v1/media/${id}`,
     method: 'put',
     data,
-    headers
+    headers: {
+      Authorization: mobx.access_token
+    }
   })
 }
 
@@ -211,7 +250,9 @@ export const getCustomEmojis = () => {
   return request({
     url: '/api/v1/custom_emojis',
     method: 'get',
-    headers
+    headers: {
+      Authorization: mobx.access_token
+    }
   })
 }
 
@@ -221,7 +262,9 @@ export const getNotifications = params => {
     url: '/api/v1/notifications',
     method: 'get',
     params,
-    headers
+    headers: {
+      Authorization: mobx.access_token
+    }
   })
 }
 
@@ -230,7 +273,9 @@ export const clearNotifications = () => {
   return request({
     url: '/api/v1/notifications/clear',
     method: 'post',
-    headers
+    headers: {
+      Authorization: mobx.access_token
+    }
   })
 }
 
@@ -240,7 +285,9 @@ export const setProfile = data => {
     url: '/settings/profile',
     method: 'get',
     params,
-    headers
+    headers: {
+      Authorization: mobx.access_token
+    }
   })
 }
 
@@ -250,7 +297,9 @@ export const getConversations = params => {
     url: '/api/v1/conversations',
     method: 'get',
     params,
-    headers
+    headers: {
+      Authorization: mobx.access_token
+    }
   })
 }
 
@@ -262,7 +311,9 @@ export const getBlocks = () => {
     params: {
       limit: 100
     },
-    headers
+    headers: {
+      Authorization: mobx.access_token
+    }
   })
 }
 
@@ -274,7 +325,9 @@ export const getMutes = () => {
     params: {
       limit: 100
     },
-    headers
+    headers: {
+      Authorization: mobx.access_token
+    }
   })
 }
 
@@ -286,7 +339,9 @@ export const following = (id, limit) => {
     params: {
       limit: limit || 1
     },
-    headers
+    headers: {
+      Authorization: mobx.access_token
+    }
   })
 }
 
@@ -298,7 +353,9 @@ export const followers = (id, limit) => {
     params: {
       limit: limit || 1
     },
-    headers
+    headers: {
+      Authorization: mobx.access_token
+    }
   })
 }
 
@@ -310,7 +367,9 @@ export const follow = (id, follow) => {
     data: {
       reblogs: true // 是否在你的时间线展示该用户转嘟的数据
     },
-    headers
+    headers: {
+      Authorization: mobx.access_token
+    }
   })
 }
 
@@ -328,7 +387,9 @@ export const checkRequest = (id, status) => {
   return request({
     url: `/api/v1/follow_requests/${id}/${status ? 'authorize' : 'reject'}`,
     method: 'post',
-    headers
+    headers: {
+      Authorization: mobx.access_token
+    }
   })
 }
 
@@ -340,7 +401,9 @@ export const search = q => {
     params: {
       q
     },
-    headers
+    headers: {
+      Authorization: mobx.access_token
+    }
   })
 }
 
@@ -350,6 +413,8 @@ export const getTag = (tag, params) => {
     url: `/api/v1/timelines/tag/${tag}`,
     method: 'get',
     params,
-    headers
+    headers: {
+      Authorization: mobx.access_token
+    }
   })
 }
