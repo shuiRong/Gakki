@@ -16,6 +16,7 @@ import HTMLView from './common/HTMLView'
 import Divider from './common/Divider'
 import { Radio } from './common/Notice'
 import { observer } from 'mobx-react'
+import { remove } from '../utils/store'
 
 let color = {}
 let deviceWidth = Dimensions.get('window').width
@@ -36,20 +37,16 @@ export default class SideBar extends Component {
     }
   }
   componentDidMount() {
-    getCurrentUser()
-      .then(res => {
-        this.setState({
-          avatar: res.avatar,
-          username: res.username,
-          header: res.header,
-          display_name: res.display_name,
-          id: res.id
-        })
-        mobx.updateAccount(res)
+    getCurrentUser().then(res => {
+      this.setState({
+        avatar: res.avatar,
+        username: res.username,
+        header: res.header,
+        display_name: res.display_name,
+        id: res.id
       })
-      .catch(err => {
-        alert(JSON.stringify(err.response))
-      })
+      mobx.updateAccount(res)
+    })
   }
 
   /**
@@ -75,6 +72,14 @@ export default class SideBar extends Component {
       },
       { height: 200 }
     )
+  }
+
+  // 删除存储的access_token等信息，进入到登录页面
+  logout = () => {
+    remove('access_token').then(() => {
+      this.props.closeDrawer()
+      this.props.navigation.navigate('Login')
+    })
   }
 
   /**
@@ -291,9 +296,11 @@ export default class SideBar extends Component {
                 style={[styles.icon, { color: color.contrastColor }]}
               />
             </View>
-            <Text style={[styles.text, { color: color.contrastColor }]}>
-              退出登录
-            </Text>
+            <TouchableOpacity activeOpacity={0.5} onPress={this.logout}>
+              <Text style={[styles.text, { color: color.contrastColor }]}>
+                退出登录
+              </Text>
+            </TouchableOpacity>
           </View>
         </View>
       </View>

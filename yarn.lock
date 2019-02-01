@@ -6128,6 +6128,13 @@ react-native-scrollable-tab-view@^0.10.0:
     prop-types "^15.6.0"
     react-timer-mixin "^0.13.3"
 
+react-native-spinkit@^1.1.1:
+  version "1.1.1"
+  resolved "http://registry.npm.taobao.org/react-native-spinkit/download/react-native-spinkit-1.1.1.tgz#3ae512f3978bc750b7c02639911e1710750d8539"
+  integrity sha1-OuUS85eLx1C3wCY5kR4XEHUNhTk=
+  dependencies:
+    prop-types "^15.5.8"
+
 react-native-tab-view@^0.0.77:
   version "0.0.77"
   resolved "http://registry.npm.taobao.org/react-native-tab-view/download/react-native-tab-view-0.0.77.tgz#11ceb8e7c23100d07e628dc151b57797524d00d4"

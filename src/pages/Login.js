@@ -3,7 +3,14 @@
  */
 
 import React, { Component } from 'react'
-import { View, Text, Image, TextInput, TouchableOpacity } from 'react-native'
+import {
+  View,
+  Text,
+  Image,
+  TextInput,
+  TouchableOpacity,
+  Linking
+} from 'react-native'
 import { apps } from '../utils/api'
 import { themeData } from '../utils/color'
 import mobx from '../utils/mobx'
@@ -19,6 +26,10 @@ export default class Login extends Component {
     this.state = {
       domain: 'cmx.im'
     }
+  }
+
+  openURL = url => {
+    Linking.openURL(url).catch(err => console.error('An error occurred', err))
   }
 
   createApps = () => {
@@ -54,7 +65,9 @@ export default class Login extends Component {
           <Text style={{ color: color.contrastColor, fontSize: 18 }}>
             不知道该选择哪个实例？
           </Text>
-          <TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => this.openURL('https://joinmastodon.org/')}
+          >
             <Text style={{ color: color.subColor, fontSize: 18 }}>
               https://joinmastodon.org/
             </Text>

@@ -418,3 +418,14 @@ export const getTag = (tag, params) => {
     }
   })
 }
+
+// 验证token是否有效
+export const verify_credentials = access_token => {
+  return request({
+    url: `/api/v1/apps/verify_credentials`,
+    method: 'get',
+    headers: {
+      Authorization: access_token
+    }
+  })
+}

@@ -11,3 +11,7 @@ export const fetch = key => {
 export const merge = (key, value, cb) => {
   return AsyncStorage.mergeItem(key, value, cb)
 }
+
+export const remove = (key, cb) => {
+  return AsyncStorage.removeItem(key, cb)
+}
