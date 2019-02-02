@@ -403,6 +403,7 @@ export default class Profile extends Component {
                 activeTextColor={color.contrastColor}
                 inactiveTextColor={color.subColor}
                 underlineStyle={{ backgroundColor: color.contrastColor }}
+                style={{ borderColor: color.subColor }}
               />
             )}
           >

@@ -57,14 +57,20 @@ export default class Notifications extends Component {
    * @param {params}: 分页参数
    */
   getNotifications = (cb, params) => {
-    getNotifications(params).then(res => {
-      // 同时将数据更新到state数据中，刷新视图
-      this.setState({
-        list: this.state.list.concat(res),
-        loading: false
+    getNotifications(params)
+      .then(res => {
+        // 同时将数据更新到state数据中，刷新视图
+        this.setState({
+          list: this.state.list.concat(res),
+          loading: false
+        })
+        if (cb) cb()
       })
-      if (cb) cb()
-    })
+      .catch(() => {
+        this.setState({
+          loading: false
+        })
+      })
   }
 
   /**
@@ -73,12 +79,18 @@ export default class Notifications extends Component {
    */
   clearNotifications = () => {
     Confirm.show('确定清空所有通知吗？', () => {
-      clearNotifications().then(() => {
-        this.setState({
-          list: [],
-          loading: false
+      clearNotifications()
+        .then(() => {
+          this.setState({
+            list: [],
+            loading: false
+          })
         })
-      })
+        .catch(() => {
+          this.setState({
+            loading: false
+          })
+        })
     })
   }
 

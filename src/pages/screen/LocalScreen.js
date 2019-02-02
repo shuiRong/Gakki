@@ -104,14 +104,20 @@ export default class LocalScreen extends Component {
     getHomeTimelines(this.state.url, {
       ...this.state.baseParams,
       ...params
-    }).then(res => {
-      // 同时将数据更新到state数据中，刷新视图
-      this.setState({
-        list: this.state.list.concat(res),
-        loading: false
-      })
-      if (cb) cb()
     })
+      .then(res => {
+        // 同时将数据更新到state数据中，刷新视图
+        this.setState({
+          list: this.state.list.concat(res),
+          loading: false
+        })
+        if (cb) cb()
+      })
+      .catch(() => {
+        this.setState({
+          loading: false
+        })
+      })
   }
 
   refreshHandler = () => {

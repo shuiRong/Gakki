@@ -33,12 +33,18 @@ export default class FollowRequests extends Component {
    * @description 获取关注请求列表
    */
   followRequests = () => {
-    followRequests().then(res => {
-      this.setState({
-        list: this.state.list.concat(res),
-        loading: false
+    followRequests()
+      .then(res => {
+        this.setState({
+          list: this.state.list.concat(res),
+          loading: false
+        })
       })
-    })
+      .catch(() => {
+        this.setState({
+          loading: false
+        })
+      })
   }
 
   deleteUser = id => {

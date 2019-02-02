@@ -152,6 +152,7 @@ class UploadMedia extends Component {
           <Input
             autoFocus={true}
             placeholder={'为视觉障碍人士添加文字说明...'}
+            placeholderTextColor={color.contrastColor}
             multiline={true}
             maxLength={20}
             numberOfLines={3}
@@ -592,7 +593,8 @@ export default class ReplyInput extends Component {
     color = themeData[mobx.theme]
     const boxCommonStyle = {
       padding: 10,
-      borderColor: color.lightThemeColor
+      borderColor: color.lightThemeColor,
+      color: color.contrastColor
     }
     const inputCommonStyle = {
       ...boxCommonStyle,
@@ -605,6 +607,7 @@ export default class ReplyInput extends Component {
     }
     let boxStyle = {
       ...boxCommonStyle,
+      backgroundColor: color.themeColor,
       height: 140
     }
 
@@ -665,6 +668,7 @@ export default class ReplyInput extends Component {
           value={mobx.spoiler_text}
           maxLength={80}
           placeholder={'折叠部分的警告信息～'}
+          placeholderTextColor={color.contrastColor}
           onBlur={this.blurHandler}
           onFocus={() =>
             this.setState({
@@ -694,6 +698,7 @@ export default class ReplyInput extends Component {
             multiline={true}
             textAlignVertical={'top'}
             placeholder={'在想啥？'}
+            placeholderTextColor={color.contrastColor}
             maxLength={500}
             numberOfLines={3}
             onFocus={() =>

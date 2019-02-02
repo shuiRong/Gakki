@@ -5,13 +5,17 @@ import Header from './common/Header'
 import Loading from './common/Loading'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { getStatuses, context } from '../utils/api'
-import { color } from '../utils/color'
+import { themeData } from '../utils/color'
+import mobx from '../utils/mobx'
 import Context from './common/Context'
 import ReplyInput from './common/ReplyInput'
+import { observer } from 'mobx-react'
 
 /**
  * Toot详情页面
  */
+let color = {}
+@observer
 export default class TootDetail extends Component {
   constructor(props) {
     super(props)
@@ -19,8 +23,7 @@ export default class TootDetail extends Component {
       toot: null,
       context: null,
       ancestors: [],
-      descendants: [],
-      refreshing: false
+      descendants: []
     }
   }
 
@@ -31,15 +34,13 @@ export default class TootDetail extends Component {
     const id = toot.id
 
     this.setState({
-      toot: toot,
-      refreshing: false
+      toot: toot
     })
     this.getContext(id)
   }
 
   fetchData = () => {
     this.setState({
-      refreshing: true,
       toot: null
     })
 
@@ -48,8 +49,7 @@ export default class TootDetail extends Component {
 
     getStatuses(id).then(res => {
       this.setState({
-        toot: res,
-        refreshing: false
+        toot: res
       })
     })
 
@@ -84,6 +84,7 @@ export default class TootDetail extends Component {
     const toot = this.state.toot
     const ancestors = this.state.ancestors
     const descendants = this.state.descendants
+    color = themeData[mobx.theme]
 
     const headerElement = (
       <Header
@@ -103,7 +104,7 @@ export default class TootDetail extends Component {
 
     if (!toot) {
       return (
-        <View style={styles.container}>
+        <View style={{ flex: 1, backgroundColor: color.themeColor }}>
           {headerElement}
           <Loading />
         </View>
@@ -111,7 +112,7 @@ export default class TootDetail extends Component {
     }
 
     return (
-      <View style={styles.container}>
+      <View style={{ flex: 1, backgroundColor: color.themeColor }}>
         {headerElement}
         <View style={{ flex: 1 }}>
           <Context
@@ -133,10 +134,6 @@ export default class TootDetail extends Component {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: color.themeColor
-  },
   icon: {
     fontSize: 17
   }

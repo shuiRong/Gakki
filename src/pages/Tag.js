@@ -52,12 +52,18 @@ export default class HashTag extends Component {
   }
 
   getTag = params => {
-    getTag(this.tag, params).then(res => {
-      this.setState({
-        list: this.state.list.concat(res),
-        loading: false
+    getTag(this.tag, params)
+      .then(res => {
+        this.setState({
+          list: this.state.list.concat(res),
+          loading: false
+        })
       })
-    })
+      .catch(() => {
+        this.setState({
+          loading: false
+        })
+      })
   }
 
   refreshHandler = () => {

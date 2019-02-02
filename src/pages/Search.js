@@ -53,9 +53,15 @@ export default class Notifications extends Component {
   }
 
   search = () => {
-    search(this.state.text).then(res => {
-      this.setState(res)
-    })
+    search(this.state.text)
+      .then(res => {
+        this.setState(res)
+      })
+      .catch(() => {
+        this.setState({
+          loading: false
+        })
+      })
   }
 
   render() {
@@ -87,7 +93,8 @@ export default class Notifications extends Component {
                 borderBottomColor: color.subColor,
                 borderBottomWidth: 1,
                 padding: 2,
-                borderRadius: 3
+                borderRadius: 3,
+                color: color.contrastColor
               }}
               autoFocus={true}
               onChangeText={text =>

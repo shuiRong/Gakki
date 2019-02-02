@@ -86,19 +86,25 @@ export default class TootScreen extends Component {
     getUserStatuses(id, {
       exclude_replies: true,
       ...params
-    }).then(res => {
-      // 手动移除已经被置顶的嘟文
-      // P.S. mastodon2.7.0的接口返回的status不存在pinned属性，疑似bug
-      // res = res.filter(toot => !toot.pinned)
-      res = res.filter(item => !this.isExist(this.state.pinnedList, item))
-
-      // 同时将数据更新到state数据中，刷新视图
-      this.setState({
-        list: this.state.list.concat(res),
-        loading: false
-      })
-      if (cb) cb()
     })
+      .then(res => {
+        // 手动移除已经被置顶的嘟文
+        // P.S. mastodon2.7.0的接口返回的status不存在pinned属性，疑似bug
+        // res = res.filter(toot => !toot.pinned)
+        res = res.filter(item => !this.isExist(this.state.pinnedList, item))
+
+        // 同时将数据更新到state数据中，刷新视图
+        this.setState({
+          list: this.state.list.concat(res),
+          loading: false
+        })
+        if (cb) cb()
+      })
+      .catch(() => {
+        this.setState({
+          loading: false
+        })
+      })
   }
 
   /**
@@ -123,18 +129,24 @@ export default class TootScreen extends Component {
   getUserPinnedStatuses = () => {
     getUserStatuses(this.props.navigation.getParam('id'), {
       pinned: true
-    }).then(res => {
-      const newList = res.concat(this.state.list)
-      this.setState(
-        {
-          pinnedList: newList,
-          loading: false
-        },
-        () => {
-          this.getUserStatuses()
-        }
-      )
     })
+      .then(res => {
+        const newList = res.concat(this.state.list)
+        this.setState(
+          {
+            pinnedList: newList,
+            loading: false
+          },
+          () => {
+            this.getUserStatuses()
+          }
+        )
+      })
+      .catch(() => {
+        this.setState({
+          loading: false
+        })
+      })
   }
 
   refreshHandler = () => {

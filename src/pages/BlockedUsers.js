@@ -51,15 +51,21 @@ export default class MutedUsers extends Component {
    * @param {params}: 分页参数
    */
   getBlocks = (cb, params) => {
-    getBlocks(params).then(res => {
-      // 同时将数据更新到state数据中，刷新视图
-      this.setState({
-        list: this.state.list.concat(res),
-        loading: false
+    getBlocks(params)
+      .then(res => {
+        // 同时将数据更新到state数据中，刷新视图
+        this.setState({
+          list: this.state.list.concat(res),
+          loading: false
+        })
+        if (cb) cb()
+        this.getRelationship(this.state.list.map(item => item.id))
       })
-      if (cb) cb()
-      this.getRelationship(this.state.list.map(item => item.id))
-    })
+      .catch(() => {
+        this.setState({
+          loading: false
+        })
+      })
   }
 
   getRelationship = ids => {

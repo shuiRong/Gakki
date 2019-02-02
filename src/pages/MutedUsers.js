@@ -51,23 +51,35 @@ export default class MutedUsers extends Component {
    * @param {params}: 分页参数
    */
   getMutes = (cb, params) => {
-    getMutes(params).then(res => {
-      // 同时将数据更新到state数据中，刷新视图
-      this.setState({
-        list: this.state.list.concat(res),
-        loading: false
+    getMutes(params)
+      .then(res => {
+        // 同时将数据更新到state数据中，刷新视图
+        this.setState({
+          list: this.state.list.concat(res),
+          loading: false
+        })
+        if (cb) cb()
+        this.getRelationship(this.state.list.map(item => item.id))
       })
-      if (cb) cb()
-      this.getRelationship(this.state.list.map(item => item.id))
-    })
+      .catch(() => {
+        this.setState({
+          loading: false
+        })
+      })
   }
 
   getRelationship = ids => {
-    getRelationship(ids).then(res => {
-      this.setState({
-        relationships: res
+    getRelationship(ids)
+      .then(res => {
+        this.setState({
+          relationships: res
+        })
       })
-    })
+      .catch(() => {
+        this.setState({
+          loading: false
+        })
+      })
   }
 
   refreshHandler = () => {

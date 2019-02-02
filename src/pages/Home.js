@@ -140,6 +140,7 @@ export default class Home extends Component {
                   underlineStyle={{
                     backgroundColor: color.contrastColor
                   }}
+                  style={{ borderColor: color.subColor }}
                 />
               )}
             >

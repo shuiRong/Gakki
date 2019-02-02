@@ -90,27 +90,33 @@ export default class TootScreen extends Component {
     getUserStatuses(id, {
       only_media: true,
       ...params
-    }).then(res => {
-      // 同时将数据更新到state数据中，刷新视图
-      const newList = []
-      res.forEach(item => {
-        const mediaList = item.media_attachments
-        if (!mediaList || mediaList.length === 0) {
-          return
-        }
-        mediaList.forEach(media => {
-          newList.push({
-            preview_url: media.preview_url,
-            id: item.id
+    })
+      .then(res => {
+        // 同时将数据更新到state数据中，刷新视图
+        const newList = []
+        res.forEach(item => {
+          const mediaList = item.media_attachments
+          if (!mediaList || mediaList.length === 0) {
+            return
+          }
+          mediaList.forEach(media => {
+            newList.push({
+              preview_url: media.preview_url,
+              id: item.id
+            })
           })
         })
+        this.setState({
+          list: this.state.list.concat(newList),
+          loading: false
+        })
+        if (cb) cb()
       })
-      this.setState({
-        list: this.state.list.concat(newList),
-        loading: false
+      .catch(() => {
+        this.setState({
+          loading: false
+        })
       })
-      if (cb) cb()
-    })
   }
 
   refreshHandler = () => {

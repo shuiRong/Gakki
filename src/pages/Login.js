@@ -123,7 +123,8 @@ export default class Login extends Component {
               fontSize: 20,
               borderWidth: 0,
               borderBottomWidth: 1,
-              borderColor: color.contrastColor
+              borderColor: color.contrastColor,
+              color: color.contrastColor
             }}
             maxLength={20}
             onChangeText={text => this.setState({ domain: text })}

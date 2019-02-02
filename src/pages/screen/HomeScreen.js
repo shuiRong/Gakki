@@ -117,14 +117,20 @@ export default class HomeScreen extends Component {
         ...params
       },
       accessToken
-    ).then(res => {
-      // 同时将数据更新到state数据中，刷新视图
-      this.setState({
-        list: this.state.list.concat(res),
-        loading: false
+    )
+      .then(res => {
+        // 同时将数据更新到state数据中，刷新视图
+        this.setState({
+          list: this.state.list.concat(res),
+          loading: false
+        })
+        if (cb) cb()
       })
-      if (cb) cb()
-    })
+      .catch(() => {
+        this.setState({
+          loading: false
+        })
+      })
   }
 
   refreshHandler = () => {

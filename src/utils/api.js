@@ -1,6 +1,4 @@
 import request from './request'
-import config from './config'
-import { fetch } from './store'
 import mobx from './mobx'
 
 export const apps = data => {
@@ -98,7 +96,9 @@ export const context = id => {
   return request({
     url: `/api/v1/statuses/${id}/context`,
     method: 'get',
-    headers
+    headers: {
+      Authorization: mobx.access_token
+    }
   })
 }
 
@@ -378,7 +378,9 @@ export const followRequests = () => {
   return request({
     url: `/api/v1/follow_requests`,
     method: 'get',
-    headers
+    headers: {
+      Authorization: mobx.access_token
+    }
   })
 }
 

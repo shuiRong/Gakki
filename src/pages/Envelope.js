@@ -11,9 +11,12 @@ import TootBox from './common/TootBox'
 import Header from './common/Header'
 import Loading from './common/Loading'
 import ListFooterComponent from './common/ListFooterComponent'
-import { color } from '../utils/color'
+import { themeData } from '../utils/color'
+import mobx from '../utils/mobx'
 import Divider from './common/Divider'
+import { observer } from 'mobx-react'
 
+@observer
 export default class Envelope extends Component {
   constructor(props) {
     super(props)
@@ -52,14 +55,20 @@ export default class Envelope extends Component {
    * @param {params}: 分页参数
    */
   getConversations = (cb, params) => {
-    getConversations(params).then(res => {
-      // 同时将数据更新到state数据中，刷新视图
-      this.setState({
-        list: this.state.list.concat(res),
-        loading: false
+    getConversations(params)
+      .then(res => {
+        // 同时将数据更新到state数据中，刷新视图
+        this.setState({
+          list: this.state.list.concat(res),
+          loading: false
+        })
+        if (cb) cb()
       })
-      if (cb) cb()
-    })
+      .catch(() => {
+        this.setState({
+          loading: false
+        })
+      })
   }
 
   refreshHandler = () => {
@@ -80,9 +89,10 @@ export default class Envelope extends Component {
 
   render() {
     const state = this.state
+    color = themeData[mobx.theme]
 
     return (
-      <View style={styles.container}>
+      <View style={[styles.container, { backgroundColor: color.themeColor }]}>
         <Header
           left={
             <Button transparent>
@@ -138,8 +148,7 @@ export default class Envelope extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 0,
-    backgroundColor: color.themeColor
+    paddingTop: 0
   },
   icon: {
     fontSize: 17

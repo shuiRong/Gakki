@@ -38,13 +38,19 @@ export default class Following extends Component {
    * @param {limit}: 获取数据数量
    */
   following = (id, limit) => {
-    following(id, limit).then(res => {
-      // 同时将数据更新到state数据中，刷新视图
-      this.setState({
-        list: this.state.list.concat(res),
-        loading: false
+    following(id, limit)
+      .then(res => {
+        // 同时将数据更新到state数据中，刷新视图
+        this.setState({
+          list: this.state.list.concat(res),
+          loading: false
+        })
       })
-    })
+      .catch(() => {
+        this.setState({
+          loading: false
+        })
+      })
   }
 
   refreshHandler = () => {

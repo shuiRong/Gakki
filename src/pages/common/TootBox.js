@@ -389,7 +389,8 @@ export default class TootBox extends Component {
       <Text
         style={{
           flex: 1,
-          textAlign: 'right'
+          textAlign: 'right',
+          color: color.subColor
         }}
       >
         <RelativeTime
@@ -749,7 +750,7 @@ export default class TootBox extends Component {
           }}
         >
           {getDisplayName()}
-          <Text style={[{ color: color.contrastColor }, pTagStyle]}>
+          <Text style={[{ color: color.lightContrastColor }, pTagStyle]}>
             {info[type]}
           </Text>
         </View>
