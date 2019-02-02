@@ -12,9 +12,12 @@ import {
   TouchableOpacity
 } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
-import { color } from '../../utils/color'
+import { themeData } from '../../utils/color'
 import { Overlay } from 'teaset'
+import { observer } from 'mobx-react'
+import mobx from '../../utils/mobx'
 
+let color = {}
 const width = Dimensions.get('window').width
 const height = Dimensions.get('window').height
 
@@ -23,9 +26,13 @@ class BlackMirror extends Component {
   render() {
     return (
       <TouchableOpacity activeOpacity={1} onPress={this.props.showMedia}>
-        <View style={styles.blackMirror}>
-          <Text style={styles.sensitiveText}>{this.props.text}</Text>
-          <Text style={styles.sensitiveSubText}>点击显示</Text>
+        <View
+          style={[styles.blackMirror, { backgroundColor: color.contrastColor }]}
+        >
+          <Text style={{ fontSize: 15, color: color.subColor }}>
+            {this.props.text}
+          </Text>
+          <Text style={{ color: color.themeColor }}>点击显示</Text>
         </View>
       </TouchableOpacity>
     )
@@ -65,7 +72,7 @@ class ImageBox extends Component {
       <Overlay.View overlayOpacity={0.9} ref={v => (this.overlayView = v)}>
         <View style={styles.enlargeImageBox}>
           <Image
-            style={styles.enlargeImage}
+            style={[styles.enlargeImage, { overlayColor: color.themeColor }]}
             resizeMode={'contain'}
             source={{ uri: url }}
           />
@@ -94,9 +101,18 @@ class ImageBox extends Component {
     } else {
       return (
         <View key={image.id} style={styles.mediaBox}>
-          <View zIndex={4} style={styles.eyeSlashBox}>
+          <View
+            zIndex={4}
+            style={[
+              styles.eyeSlashBox,
+              { backgroundColor: color.contrastColor }
+            ]}
+          >
             <TouchableOpacity onPress={() => this.changeMediaStatus(true)}>
-              <Icon name={'eye-slash'} style={styles.eyeSlashIcon} />
+              <Icon
+                name={'eye-slash'}
+                style={{ fontSize: 14, color: color.themeColor }}
+              />
             </TouchableOpacity>
           </View>
           <TouchableOpacity
@@ -106,7 +122,7 @@ class ImageBox extends Component {
           >
             <Image
               source={{ uri: image.preview_url }}
-              style={styles.mediaImage}
+              style={[styles.mediaImage, { overlayColor: color.themeColor }]}
             />
           </TouchableOpacity>
         </View>
@@ -115,12 +131,14 @@ class ImageBox extends Component {
   }
 }
 
+@observer
 export default class MediaBox extends Component {
   getVideoElement = data => {}
 
   render() {
     const data = this.props.data
     const sensitive = this.props.sensitive
+    color = themeData[mobx.theme]
 
     if (!data) {
       return <View />
@@ -146,19 +164,11 @@ export default class MediaBox extends Component {
 
 const styles = StyleSheet.create({
   blackMirror: {
-    backgroundColor: color.black,
     justifyContent: 'center',
     alignItems: 'center',
     height: 180,
     borderRadius: 5,
     marginBottom: 5
-  },
-  sensitiveText: {
-    fontSize: 15,
-    color: color.lightBlack
-  },
-  sensitiveSubText: {
-    color: color.lightBlack
   },
   mediaBox: {
     width: '100%',
@@ -173,13 +183,8 @@ const styles = StyleSheet.create({
     height: 23,
     borderRadius: 5,
     opacity: 0.5,
-    backgroundColor: color.moreBlack,
     justifyContent: 'center',
     alignItems: 'center'
-  },
-  eyeSlashIcon: {
-    fontSize: 14,
-    color: color.themeColor
   },
   mediaImage: {
     flex: 1,

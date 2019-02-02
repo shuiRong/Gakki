@@ -34,16 +34,3 @@ export const themeData = {
     lightBlue: '#3F51B5'
   }
 }
-
-export const color = {
-  themeColor: 'blue',
-  lightGrey: '#dddddd',
-  grey: '#999999',
-  white: '#ffffff',
-  pColor: '#2b2e3d',
-  lightBlack: '#606984',
-  moreBlack: '#2F2F2F',
-  black: '#000000',
-  gold: '#F3AB27',
-  lightgreen: '#1FC966'
-}

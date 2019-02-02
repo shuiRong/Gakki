@@ -205,7 +205,7 @@ export default class UserList extends Component {
         >
           <Image
             source={{ uri: account.avatar }}
-            style={{ width: 40, height: 40, borderRadius: 5, marginRight: 5 }}
+            style={{ overlayColor: color.themeColor,width: 40, height: 40, borderRadius: 5, marginRight: 5 }}
           />
         </TouchableOpacity>
         <TouchableOpacity

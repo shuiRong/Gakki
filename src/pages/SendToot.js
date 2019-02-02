@@ -43,7 +43,10 @@ export default class SendToot extends Component {
           }
           title={'发嘟'}
           right={
-            <Image source={{ uri: mobx.account.avatar }} style={styles.image} />
+            <Image
+              source={{ uri: mobx.account.avatar }}
+              style={[styles.image, { overlayColor: color.themeColor }]}
+            />
           }
         />
         <View

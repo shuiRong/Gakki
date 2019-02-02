@@ -103,7 +103,7 @@ export default class Login extends Component {
         }}
       >
         <Image
-          style={{ marginTop: 100, width: 300, height: 130, borderRadius: 5 }}
+          style={{overlayColor: color.themeColor, marginTop: 100, width: 300, height: 130, borderRadius: 5 }}
           source={require('../assets/image/mastodon.jpg')}
         />
         <View style={{ width: 300, marginTop: 30 }}>

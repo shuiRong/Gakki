@@ -329,18 +329,21 @@ export default class AnotherTootBox extends Component {
   getAvatar = toot => {
     if (!toot.reblog) {
       return (
-        <Image style={styles.avatar} source={{ uri: toot.account.avatar }} />
+        <Image
+          style={[styles.avatar, { overlayColor: color.themeColor }]}
+          source={{ uri: toot.account.avatar }}
+        />
       )
     }
 
     return (
       <View style={{ width: 40, height: 40, marginRight: 10 }}>
         <Image
-          style={styles.avatarTopLeft}
+          style={[styles.avatarTopLeft, { overlayColor: color.themeColor }]}
           source={{ uri: toot.reblog.account.avatar }}
         />
         <Image
-          style={styles.avatarBottomRight}
+          style={[styles.avatarBottomRight, { overlayColor: color.themeColor }]}
           source={{ uri: toot.account.avatar }}
         />
       </View>
@@ -471,7 +474,10 @@ export default class AnotherTootBox extends Component {
                 style={styles.iconParent}
                 onPress={() => this.replyTo(data)}
               >
-                <Icon style={styles.icon} name="reply" />
+                <Icon
+                  style={{ fontSize: 15, color: color.subColor }}
+                  name="reply"
+                />
                 <Text style={styles.bottomText}>{data.replies_count}</Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -484,9 +490,14 @@ export default class AnotherTootBox extends Component {
                     name="retweet"
                   />
                 ) : (
-                  <Icon style={styles.icon} name="retweet" />
+                  <Icon
+                    style={{ fontSize: 15, color: color.subColor }}
+                    name="retweet"
+                  />
                 )}
-                <Text style={styles.bottomText}>{data.reblogs_count}</Text>
+                <Text style={{ marginLeft: 10, color: color.subColor }}>
+                  {data.replies_count}
+                </Text>
               </TouchableOpacity>
               <TouchableOpacity
                 style={styles.iconParent}
@@ -499,7 +510,10 @@ export default class AnotherTootBox extends Component {
                     solid
                   />
                 ) : (
-                  <Icon style={styles.icon} name="star" />
+                  <Icon
+                    style={{ fontSize: 15, color: color.subColor }}
+                    name="star"
+                  />
                 )}
                 <Text style={styles.bottomText}>{data.favourites_count}</Text>
               </TouchableOpacity>
@@ -508,7 +522,10 @@ export default class AnotherTootBox extends Component {
                 ref={ref => (this.ref = ref)}
                 onPress={this.showMenu}
               >
-                <Icon style={styles.icon} name="ellipsis-h" />
+                <Icon
+                  style={{ fontSize: 15, color: color.subColor }}
+                  name="ellipsis-h"
+                />
               </TouchableOpacity>
             </View>
           </TouchableOpacity>
@@ -589,15 +606,9 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginRight: 20
   },
-  icon: {
-    fontSize: 15
-  },
   menuIcon: {
     fontSize: 15,
     marginRight: 10
-  },
-  bottomText: {
-    marginLeft: 10
   },
   iconParent: {
     flexDirection: 'row',

@@ -255,7 +255,8 @@ export default class TootBox extends Component {
         popoverStyle: {
           backgroundColor: color.themeColor,
           justifyContent: 'center',
-          elevation: 10
+          elevation: 10,
+          borderColor: color.subColor
         }
       })
     })
@@ -529,18 +530,21 @@ export default class TootBox extends Component {
       }
 
       return (
-        <Image style={styles.avatar} source={{ uri: toot.account.avatar }} />
+        <Image
+          style={[styles.avatar, { overlayColor: color.themeColor }]}
+          source={{ uri: toot.account.avatar }}
+        />
       )
     }
 
     return (
       <View style={{ width: 40, height: 40, marginRight: 10 }}>
         <Image
-          style={styles.avatarTopLeft}
+          style={[styles.avatarTopLeft, , { overlayColor: color.themeColor }]}
           source={{ uri: toot.reblog.account.avatar }}
         />
         <Image
-          style={styles.avatarBottomRight}
+          style={[styles.avatarBottomRight, { overlayColor: color.themeColor }]}
           source={{ uri: toot.account.avatar }}
         />
       </View>
@@ -564,11 +568,21 @@ export default class TootBox extends Component {
           }}
         >
           <Image
-            style={{ width: 19, height: 40, borderRadius: 3 }}
+            style={{
+              width: 19,
+              height: 40,
+              borderRadius: 3,
+              overlayColor: color.themeColor
+            }}
             source={{ uri: accounts[0].avatar }}
           />
           <Image
-            style={{ width: 19, height: 40, borderRadius: 3 }}
+            style={{
+              width: 19,
+              height: 40,
+              borderRadius: 3,
+              overlayColor: color.themeColor
+            }}
             source={{ uri: accounts[1].avatar }}
           />
         </View>
@@ -594,11 +608,21 @@ export default class TootBox extends Component {
             }}
           >
             <Image
-              style={{ width: 19, height: 19, borderRadius: 3 }}
+              style={{
+                width: 19,
+                height: 19,
+                borderRadius: 3,
+                overlayColor: color.themeColor
+              }}
               source={{ uri: accounts[0].avatar }}
             />
             <Image
-              style={{ width: 19, height: 19, borderRadius: 3 }}
+              style={{
+                width: 19,
+                height: 19,
+                borderRadius: 3,
+                overlayColor: color.themeColor
+              }}
               source={{ uri: accounts[1].avatar }}
             />
           </View>
@@ -612,7 +636,12 @@ export default class TootBox extends Component {
             }}
           >
             <Image
-              style={{ width: 19, height: 19, borderRadius: 3 }}
+              style={{
+                width: 19,
+                height: 19,
+                borderRadius: 3,
+                overlayColor: color.themeColor
+              }}
               source={{ uri: accounts[2].avatar }}
             />
             {accounts[3] && (
@@ -621,7 +650,8 @@ export default class TootBox extends Component {
                   width: 19,
                   height: 19,
                   marginLeft: 2,
-                  borderRadius: 3
+                  borderRadius: 3,
+                  overlayColor: color.themeColor
                 }}
                 source={{ uri: accounts[3].avatar }}
               />

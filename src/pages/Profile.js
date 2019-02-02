@@ -310,7 +310,7 @@ export default class Profile extends Component {
         >
           <Image
             source={{ uri: profile.header }}
-            style={{ width: '100%', height: 155 }}
+            style={{ width: '100%', height: 155,overlayColor: color.themeColor }}
           />
           <View style={{ padding: 15 }}>
             <Image
@@ -321,7 +321,8 @@ export default class Profile extends Component {
                 borderRadius: 10,
                 position: 'absolute',
                 left: 15,
-                top: -40
+                top: -40,
+                overlayColor: color.themeColor
               }}
             />
             {this.getRelationshop(profile)}

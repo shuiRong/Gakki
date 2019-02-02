@@ -86,7 +86,7 @@ class EmojiBox extends Component {
             onPress={() => mobx.addInputValue(`:${item.shortcode}: `)}
           >
             <Image
-              style={styles.emojiImage}
+              style={[styles.emojiImage, { overlayColor: color.themeColor }]}
               source={{ uri: item.static_url }}
             />
           </TouchableOpacity>
@@ -250,7 +250,7 @@ class UploadMedia extends Component {
             onPress={() => this.showMediaOption(index)}
           >
             <Image
-              style={styles.mediaFile}
+              style={[styles.mediaFile, { overlayColor: color.themeColor }]}
               resizeMode={'contain'}
               key={image.uri}
               source={image}
@@ -682,7 +682,7 @@ export default class ReplyInput extends Component {
     return (
       <View style={boxStyle}>
         {!this.props.sendMode && (
-          <Text style={{ marginBottom: 5 }}>
+          <Text style={{ marginBottom: 5, color: color.subColor }}>
             回复
             {mobx.reply_to_username ? '@' + mobx.reply_to_username : ''}
           </Text>

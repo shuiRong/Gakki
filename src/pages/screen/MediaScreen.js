@@ -179,7 +179,10 @@ export default class TootScreen extends Component {
               activeOpacity={1}
               onPress={() => this.goTootDetail(item)}
             >
-              <Image style={styles.image} source={{ uri: item.preview_url }} />
+              <Image
+                style={[styles.image, { overlayColor: color.themeColor }]}
+                source={{ uri: item.preview_url }}
+              />
             </TouchableOpacity>
           )}
         />

@@ -13,7 +13,6 @@ import Auth from './pages/Auth'
 import Following from './pages/Following'
 import About from './pages/About'
 import OpenSource from './pages/OpenSource'
-import EditProfile from './pages/EditProfile'
 import Search from './pages/Search'
 import SendToot from './pages/SendToot'
 import Test from './pages/Test'
@@ -34,7 +33,6 @@ export default createStackNavigator(
     Tag,
     Auth,
     OpenSource,
-    EditProfile,
     Search,
     SendToot,
     Test
