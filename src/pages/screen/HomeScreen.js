@@ -3,7 +3,13 @@
  */
 
 import React, { Component } from 'react'
-import { View, StyleSheet, FlatList, RefreshControl } from 'react-native'
+import {
+  View,
+  StyleSheet,
+  FlatList,
+  RefreshControl,
+  StatusBar
+} from 'react-native'
 import { getHomeTimelines } from '../../utils/api'
 import TootBox from '../common/TootBox'
 import ListFooterComponent from '../common/ListFooterComponent'
@@ -32,9 +38,8 @@ export default class HomeScreen extends Component {
     if (!navigation) {
       return
     }
-    console.log('receive: ', navigation.getParam('access_token'))
-    this.fetchTimelines()
 
+    this.fetchTimelines()
     const params = navigation.getParam('data')
 
     if (params && params.id) {

@@ -30,7 +30,7 @@ export default class SendToot extends Component {
     color = themeData[mobx.theme]
 
     return (
-      <View style={[styles.container, { backgroundColor: color.white }]}>
+      <View style={[styles.container, { backgroundColor: color.themeColor }]}>
         <Header
           left={
             <Button transparent>
@@ -50,7 +50,7 @@ export default class SendToot extends Component {
           style={[
             styles.inputBox,
             {
-              backgroundColor: color.white
+              backgroundColor: color.themeColor
             }
           ]}
         >

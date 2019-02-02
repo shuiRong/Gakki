@@ -265,7 +265,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 0,
-    backgroundColor: color.white
+    backgroundColor: color.themeColor
   },
   body: {
     flex: 1
@@ -290,7 +290,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   upload: {
-    color: color.white,
+    color: color.themeColor,
     fontSize: 30
   },
   baseInput: {

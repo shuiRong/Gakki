@@ -18,8 +18,8 @@ export const themeData = {
     lightBlue: '#3F51B5'
   },
   black: {
-    themeColor: '#333333', // 主色
-    lightThemeColor: '#2F2F2F',
+    themeColor: '#2F2F2F', // 主色
+    lightThemeColor: '#464646',
     subColor: '#747474', // 副色
     lightContrastColor: '#E8E8E8',
     contrastColor: '#FFFFFF', // 对比色

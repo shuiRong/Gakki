@@ -12,7 +12,7 @@ class Globe {
   @observable NSFW = false // 针对媒体内容的模式 not safe for work
   @observable spoiler_text = undefined // CW模式的警告语
   @observable inputValue = '' // 输入框内容
-  @observable theme = 'white' // 当前用户选择主题
+  @observable theme = 'black' // 当前用户选择主题
   @observable visibility = 'public' // 当前用户选择主题
   @observable emojiObj = {} // 当前实例的emoji对象
   @observable access_token = ''

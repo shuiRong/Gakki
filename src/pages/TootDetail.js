@@ -135,7 +135,7 @@ export default class TootDetail extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: color.white
+    backgroundColor: color.themeColor
   },
   icon: {
     fontSize: 17

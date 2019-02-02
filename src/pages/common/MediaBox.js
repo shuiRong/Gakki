@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
   },
   eyeSlashIcon: {
     fontSize: 14,
-    color: color.white
+    color: color.themeColor
   },
   mediaImage: {
     flex: 1,

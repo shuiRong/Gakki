@@ -5,7 +5,8 @@ import {
   Image,
   Text,
   TouchableOpacity,
-  Clipboard
+  Clipboard,
+  StatusBar
 } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import {
@@ -436,8 +437,10 @@ export default class TootBox extends Component {
           style={styles.iconParent}
           onPress={() => this.replyTo(data)}
         >
-          <Icon style={styles.icon} name="reply" />
-          <Text style={styles.bottomText}>{data.replies_count}</Text>
+          <Icon style={{ fontSize: 15, color: color.subColor }} name="reply" />
+          <Text style={{ marginLeft: 10, color: color.subColor }}>
+            {data.replies_count}
+          </Text>
         </TouchableOpacity>
         {this.getRetweetIcon(data)}
         <TouchableOpacity
@@ -451,16 +454,21 @@ export default class TootBox extends Component {
               solid
             />
           ) : (
-            <Icon style={styles.icon} name="star" />
+            <Icon style={{ fontSize: 15, color: color.subColor }} name="star" />
           )}
-          <Text style={styles.bottomText}>{data.favourites_count}</Text>
+          <Text style={{ marginLeft: 10, color: color.subColor }}>
+            {data.favourites_count}
+          </Text>
         </TouchableOpacity>
         <TouchableOpacity
           style={styles.iconParent}
           ref={ref => (this.ref = ref)}
           onPress={this.showMenu}
         >
-          <Icon style={styles.icon} name="ellipsis-h" />
+          <Icon
+            style={{ fontSize: 15, color: color.subColor }}
+            name="ellipsis-h"
+          />
         </TouchableOpacity>
       </View>
     )
@@ -470,7 +478,7 @@ export default class TootBox extends Component {
     if (data.accounts) {
       return (
         <Icon
-          style={[styles.icon, { color: color.lightThemeColor }]}
+          style={{ fontSize: 15, color: color.lightThemeColor }}
           name="envelope"
         />
       )
@@ -487,9 +495,14 @@ export default class TootBox extends Component {
             name="retweet"
           />
         ) : (
-          <Icon style={styles.icon} name="retweet" />
+          <Icon
+            style={{ fontSize: 15, color: color.subColor }}
+            name="retweet"
+          />
         )}
-        <Text style={styles.bottomText}>{data.reblogs_count}</Text>
+        <Text style={{ marginLeft: 10, color: color.subColor }}>
+          {data.reblogs_count}
+        </Text>
       </TouchableOpacity>
     )
   }
@@ -827,6 +840,7 @@ export default class TootBox extends Component {
     color = themeData[mobx.theme]
     return (
       <View style={[styles.container, { backgroundColor: color.themeColor }]}>
+        <StatusBar backgroundColor={color.themeColor} />
         {this.getAdditionalInfo(toot)}
         {this.getBody(toot)}
       </View>
@@ -837,8 +851,8 @@ export default class TootBox extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    margin: 10,
-    marginTop: 15
+    padding: 10,
+    paddingTop: 15
   },
   additional: {
     flexDirection: 'row',
@@ -895,15 +909,9 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginRight: 20
   },
-  icon: {
-    fontSize: 15
-  },
   menuIcon: {
     fontSize: 15,
     marginRight: 10
-  },
-  bottomText: {
-    marginLeft: 10
   },
   iconParent: {
     flexDirection: 'row',

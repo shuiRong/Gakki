@@ -44,12 +44,6 @@ export default class Home extends Component {
   }
 
   componentDidMount() {
-    // 设置顶部状态栏状态
-    this._navListener = this.props.navigation.addListener('didFocus', () => {
-      StatusBar.setBarStyle('dark-content')
-      StatusBar.setBackgroundColor(color.themeColor)
-    })
-
     fetch('emojis').then(res => {
       // 检测是否保存有emoji数据，如果没有的话，从网络获取
       if (!res || !res.length) {
@@ -143,7 +137,9 @@ export default class Home extends Component {
                   backgroundColor={color.themeColor}
                   activeTextColor={color.contrastColor}
                   inactiveTextColor={color.subColor}
-                  underlineStyle={{ backgroundColor: color.contrastColor }}
+                  underlineStyle={{
+                    backgroundColor: color.contrastColor
+                  }}
                 />
               )}
             >

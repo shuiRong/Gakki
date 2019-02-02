@@ -3,7 +3,7 @@
  */
 
 import React, { Component } from 'react'
-import { View } from 'react-native'
+import { View, StatusBar } from 'react-native'
 import { verify_credentials } from '../utils/api'
 import { themeData } from '../utils/color'
 import mobx from '../utils/mobx'
@@ -42,12 +42,13 @@ export default class Login extends Component {
           justifyContent: 'center'
         }}
       >
+        <StatusBar backgroundColor={color.themeColor} />
         <Spinner
           style={{ marginTop: -40 }}
           isVisible={true}
           size={100}
           type={'ChasingDots'}
-          color={color.constrastColor}
+          color={color.contrastColor}
         />
       </View>
     )
