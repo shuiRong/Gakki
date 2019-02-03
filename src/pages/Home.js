@@ -8,7 +8,7 @@ import Fab from './common/Fab'
 import ScrollableTabView, {
   DefaultTabBar
 } from 'react-native-scrollable-tab-view'
-import { getCustomEmojis } from '../utils/api'
+import { getCustomEmojis, getCurrentUser } from '../utils/api'
 import { themeData } from '../utils/color'
 import { save, fetch } from '../utils/store'
 import mobx from '../utils/mobx'
@@ -53,6 +53,10 @@ export default class Home extends Component {
       }
       // 如果存在，则接着检测emoji 对象是否存在
       this.detectEmojiObj()
+    })
+
+    getCurrentUser().then(res => {
+      mobx.updateAccount(res)
     })
   }
 

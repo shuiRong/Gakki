@@ -37,16 +37,25 @@ export default class SideBar extends Component {
     }
   }
   componentDidMount() {
-    getCurrentUser().then(res => {
+    const update = data => {
       this.setState({
-        avatar: res.avatar,
-        username: res.username,
-        header: res.header,
-        display_name: res.display_name,
-        id: res.id
+        avatar: data.avatar,
+        username: data.username,
+        header: data.header,
+        display_name: data.display_name,
+        id: data.id
       })
-      mobx.updateAccount(res)
-    })
+    }
+
+    // 如果没获取到的account数据，重新拉取
+    if (!mobx.account || !mobx.account.id) {
+      getCurrentUser().then(res => {
+        update(res)
+        mobx.updateAccount(res)
+      })
+    } else {
+      update(mobx.account)
+    }
   }
 
   /**
@@ -128,10 +137,7 @@ export default class SideBar extends Component {
                 })
               }}
             >
-              <Image
-                source={{ uri: state.avatar }}
-                style={styles.image}
-              />
+              <Image source={{ uri: state.avatar }} style={styles.image} />
             </TouchableOpacity>
             <View style={styles.info}>
               <HTMLView
