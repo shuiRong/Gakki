@@ -143,7 +143,8 @@ class TootContent extends Component {
 @observer
 export default class TootBox extends Component {
   static defaultProps = {
-    showTread: true // 是否显示'显示前文字符'
+    showTread: true, // 是否显示'显示前文字符'
+    isMaster: false // 当前的嘟文再详情页面展示时是主要还是次要（主要区别是头像是和用户名展示在一起还是单独一列）
   }
 
   constructor(props) {
@@ -824,18 +825,24 @@ export default class TootBox extends Component {
 
     return (
       <View style={styles.body}>
-        <TouchableOpacity
-          activeOpacity={1}
-          onPress={() => this.goProfile(data.account.id)}
-        >
-          {this.getAvatar(toot)}
-        </TouchableOpacity>
+        {!this.props.isMaster && (
+          <TouchableOpacity onPress={() => this.goProfile(data.account.id)}>
+            {this.getAvatar(toot)}
+          </TouchableOpacity>
+        )}
         <View style={styles.list}>
           <TouchableOpacity
             activeOpacity={1}
             onPress={() => this.goTootDetail(data)}
           >
             <View style={styles.row}>
+              {this.props.isMaster && (
+                <TouchableOpacity
+                  onPress={() => this.goProfile(data.account.id)}
+                >
+                  {this.getAvatar(toot)}
+                </TouchableOpacity>
+              )}
               <View
                 style={
                   data.type === 'follow'

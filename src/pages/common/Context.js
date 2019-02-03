@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { StyleSheet, FlatList, View } from 'react-native'
 import TootBox from './TootBox'
 import Divider from './Divider'
-import AnotherTootBox from './AnotherTootBox'
 
 /**
  * 评论组件
@@ -41,9 +40,11 @@ export default class Context extends Component {
           renderItem={({ item }) => {
             if (item.isMaster) {
               return (
-                <AnotherTootBox
+                <TootBox
+                  isMaster={true}
                   data={item}
                   navigation={this.props.navigation}
+                  sensitive={item.sensitive}
                   showTread={false}
                 />
               )

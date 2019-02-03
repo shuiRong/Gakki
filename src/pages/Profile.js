@@ -292,15 +292,6 @@ export default class Profile extends Component {
               name={'arrow-left'}
             />
           </TouchableOpacity>
-          <TouchableOpacity
-            style={{ marginRight: 20 }}
-            onPress={() => alert('v1')}
-          >
-            <Icon
-              style={{ fontSize: 20, color: color.subColor }}
-              name="ellipsis-v"
-            />
-          </TouchableOpacity>
         </View>
         <Animated.View
           scrollEventThrottle={20}
@@ -310,7 +301,11 @@ export default class Profile extends Component {
         >
           <Image
             source={{ uri: profile.header }}
-            style={{ width: '100%', height: 155,overlayColor: color.themeColor }}
+            style={{
+              width: '100%',
+              height: 155,
+              overlayColor: color.themeColor
+            }}
           />
           <View style={{ padding: 15 }}>
             <Image
