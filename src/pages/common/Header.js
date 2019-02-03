@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { StyleSheet, View } from 'react-native'
+import { StyleSheet, View, StatusBar } from 'react-native'
 import { Header, Left, Body, Right, Button, Title } from 'native-base'
 import SideBar from '../SideBar'
 import Icon from 'react-native-vector-icons/FontAwesome5'
@@ -64,6 +64,7 @@ export default class HeaderItem extends Component {
 
     return (
       <Header style={[props.style, { backgroundColor: color.themeColor }]}>
+        <StatusBar backgroundColor={color.themeColor} />
         <Left>
           {props.left || (
             <Button

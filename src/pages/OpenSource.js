@@ -31,8 +31,16 @@ class Card extends Component {
           borderRadius: 5
         }}
       >
-        <Text style={{ fontWeight: 'bold', fontSize: 16 }}>{data.name}</Text>
-        <Text>{data.license}</Text>
+        <Text
+          style={{
+            fontWeight: 'bold',
+            fontSize: 16,
+            color: color.contrastColor
+          }}
+        >
+          {data.name}
+        </Text>
+        <Text style={{ color: color.contrastColor }}>{data.license}</Text>
         <TouchableOpacity
           activeOpacity={0.5}
           onPress={() => this.openURL(data.address)}

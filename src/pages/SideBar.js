@@ -130,7 +130,7 @@ export default class SideBar extends Component {
             >
               <Image
                 source={{ uri: state.avatar }}
-                style={[styles.image, { overlayColor: color.themeColor }]}
+                style={styles.image}
               />
             </TouchableOpacity>
             <View style={styles.info}>

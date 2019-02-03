@@ -476,12 +476,25 @@ export default class TootBox extends Component {
     )
   }
 
+  /**
+   * @description 根据不同情况返回不同的转发图标，比如：私信页面/仅关注者/私信 禁止转发
+   * @param {data}: 嘟文数据
+   */
   getRetweetIcon = data => {
     if (data.accounts) {
       return (
         <Icon
           style={{ fontSize: 15, color: color.lightThemeColor }}
           name="envelope"
+        />
+      )
+    }
+
+    if (data.visibility === 'private' || data.visibility === 'direct') {
+      return (
+        <Icon
+          style={{ fontSize: 15, color: color.lightThemeColor }}
+          name="lock"
         />
       )
     }

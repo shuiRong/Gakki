@@ -23,16 +23,33 @@ const height = Dimensions.get('window').height
 
 // 多媒体的黑色隐藏框
 class BlackMirror extends Component {
+  /**
+   * @description 根据不同的主题返回不同的敏感内容遮罩颜色
+   */
+  getCoverColor = () => {
+    let coverColor = color.contrastColor
+    if (mobx.theme === 'black') {
+      coverColor = color.subColor
+    }
+
+    return coverColor
+  }
+
   render() {
     return (
       <TouchableOpacity activeOpacity={1} onPress={this.props.showMedia}>
         <View
-          style={[styles.blackMirror, { backgroundColor: color.contrastColor }]}
+          style={[
+            styles.blackMirror,
+            { backgroundColor: this.getCoverColor() }
+          ]}
         >
-          <Text style={{ fontSize: 15, color: color.subColor }}>
+          <Text style={{ color: color.lightThemeColor }}>
             {this.props.text}
           </Text>
-          <Text style={{ color: color.themeColor }}>点击显示</Text>
+          <Text style={{ fontSize: 17, color: color.themeColor }}>
+            点击显示
+          </Text>
         </View>
       </TouchableOpacity>
     )
@@ -103,10 +120,7 @@ class ImageBox extends Component {
         <View key={image.id} style={styles.mediaBox}>
           <View
             zIndex={4}
-            style={[
-              styles.eyeSlashBox,
-              { backgroundColor: color.contrastColor }
-            ]}
+            style={[styles.eyeSlashBox, { backgroundColor: color.subColor }]}
           >
             <TouchableOpacity onPress={() => this.changeMediaStatus(true)}>
               <Icon

@@ -83,7 +83,7 @@ class EmojiBox extends Component {
           <TouchableOpacity
             activeOpacity={0.8}
             style={{ margin: 3 }}
-            onPress={() => mobx.addInputValue(`:${item.shortcode}: `)}
+            onPress={() => mobx.addInputValue(` :${item.shortcode}: `)}
           >
             <Image
               style={[styles.emojiImage, { overlayColor: color.themeColor }]}
@@ -159,7 +159,11 @@ class UploadMedia extends Component {
             textAlignVertical={'top'}
             style={[
               styles.descriptionInput,
-              { borderBottomColor: color.contrastColor }
+              {
+                borderBottomColor: color.contrastColor,
+                backgroundColor: color.themeColor,
+                color: color.contrastColor
+              }
             ]}
             // value={this.state.description}
             onChangeText={text => this.setState({ description: text })}

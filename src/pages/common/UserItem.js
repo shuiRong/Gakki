@@ -205,7 +205,13 @@ export default class UserList extends Component {
         >
           <Image
             source={{ uri: account.avatar }}
-            style={{ overlayColor: color.themeColor,width: 40, height: 40, borderRadius: 5, marginRight: 5 }}
+            style={{
+              overlayColor: color.themeColor,
+              width: 40,
+              height: 40,
+              borderRadius: 5,
+              marginRight: 5
+            }}
           />
         </TouchableOpacity>
         <TouchableOpacity
@@ -218,7 +224,7 @@ export default class UserList extends Component {
           }
         >
           <HTMLView data={account.display_name || account.username} />
-          <Text>@{account.username}</Text>
+          <Text style={{ color: color.subColor }}>@{account.username}</Text>
         </TouchableOpacity>
         <View
           style={{
