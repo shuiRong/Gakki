@@ -91,6 +91,7 @@ project.ext.react = [
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
+apply from: "../../node_modules/react-native-code-push/android/codepush.gradle"
 
 /**
  * Set this to true to create two separate APKs instead of one:
@@ -117,7 +118,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.0"
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
@@ -145,6 +146,7 @@ android {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
             signingConfig signingConfigs.release
+            buildConfigField "String", "CODEPUSH_KEY",'"'+properties.getProperty("code_push_key_production")+'"'
         }
     }
     // applicationVariants are e.g. debug, release
@@ -169,6 +171,7 @@ configurations.all {
 }
 
 dependencies {
+    compile project(':react-native-code-push')
     compile project(':react-native-spinkit')
     compile project(':react-native-image-picker')
     // compile project(':react-native-popover-menu')

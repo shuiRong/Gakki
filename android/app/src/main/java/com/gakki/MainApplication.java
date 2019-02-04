@@ -3,6 +3,7 @@ package com.gakki;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.microsoft.codepush.react.CodePush;
 import com.imagepicker.ImagePickerPackage;
 // import ui.popovermenu.RNPopoverMenuPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
@@ -19,6 +20,12 @@ import java.util.List;
 public class MainApplication extends Application implements ReactApplication {
 
   private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
+
+        @Override
+        protected String getJSBundleFile() {
+        return CodePush.getJSBundleFile();
+        }
+    
     @Override
     public boolean getUseDeveloperSupport() {
       return BuildConfig.DEBUG;
@@ -32,7 +39,8 @@ public class MainApplication extends Application implements ReactApplication {
           // new RNPopoverMenuPackage(),
           new VectorIconsPackage(),
           new RNGestureHandlerPackage(),
-          new RNSpinkitPackage()
+          new RNSpinkitPackage(),
+          new CodePush(BuildConfig.CODEPUSH_KEY, MainApplication.this, BuildConfig.DEBUG)
       );
     }
 
