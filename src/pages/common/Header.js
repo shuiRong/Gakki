@@ -61,10 +61,11 @@ export default class HeaderItem extends Component {
   render() {
     const props = this.props
     color = themeData[mobx.theme]
+    const barStyle = mobx.theme === 'black' ? 'light-content' : 'dark-content'
 
     return (
       <Header style={[props.style, { backgroundColor: color.themeColor }]}>
-        <StatusBar backgroundColor={color.themeColor} />
+        <StatusBar backgroundColor={color.themeColor} barStyle={barStyle} />
         <Left>
           {props.left || (
             <Button

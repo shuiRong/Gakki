@@ -889,9 +889,11 @@ export default class TootBox extends Component {
   render() {
     const toot = this.state.toot
     color = themeData[mobx.theme]
+    const barStyle = mobx.theme === 'black' ? 'light-content' : 'dark-content'
+
     return (
       <View style={[styles.container, { backgroundColor: color.themeColor }]}>
-        <StatusBar backgroundColor={color.themeColor} />
+        <StatusBar backgroundColor={color.themeColor} barStyle={barStyle} />
         {this.getAdditionalInfo(toot)}
         {this.getBody(toot)}
       </View>

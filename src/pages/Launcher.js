@@ -42,6 +42,7 @@ export default class Login extends Component {
 
   render() {
     color = themeData[mobx.theme]
+    const barStyle = mobx.theme === 'black' ? 'light-content' : 'dark-content'
 
     return (
       <View
@@ -52,7 +53,7 @@ export default class Login extends Component {
           justifyContent: 'center'
         }}
       >
-        <StatusBar backgroundColor={color.themeColor} />
+        <StatusBar backgroundColor={color.themeColor} barStyle={barStyle} />
         <Spinner
           style={{ marginTop: -40 }}
           isVisible={true}
