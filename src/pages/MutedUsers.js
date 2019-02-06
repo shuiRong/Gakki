@@ -8,12 +8,12 @@ import { Button } from 'native-base'
 import { getMutes, getRelationship } from '../utils/api'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import Header from './common/Header'
-import Loading from './common/Loading'
 import { themeData } from '../utils/color'
 import mobx from '../utils/mobx'
 import Divider from './common/Divider'
 import UserItem from './common/UserItem'
 import { observer } from 'mobx-react'
+import { UserSpruce } from './common/Spruce';
 
 let color = {}
 @observer
@@ -115,7 +115,7 @@ export default class MutedUsers extends Component {
           right={'none'}
         />
         {state.loading ? (
-          <Loading />
+          <UserSpruce />
         ) : (
           <FlatList
             ItemSeparatorComponent={() => <Divider />}

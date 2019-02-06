@@ -311,8 +311,7 @@ export default class Profile extends Component {
               }}
             />
             <View style={{ padding: 15 }}>
-              <Image
-                source={{ uri: profile.avatar }}
+              <View
                 style={{
                   width: 80,
                   height: 80,
@@ -320,9 +319,17 @@ export default class Profile extends Component {
                   position: 'absolute',
                   left: 15,
                   top: -40,
-                  overlayColor: color.themeColor
+                  overflow: 'hidden'
                 }}
-              />
+              >
+                <Image
+                  source={{ uri: profile.avatar }}
+                  style={{
+                    width: 80,
+                    height: 80
+                  }}
+                />
+              </View>
               {this.getRelationshop(profile)}
               <View>
                 <HTMLView

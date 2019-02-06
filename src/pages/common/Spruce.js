@@ -27,8 +27,8 @@ export class TootListSpruce extends Component {
         >
           <ContentLoader width={width * 0.9} height={200} duration={1000}>
             <Circle cx="30" cy="30" r="30" />
-            <Rect x="75" y="13" rx="4" ry="4" width="100" height="13" />
-            <Rect x="75" y="37" rx="4" ry="4" width="50" height="8" />
+            <Rect x="75" y="13" rx="4" ry="4" width="200" height="10" />
+            <Rect x="75" y="37" rx="4" ry="4" width="140" height="8" />
             <Rect x="0" y="70" rx="5" ry="5" width="400" height="200" />
           </ContentLoader>
         </View>
@@ -42,8 +42,8 @@ export class TootListSpruce extends Component {
         >
           <ContentLoader width={width * 0.9} height={200} duration={1000}>
             <Circle cx="30" cy="30" r="30" />
-            <Rect x="75" y="13" rx="4" ry="4" width="100" height="13" />
-            <Rect x="75" y="37" rx="4" ry="4" width="50" height="8" />
+            <Rect x="75" y="13" rx="4" ry="4" width="200" height="10" />
+            <Rect x="75" y="37" rx="4" ry="4" width="140" height="8" />
             <Rect x="0" y="70" rx="5" ry="5" width="400" height="200" />
           </ContentLoader>
         </View>
@@ -57,8 +57,8 @@ export class TootListSpruce extends Component {
         >
           <ContentLoader width={width * 0.9} height={200} duration={1000}>
             <Circle cx="30" cy="30" r="30" />
-            <Rect x="75" y="13" rx="4" ry="4" width="100" height="13" />
-            <Rect x="75" y="37" rx="4" ry="4" width="50" height="8" />
+            <Rect x="75" y="13" rx="4" ry="4" width="200" height="10" />
+            <Rect x="75" y="37" rx="4" ry="4" width="140" height="8" />
             <Rect x="0" y="70" rx="5" ry="5" width="400" height="200" />
           </ContentLoader>
         </View>
@@ -117,6 +117,34 @@ export class ProfileSpruce extends Component {
           <Rect x="130" y="290" rx="3" ry="3" width="60" height="10" />
           <Rect x="200" y="290" rx="3" ry="3" width="60" height="10" />
         </ContentLoader>
+      </View>
+    )
+  }
+}
+
+@observer
+export class UserSpruce extends Component {
+  render() {
+    color = themeData[mobx.theme]
+    const barStyle = mobx.theme === 'black' ? 'light-content' : 'dark-content'
+
+    const item = (
+      <ContentLoader width="100%" height={60} duration={1000}>
+        <Rect x="15" y="15" rx="3" ry="3" width="40" height="40" />
+        <Rect x="70" y="22" rx="3" ry="3" width="100" height="10" />
+        <Rect x="70" y="40" rx="3" ry="3" width="200" height="10" />
+      </ContentLoader>
+    )
+
+    return (
+      <View
+        style={{
+          width,
+          height: 60
+        }}
+      >
+        <StatusBar backgroundColor={color.themeColor} barStyle={barStyle} />
+        {Array(7).fill(item)}
       </View>
     )
   }

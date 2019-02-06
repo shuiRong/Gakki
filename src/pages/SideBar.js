@@ -129,6 +129,10 @@ export default class SideBar extends Component {
         <ImageBackground source={{ uri: state.header }} style={styles.bg}>
           <View style={styles.infoBox}>
             <TouchableOpacity
+              style={{
+                ...styles.image,
+                overflow: 'hidden'
+              }}
               activeOpacity={0.5}
               onPress={() => {
                 this.props.closeDrawer()

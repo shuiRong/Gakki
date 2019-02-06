@@ -9,7 +9,7 @@ import { getNotifications, clearNotifications } from '../utils/api'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import TootBox from './common/TootBox'
 import Header from './common/Header'
-import Loading from './common/Loading'
+import { TootListSpruce } from './common/Spruce'
 import ListFooterComponent from './common/ListFooterComponent'
 import { themeData } from '../utils/color'
 import mobx from '../utils/mobx'
@@ -137,7 +137,7 @@ export default class Notifications extends Component {
           }
         />
         {state.loading ? (
-          <Loading />
+          <TootListSpruce />
         ) : (
           <FlatList
             ItemSeparatorComponent={() => <Divider />}
