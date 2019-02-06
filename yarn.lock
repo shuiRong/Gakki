@@ -2910,6 +2910,18 @@ cycle@1.0.x:
   resolved "http://registry.npm.taobao.org/cycle/download/cycle-1.0.3.tgz#21e80b2be8580f98b468f379430662b046c34ad2"
   integrity sha1-IegLK+hYD5i0aPN5QwZisEbDStI=
 
+d3-color@1:
+  version "1.2.3"
+  resolved "http://registry.npm.taobao.org/d3-color/download/d3-color-1.2.3.tgz#6c67bb2af6df3cc8d79efcc4d3a3e83e28c8048f"
+  integrity sha1-bGe7KvbfPMjXnvzE06PoPijIBI8=
+
+d3-interpolate@^1.1.5, d3-interpolate@^1.3.2:
+  version "1.3.2"
+  resolved "http://registry.npm.taobao.org/d3-interpolate/download/d3-interpolate-1.3.2.tgz#417d3ebdeb4bc4efcc8fd4361c55e4040211fd68"
+  integrity sha1-QX0+vetLxO/Mj9Q2HFXkBAIR/Wg=
+  dependencies:
+    d3-color "1"
+
 dashdash@^1.12.0:
   version "1.14.1"
   resolved "http://registry.npm.taobao.org/dashdash/download/dashdash-1.14.1.tgz#853cfa0f7cbe2fed5de20326b8dd581035f6e2f0"
@@ -6920,6 +6932,13 @@ react-native-code-push@^5.5.2:
     plist "3.0.1"
     xcode "1.0.0"
 
+react-native-content-loader@^0.1.6:
+  version "0.1.6"
+  resolved "http://registry.npm.taobao.org/react-native-content-loader/download/react-native-content-loader-0.1.6.tgz#4e75cd81351abc3f4aa2245d0fc5a1f71404db9b"
+  integrity sha1-TnXNgTUavD9KoiRdD8Wh9xQE25s=
+  dependencies:
+    d3-interpolate "^1.1.5"
+
 "react-native-deprecated-custom-components@github:facebookarchive/react-native-custom-components":
   version "0.1.1"
   resolved "https://codeload.github.com/facebookarchive/react-native-custom-components/tar.gz/d5201e53221a2460b096ee82ff4480f3b0de7fe4"
@@ -7054,6 +7073,11 @@ react-native-spinkit@^1.1.1:
   integrity sha1-OuUS85eLx1C3wCY5kR4XEHUNhTk=
   dependencies:
     prop-types "^15.5.8"
+
+react-native-svg@^9.2.3:
+  version "9.2.3"
+  resolved "http://registry.npm.taobao.org/react-native-svg/download/react-native-svg-9.2.3.tgz#e03cea41d10821ad3229c34aa3e0d119db252938"
+  integrity sha1-4DzqQdEIIa0yKcNKo+DRGdslKTg=
 
 react-native-tab-view@^0.0.77:
   version "0.0.77"

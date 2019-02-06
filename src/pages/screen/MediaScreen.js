@@ -12,11 +12,15 @@ import {
   RefreshControl
 } from 'react-native'
 import { getUserStatuses } from '../../utils/api'
-import Loading from '../common/Loading'
+import { CodeStyleSpruce } from '../common/Spruce'
 import ListFooterComponent from '../common/ListFooterComponent'
 import mobx from '../../utils/mobx'
+import { observer } from 'mobx-react'
+import { themeData } from '../../utils/color'
 
+let color = {}
 let deviceWidth = require('Dimensions').get('window').width
+@observer
 export default class TootScreen extends Component {
   constructor(props) {
     super(props)
@@ -124,7 +128,7 @@ export default class TootScreen extends Component {
       loading: true,
       list: []
     })
-    this.fetchTimelines()
+    this.getUserMediaStatuses()
   }
 
   /**
@@ -153,8 +157,10 @@ export default class TootScreen extends Component {
   }
 
   render() {
+    color = themeData[mobx.theme]
+
     if (this.state.loading) {
-      return <Loading />
+      return <CodeStyleSpruce />
     }
     return (
       <View style={styles.container}>

@@ -4,7 +4,7 @@
 
 import React, { Component } from 'react'
 import { View, StyleSheet, FlatList, RefreshControl } from 'react-native'
-import Loading from '../common/Loading'
+import { TootListSpruce } from '../common/Spruce'
 import { getHomeTimelines } from '../../utils/api'
 import TootBox from '../common/TootBox'
 import ListFooterComponent from '../common/ListFooterComponent'
@@ -138,7 +138,7 @@ export default class PublicScreen extends Component {
     const state = this.state
 
     if (state.loading) {
-      return <Loading />
+      return <TootListSpruce />
     }
     return (
       <View style={styles.container}>

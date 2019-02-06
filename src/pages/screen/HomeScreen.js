@@ -8,7 +8,7 @@ import { getHomeTimelines } from '../../utils/api'
 import TootBox from '../common/TootBox'
 import ListFooterComponent from '../common/ListFooterComponent'
 import Divider from '../common/Divider'
-import Loading from '../common/Loading'
+import { TootListSpruce, CodeStyleSpruce } from '../common/Spruce'
 
 export default class HomeScreen extends Component {
   constructor(props) {
@@ -34,7 +34,7 @@ export default class HomeScreen extends Component {
     }
 
     this.fetchTimelines()
-    
+
     const params = navigation.getParam('data')
     if (params && params.id) {
       let newList = this.state.list
@@ -145,8 +145,9 @@ export default class HomeScreen extends Component {
     const state = this.state
 
     if (state.loading) {
-      return <Loading />
+      return <TootListSpruce />
     }
+
     return (
       <View style={styles.container}>
         <FlatList

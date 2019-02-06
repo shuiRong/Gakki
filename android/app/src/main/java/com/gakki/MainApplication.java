@@ -3,6 +3,7 @@ package com.gakki;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.horcrux.svg.SvgPackage;
 import com.microsoft.codepush.react.CodePush;
 import com.imagepicker.ImagePickerPackage;
 // import ui.popovermenu.RNPopoverMenuPackage;
@@ -35,6 +36,7 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new SvgPackage(),
           new ImagePickerPackage(),
           new VectorIconsPackage(),
           new RNGestureHandlerPackage(),

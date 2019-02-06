@@ -26,6 +26,7 @@ import Fab from './common/Fab'
 import { themeData } from '../utils/color'
 import mobx from '../utils/mobx'
 import HTMLView from './common/HTMLView'
+import { ProfileSpruce } from './common/Spruce'
 import { observer } from 'mobx-react'
 
 /**
@@ -78,7 +79,6 @@ export default class Profile extends Component {
 
   componentDidMount() {
     const id = this.props.navigation.getParam('id')
-    // const id = '81232'
     this.getAccountData(id)
     this.getRelationship(id)
   }
@@ -293,97 +293,101 @@ export default class Profile extends Component {
             />
           </TouchableOpacity>
         </View>
-        <Animated.View
-          scrollEventThrottle={20}
-          style={{
-            top: this.distanceFromTop
-          }}
-        >
-          <Image
-            source={{ uri: profile.header }}
+        {!profile.id ? (
+          <ProfileSpruce />
+        ) : (
+          <Animated.View
+            scrollEventThrottle={20}
             style={{
-              width: '100%',
-              height: 155,
-              overlayColor: color.themeColor
+              top: this.distanceFromTop
             }}
-          />
-          <View style={{ padding: 15 }}>
+          >
             <Image
-              source={{ uri: profile.avatar }}
+              source={{ uri: profile.header }}
               style={{
-                width: 80,
-                height: 80,
-                borderRadius: 10,
-                position: 'absolute',
-                left: 15,
-                top: -40,
+                width: '100%',
+                height: 155,
                 overlayColor: color.themeColor
               }}
             />
-            {this.getRelationshop(profile)}
-            <View>
-              <HTMLView
-                data={profile.display_name}
-                pTagStyle={{ color: color.contrastColor, fontWeight: 'bold' }}
+            <View style={{ padding: 15 }}>
+              <Image
+                source={{ uri: profile.avatar }}
+                style={{
+                  width: 80,
+                  height: 80,
+                  borderRadius: 10,
+                  position: 'absolute',
+                  left: 15,
+                  top: -40,
+                  overlayColor: color.themeColor
+                }}
               />
-              <Text style={[styles.userName, { color: color.contrastColor }]}>
-                @{profile.username}
-              </Text>
-            </View>
-            <HTMLView
-              navigation={this.props.navigation}
-              data={profile.note}
-              pTagStyle={{
-                color: color.contrastColor,
-                fontSize: 14,
-                textAlign: 'center',
-                lineHeight: 18
-              }}
-            />
-            <View style={styles.followInfoBox}>
-              <TouchableOpacity
-                onPress={() =>
-                  this.props.navigation.navigate('Followers', {
-                    id: profile.id,
-                    limit: profile.followers_count
-                  })
-                }
-                style={styles.sideInfoBox}
-              >
-                <Text
-                  style={[styles.followCount, { color: color.contrastColor }]}
-                >
-                  {profile.followers_count}
+              {this.getRelationshop(profile)}
+              <View>
+                <HTMLView
+                  data={profile.display_name}
+                  pTagStyle={{ color: color.contrastColor, fontWeight: 'bold' }}
+                />
+                <Text style={[styles.userName, { color: color.contrastColor }]}>
+                  @{profile.username}
                 </Text>
-                <Text style={{ color: color.contrastColor }}>关注者</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() =>
-                  this.props.navigation.navigate('Following', {
-                    id: profile.id,
-                    limit: profile.following_count
-                  })
-                }
-                style={styles.insideInfoBox}
-              >
-                <Text
-                  style={[styles.followCount, { color: color.contrastColor }]}
+              </View>
+              <HTMLView
+                navigation={this.props.navigation}
+                data={profile.note}
+                pTagStyle={{
+                  color: color.contrastColor,
+                  fontSize: 14,
+                  textAlign: 'center',
+                  lineHeight: 18
+                }}
+              />
+              <View style={styles.followInfoBox}>
+                <TouchableOpacity
+                  onPress={() =>
+                    this.props.navigation.navigate('Followers', {
+                      id: profile.id,
+                      limit: profile.followers_count
+                    })
+                  }
+                  style={styles.sideInfoBox}
                 >
-                  {profile.following_count}
-                </Text>
-                <Text style={{ color: color.contrastColor }}>正在关注</Text>
-              </TouchableOpacity>
-              <View style={styles.insideInfoBox}>
-                <Text
-                  style={[styles.followCount, { color: color.contrastColor }]}
+                  <Text
+                    style={[styles.followCount, { color: color.contrastColor }]}
+                  >
+                    {profile.followers_count}
+                  </Text>
+                  <Text style={{ color: color.contrastColor }}>关注者</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() =>
+                    this.props.navigation.navigate('Following', {
+                      id: profile.id,
+                      limit: profile.following_count
+                    })
+                  }
+                  style={styles.insideInfoBox}
                 >
-                  {profile.statuses_count}
-                </Text>
-                <Text style={{ color: color.contrastColor }}>嘟文</Text>
+                  <Text
+                    style={[styles.followCount, { color: color.contrastColor }]}
+                  >
+                    {profile.following_count}
+                  </Text>
+                  <Text style={{ color: color.contrastColor }}>正在关注</Text>
+                </TouchableOpacity>
+                <View style={styles.insideInfoBox}>
+                  <Text
+                    style={[styles.followCount, { color: color.contrastColor }]}
+                  >
+                    {profile.statuses_count}
+                  </Text>
+                  <Text style={{ color: color.contrastColor }}>嘟文</Text>
+                </View>
               </View>
             </View>
-          </View>
-        </Animated.View>
+          </Animated.View>
+        )}
         <Animated.View
           scrollEventThrottle={20}
           style={{

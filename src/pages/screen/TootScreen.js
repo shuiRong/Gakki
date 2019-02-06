@@ -3,14 +3,14 @@
  */
 
 import React, { Component } from 'react'
-import { View, StyleSheet, FlatList, RefreshControl } from 'react-native'
+import { View, FlatList, RefreshControl } from 'react-native'
 import { getUserStatuses } from '../../utils/api'
 import ListFooterComponent from '../common/ListFooterComponent'
 import TootBox from '../common/TootBox'
 import { themeData } from '../../utils/color'
 import mobx from '../../utils/mobx'
 import Divider from '../common/Divider'
-import Loading from '../common/Loading'
+import { TootListSpruce } from '../common/Spruce'
 import { observer } from 'mobx-react'
 
 let color = {}
@@ -218,7 +218,7 @@ export default class TootScreen extends Component {
     color = themeData[mobx.theme]
 
     if (this.state.loading) {
-      return <Loading />
+      return <TootListSpruce />
     }
     return (
       <View

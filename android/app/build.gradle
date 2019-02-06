@@ -184,6 +184,7 @@ configurations.all {
 }
 
 dependencies {
+    compile project(':react-native-svg')
     compile project(':react-native-code-push')
     compile project(':react-native-spinkit')
     compile project(':react-native-image-picker')

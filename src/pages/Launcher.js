@@ -12,6 +12,7 @@ import { fetch, save } from '../utils/store'
 import Spinner from 'react-native-spinkit'
 import codePush from 'react-native-code-push'
 import { deploymentKey, token } from '../utils/config'
+import { ProfileSpruce } from './common/Spruce'
 
 let color = {}
 @observer
@@ -28,7 +29,7 @@ export default class Login extends Component {
     //   mandatoryInstallMode: codePush.InstallMode.IMMEDIATE,
     //   deploymentKey: deploymentKey
     // })
-
+    // return
     save('access_token', token).then(() => {
       mobx.updateAccessToken(token)
       this.props.navigation.navigate('Home', {
@@ -53,6 +54,7 @@ export default class Login extends Component {
   }
 
   render() {
+    // return <ProfileSpruce />
     color = themeData[mobx.theme]
     const barStyle = mobx.theme === 'black' ? 'light-content' : 'dark-content'
 
