@@ -44,7 +44,6 @@ export default class Home extends Component {
   }
 
   componentDidMount() {
-    alert(4)
     fetch('emojis').then(res => {
       // 检测是否保存有emoji数据，如果没有的话，从网络获取
       if (!res || !res.length) {

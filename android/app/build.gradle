@@ -109,6 +109,9 @@ def enableSeparateBuildPerCPUArchitecture = false
 def enableProguardInReleaseBuilds = false
 
 def pass = getPassword("shuirong1997","gakki_keystore")
+
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
@@ -142,11 +145,21 @@ android {
         }
     }
     buildTypes {
+        debug{
+            minifyEnabled false //开启混淆
+            zipAlignEnabled false
+            shrinkResources false    // 移除无用的resource文件
+            signingConfig signingConfigs.release
+            buildConfigField "String", "CODEPUSH_KEY", '"'+properties.getProperty("code_push_key_staging")+'"'
+            proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+        }
+
         release {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
             signingConfig signingConfigs.release
-            buildConfigField "String", "CODEPUSH_KEY",'"'+properties.getProperty("code_push_key_production")+'"'
+              buildConfigField "String", "CODEPUSH_KEY", '"'+properties.getProperty("code_push_key_production")+'"'
+
         }
     }
     // applicationVariants are e.g. debug, release

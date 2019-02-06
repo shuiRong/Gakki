@@ -36,7 +36,6 @@ public class MainApplication extends Application implements ReactApplication {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
           new ImagePickerPackage(),
-          // new RNPopoverMenuPackage(),
           new VectorIconsPackage(),
           new RNGestureHandlerPackage(),
           new RNSpinkitPackage(),
