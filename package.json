@@ -18,7 +18,7 @@
     "prop-types": "^15.6.2",
     "react": "16.6.3",
     "react-native": "0.57.1",
-    "react-native-content-loader": "^0.1.6",
+    "react-native-content-loader": "git+ssh://git@github.com:shuiRong/react-native-content-loader.git#master",
     "react-native-gesture-handler": "^1.0.12",
     "react-native-git-upgrade": "^0.2.7",
     "react-native-image-picker": "^0.27.2",
@@ -31,6 +31,7 @@
     "react-native-vector-icons": "^6.1.0",
     "react-navigation": "^2.5.0",
     "relative-time-react-native-component": "^4.5.1",
+    "rn-collapsing-tab-bar": "^0.1.4",
     "teaset": "^0.5.10"
   },
   "devDependencies": {

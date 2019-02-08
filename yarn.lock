@@ -6932,10 +6932,9 @@ react-native-code-push@^5.5.2:
     plist "3.0.1"
     xcode "1.0.0"
 
-react-native-content-loader@^0.1.6:
-  version "0.1.6"
-  resolved "http://registry.npm.taobao.org/react-native-content-loader/download/react-native-content-loader-0.1.6.tgz#4e75cd81351abc3f4aa2245d0fc5a1f71404db9b"
-  integrity sha1-TnXNgTUavD9KoiRdD8Wh9xQE25s=
+"react-native-content-loader@git+ssh://git@github.com:shuiRong/react-native-content-loader.git#master":
+  version "0.1.4"
+  resolved "git+ssh://git@github.com:shuiRong/react-native-content-loader.git#a3593d45b7f2b6be76d85da578bc059bd7450187"
   dependencies:
     d3-interpolate "^1.1.5"
 
@@ -7729,6 +7728,15 @@ rimraf@~2.2.6:
   version "2.2.8"
   resolved "http://registry.npm.taobao.org/rimraf/download/rimraf-2.2.8.tgz#e439be2aaee327321952730f99a8929e4fc50582"
   integrity sha1-5Dm+Kq7jJzIZUnMPmaiSnk/FBYI=
+
+rn-collapsing-tab-bar@^0.1.4:
+  version "0.1.4"
+  resolved "http://registry.npm.taobao.org/rn-collapsing-tab-bar/download/rn-collapsing-tab-bar-0.1.4.tgz#c63f63946ec4ee3a0c0f2868c3d70fd0864f499b"
+  integrity sha1-xj9jlG7E7joMDyhow9cP0IZPSZs=
+  dependencies:
+    create-react-class "^15.6.2"
+    prop-types "^15.6.0"
+    react-timer-mixin "^0.13.3"
 
 rsvp@^3.3.3:
   version "3.6.2"

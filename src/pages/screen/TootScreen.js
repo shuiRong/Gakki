@@ -89,6 +89,7 @@ export default class TootScreen extends Component {
     const id = this.props.navigation.getParam('id')
     getUserStatuses(id, {
       exclude_replies: true,
+      pinned: false,
       ...params
     })
       .then(res => {
@@ -117,16 +118,15 @@ export default class TootScreen extends Component {
    * @param {item}: 特定数据
    */
   isExist = (data, item) => {
-    const result = false
+    let result = false
     let done = false
     data.forEach(toot => {
       if (done) return
       if (toot.id === item.id) {
-        retult = true
+        result = true
         done = true
       }
     })
-
     return result
   }
 
@@ -135,10 +135,10 @@ export default class TootScreen extends Component {
       pinned: true
     })
       .then(res => {
-        const newList = res.concat(this.state.list)
+        // const newList = res.concat(this.state.list)
         this.setState(
           {
-            pinnedList: newList,
+            pinnedList: res,
             loading: false
           },
           () => {

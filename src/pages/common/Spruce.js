@@ -101,10 +101,10 @@ export class ProfileSpruce extends Component {
     return (
       <View style={{ height: 330 }}>
         <StatusBar backgroundColor={color.themeColor} barStyle={barStyle} />
-        <ContentLoader width="100%" height={500} duration={1000}>
-          <Rect x="0" y="0" rx="5" ry="5" width="100%" height="155" />
+        <ContentLoader width={width} height={500} duration={1000}>
+          <Rect x="0" y="0" rx="5" ry="5" width={width} height="155" />
           <Rect x="15" y="115" rx="3" ry="3" width="80" height="80" />
-          <Rect x="70%" y="170" rx="3" ry="3" width="100" height="35" />
+          <Rect x={width * 0.7} y="170" rx="3" ry="3" width="100" height="35" />
           <Rect x="15" y="205" rx="3" ry="3" width="80" height="10" />
           <Rect x="15" y="220" rx="3" ry="3" width="80" height="10" />
 
@@ -129,7 +129,7 @@ export class UserSpruce extends Component {
     const barStyle = mobx.theme === 'black' ? 'light-content' : 'dark-content'
 
     const item = (
-      <ContentLoader width="100%" height={60} duration={1000}>
+      <ContentLoader width={width} height={60} duration={1000}>
         <Rect x="15" y="15" rx="3" ry="3" width="40" height="40" />
         <Rect x="70" y="22" rx="3" ry="3" width="100" height="10" />
         <Rect x="70" y="40" rx="3" ry="3" width="200" height="10" />
