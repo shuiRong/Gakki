@@ -26,6 +26,7 @@ export default class TootScreen extends Component {
     }
   }
   componentDidMount() {
+    console.log('did___')
     this.getUserPinnedStatuses()
   }
 
@@ -88,7 +89,7 @@ export default class TootScreen extends Component {
   getUserStatuses = (cb, params) => {
     const id = this.props.navigation.getParam('id')
     getUserStatuses(id, {
-      exclude_replies: true,
+      exclude_replies: false,
       pinned: false,
       ...params
     })
@@ -154,6 +155,8 @@ export default class TootScreen extends Component {
   }
 
   refreshHandler = () => {
+    alert(1)
+    return
     this.setState({
       loading: true,
       list: []
@@ -220,6 +223,7 @@ export default class TootScreen extends Component {
     if (this.state.loading) {
       return <TootListSpruce />
     }
+    console.log(1, state.pinnedList.concat(state.list).map(item => item.id))
     return (
       <View
         style={{ flex: 1, paddingTop: 0, backgroundColor: color.themeColor }}

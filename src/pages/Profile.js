@@ -18,8 +18,10 @@ import {
   getRelationship,
   follow
 } from '../utils/api'
-import { DefaultTabBar } from 'react-native-scrollable-tab-view'
-import ScrollableTabView from 'rn-collapsing-tab-bar'
+import ScrollableTabView, {
+  DefaultTabBar
+} from 'react-native-scrollable-tab-view'
+// import ScrollableTabView from 'rn-collapsing-tab-bar'
 import TootScreen from './screen/TootScreen'
 import MediaScreen from './screen/MediaScreen'
 import Fab from './common/Fab'
@@ -42,7 +44,7 @@ export default class Profile extends Component {
       profile: {},
       relationship: {},
       headerTop: new Animated.Value(0),
-      loading: false
+      loading: true
     }
   }
 
@@ -79,15 +81,17 @@ export default class Profile extends Component {
   }
 
   componentDidMount() {
-    const id = this.props.navigation.getParam('id')
+    this.fetchData()
+  }
+
+  fetchData = data => {
+    const id = data || this.props.navigation.getParam('id')
     this.getAccountData(id)
     this.getRelationship(id)
   }
 
   componentWillReceiveProps({ navigation }) {
-    const id = navigation.getParam('id')
-    this.getAccountData(id)
-    this.getRelationship(id)
+    this.fetchData(navigation.getParam('id'))
   }
 
   /**
@@ -95,11 +99,18 @@ export default class Profile extends Component {
    * @param {id}: id
    */
   getAccountData = id => {
-    getAccountData(id).then(res => {
-      this.setState({
-        profile: res
+    getAccountData(id)
+      .then(res => {
+        this.setState({
+          profile: res,
+          loading: false
+        })
       })
-    })
+      .catch(() => {
+        this.setState({
+          loading: false
+        })
+      })
   }
 
   /**
@@ -192,9 +203,10 @@ export default class Profile extends Component {
   refreshHandler = () => {
     this.setState({
       loading: true,
-      list: []
+      profile: {},
+      relationship: {}
     })
-    this.getUserStatuses()
+    this.fetchData()
   }
 
   /**
@@ -268,7 +280,7 @@ export default class Profile extends Component {
       <ScrollView
         refreshControl={
           <RefreshControl
-            refreshing={this.state.loading}
+            refreshing={state.loading}
             onRefresh={this.refreshHandler}
           />
         }
@@ -316,7 +328,7 @@ export default class Profile extends Component {
         >
           <ScrollableTabView
             collapsableBar={
-              !profile.id ? (
+              state.loading ? (
                 <ProfileSpruce />
               ) : (
                 <View scrollEventThrottle={20}>
