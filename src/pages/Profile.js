@@ -18,9 +18,8 @@ import {
   getRelationship,
   follow
 } from '../utils/api'
-import ScrollableTabView, {
-  DefaultTabBar
-} from 'react-native-scrollable-tab-view'
+import ScrollableTabView from 'react-native-scrollable-tab-view'
+import DefaultTabBar from './common/DefaultTabBar'
 // import ScrollableTabView from 'rn-collapsing-tab-bar'
 import TootScreen from './screen/TootScreen'
 import MediaScreen from './screen/MediaScreen'
@@ -34,7 +33,6 @@ import { observer } from 'mobx-react'
 /**
  * Toot详情页面
  */
-let deviceHeight = require('Dimensions').get('window').height
 let color = {}
 @observer
 export default class Profile extends Component {
@@ -44,7 +42,8 @@ export default class Profile extends Component {
       profile: {},
       relationship: {},
       headerTop: new Animated.Value(0),
-      loading: true
+      loading: true,
+      tabBarHeight: 100
     }
   }
 
@@ -60,23 +59,15 @@ export default class Profile extends Component {
     const headerTop = this.state.headerTop
 
     this.distanceFromTop = headerTop.interpolate({
-      inputRange: [0, 800, 801, 802],
-      outputRange: [0, -470, -470, -470]
+      inputRange: [0, this.state.tabBarHeight],
+      outputRange: [0, -this.state.tabBarHeight]
+      // extrapolate: 'clamp'
     })
 
     this.opacity = headerTop.interpolate({
-      inputRange: [0, 456, 690, 691, 692],
-      outputRange: [0, 0, 1, 1, 1]
-    })
-
-    this.colorInterpolate = headerTop.interpolate({
-      inputRange: [0, 456, 690, 691],
-      outputRange: [
-        color.themeColor,
-        color.themeColor,
-        color.subColor,
-        color.subColor
-      ]
+      inputRange: [0, this.state.tabBarHeight],
+      outputRange: [0, 1],
+      extrapolate: 'clamp'
     })
   }
 
@@ -212,7 +203,7 @@ export default class Profile extends Component {
   /**
    * @description 返回是否已经关注对方的relationship
    */
-  getRelationshop = profile => {
+  getRelationshipElement = profile => {
     let configStyle = {
       backgroundColor: color.contrastColor,
       iconName: 'user',
@@ -320,156 +311,46 @@ export default class Profile extends Component {
             />
           </TouchableOpacity>
         </View>
-        <View
-          scrollEventThrottle={20}
-          style={{
-            height: deviceHeight + 50
-          }}
+        <ScrollableTabView
+          initialPage={0}
+          renderTabBar={() => (
+            <DefaultTabBar
+              profile={profile}
+              color={color}
+              getRelationship={this.getRelationshipElement}
+              backgroundColor={color.themeColor}
+              activeTextColor={color.contrastColor}
+              inactiveTextColor={color.subColor}
+              underlineStyle={{ backgroundColor: color.contrastColor }}
+              style={{
+                position: 'absolute',
+                top: this.distanceFromTop,
+                left: 0,
+                height: state.tabBarHeight,
+                zIndex: 100
+              }}
+              tabBarStyle={{ borderColor: color.subColor }}
+              onLayout={e => {
+                this.setState({
+                  tabBarHeight: e.nativeEvent.layout.height
+                })
+              }}
+            />
+          )}
         >
-          <ScrollableTabView
-            collapsableBar={
-              state.loading ? (
-                <ProfileSpruce />
-              ) : (
-                <View scrollEventThrottle={20}>
-                  <Image
-                    source={{ uri: profile.header }}
-                    style={{
-                      width: '100%',
-                      height: 155,
-                      overlayColor: color.themeColor
-                    }}
-                  />
-                  <View style={{ padding: 15 }}>
-                    <View
-                      style={{
-                        width: 80,
-                        height: 80,
-                        borderRadius: 10,
-                        position: 'absolute',
-                        left: 15,
-                        top: -40,
-                        overflow: 'hidden'
-                      }}
-                    >
-                      <Image
-                        source={{ uri: profile.avatar }}
-                        style={{
-                          width: 80,
-                          height: 80
-                        }}
-                      />
-                    </View>
-                    {this.getRelationshop(profile)}
-                    <View>
-                      <HTMLView
-                        data={profile.display_name}
-                        pTagStyle={{
-                          color: color.contrastColor,
-                          fontWeight: 'bold'
-                        }}
-                      />
-                      <Text
-                        style={[
-                          styles.userName,
-                          { color: color.contrastColor }
-                        ]}
-                      >
-                        @{profile.username}
-                      </Text>
-                    </View>
-                    <HTMLView
-                      navigation={this.props.navigation}
-                      data={profile.note}
-                      pTagStyle={{
-                        color: color.contrastColor,
-                        fontSize: 14,
-                        textAlign: 'center',
-                        lineHeight: 18
-                      }}
-                    />
-                    <View style={styles.followInfoBox}>
-                      <TouchableOpacity
-                        onPress={() =>
-                          this.props.navigation.navigate('Followers', {
-                            id: profile.id,
-                            limit: profile.followers_count
-                          })
-                        }
-                        style={styles.sideInfoBox}
-                      >
-                        <Text
-                          style={[
-                            styles.followCount,
-                            { color: color.contrastColor }
-                          ]}
-                        >
-                          {profile.followers_count}
-                        </Text>
-                        <Text style={{ color: color.contrastColor }}>
-                          关注者
-                        </Text>
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        onPress={() =>
-                          this.props.navigation.navigate('Following', {
-                            id: profile.id,
-                            limit: profile.following_count
-                          })
-                        }
-                        style={styles.insideInfoBox}
-                      >
-                        <Text
-                          style={[
-                            styles.followCount,
-                            { color: color.contrastColor }
-                          ]}
-                        >
-                          {profile.following_count}
-                        </Text>
-                        <Text style={{ color: color.contrastColor }}>
-                          正在关注
-                        </Text>
-                      </TouchableOpacity>
-                      <View style={styles.insideInfoBox}>
-                        <Text
-                          style={[
-                            styles.followCount,
-                            { color: color.contrastColor }
-                          ]}
-                        >
-                          {profile.statuses_count}
-                        </Text>
-                        <Text style={{ color: color.contrastColor }}>嘟文</Text>
-                      </View>
-                    </View>
-                  </View>
-                </View>
-              )
-            }
-            initialPage={0}
-            renderTabBar={() => (
-              <DefaultTabBar
-                backgroundColor={color.themeColor}
-                activeTextColor={color.contrastColor}
-                inactiveTextColor={color.subColor}
-                underlineStyle={{ backgroundColor: color.contrastColor }}
-                style={{ borderColor: color.subColor }}
-              />
-            )}
-          >
-            <TootScreen
-              tabLabel={'嘟文'}
-              onScroll={this.animatedEvent}
-              navigation={this.props.navigation}
-            />
-            <MediaScreen
-              tabLabel={'媒体'}
-              onScroll={this.animatedEvent}
-              navigation={this.props.navigation}
-            />
-          </ScrollableTabView>
-        </View>
+          <TootScreen
+            style={{ paddingTop: state.tabBarHeight }}
+            tabLabel={'嘟文'}
+            onScroll={this.animatedEvent}
+            navigation={this.props.navigation}
+          />
+          <MediaScreen
+            style={{ paddingTop: state.tabBarHeight }}
+            tabLabel={'媒体'}
+            onScroll={this.animatedEvent}
+            navigation={this.props.navigation}
+          />
+        </ScrollableTabView>
         <Fab navigation={this.props.navigation} />
       </ScrollView>
     )

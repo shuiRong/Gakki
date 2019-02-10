@@ -165,6 +165,7 @@ export default class TootScreen extends Component {
     return (
       <View style={styles.container}>
         <FlatList
+          contentContainerStyle={this.props.style}
           numColumns={3}
           showsVerticalScrollIndicator={false}
           data={this.state.list}

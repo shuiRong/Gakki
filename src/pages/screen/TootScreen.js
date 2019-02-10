@@ -223,38 +223,34 @@ export default class TootScreen extends Component {
     if (this.state.loading) {
       return <TootListSpruce />
     }
-    console.log(1, state.pinnedList.concat(state.list).map(item => item.id))
     return (
-      <View
-        style={{ flex: 1, paddingTop: 0, backgroundColor: color.themeColor }}
-      >
-        <FlatList
-          ItemSeparatorComponent={() => <Divider />}
-          showsVerticalScrollIndicator={false}
-          data={state.pinnedList.concat(state.list)}
-          onEndReachedThreshold={0.1}
-          onEndReached={this.onEndReached}
-          onScroll={this.props.onScroll}
-          keyExtractor={item => item.id}
-          refreshControl={
-            <RefreshControl
-              refreshing={this.state.loading}
-              onRefresh={this.refreshHandler}
-            />
-          }
-          ListFooterComponent={() => <ListFooterComponent />}
-          renderItem={({ item }) => (
-            <TootBox
-              data={item}
-              navigation={this.props.navigation}
-              deleteToot={this.deleteToot}
-              setPin={this.setPin}
-              muteAccount={this.muteAccount}
-              blockAccount={this.blockAccount}
-            />
-          )}
-        />
-      </View>
+      <FlatList
+        contentContainerStyle={this.props.style}
+        ItemSeparatorComponent={() => <Divider />}
+        showsVerticalScrollIndicator={false}
+        data={state.pinnedList.concat(state.list)}
+        onEndReachedThreshold={0.1}
+        onEndReached={this.onEndReached}
+        onScroll={this.props.onScroll}
+        keyExtractor={item => item.id}
+        refreshControl={
+          <RefreshControl
+            refreshing={this.state.loading}
+            onRefresh={this.refreshHandler}
+          />
+        }
+        ListFooterComponent={() => <ListFooterComponent />}
+        renderItem={({ item }) => (
+          <TootBox
+            data={item}
+            navigation={this.props.navigation}
+            deleteToot={this.deleteToot}
+            setPin={this.setPin}
+            muteAccount={this.muteAccount}
+            blockAccount={this.blockAccount}
+          />
+        )}
+      />
     )
   }
 }
