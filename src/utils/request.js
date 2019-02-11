@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { Toast } from 'teaset'
 
 const service = axios.create({
   baseURL: 'https://cmx.im',
@@ -20,9 +21,10 @@ service.interceptors.response.use(
   response => {
     return response.data
   },
-  err => {
-    console.log('拦截器err:', err)
-    return Promise.reject(err)
+  ({ error }) => {
+    console.log('拦截器err:', error)
+    Toast.message(error)
+    return Promise.reject(error)
   }
 )
 
