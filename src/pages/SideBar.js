@@ -16,7 +16,7 @@ import HTMLView from './common/HTMLView'
 import Divider from './common/Divider'
 import { Radio } from './common/Notice'
 import { observer } from 'mobx-react'
-import { remove } from '../utils/store'
+import { remove, save } from '../utils/store'
 
 let color = {}
 let deviceWidth = Dimensions.get('window').width
@@ -78,6 +78,7 @@ export default class SideBar extends Component {
       newTheme,
       theme => {
         mobx.updateTheme(theme)
+        save('theme', theme)
       },
       { height: 200 }
     )
@@ -146,9 +147,9 @@ export default class SideBar extends Component {
             <View style={styles.info}>
               <HTMLView
                 data={state.display_name}
-                pTagStyle={{ color: color.themeColor, fontWeight: 'bold' }}
+                pTagStyle={{ color: color.white, fontWeight: 'bold' }}
               />
-              <Text style={{ color: color.themeColor }}>
+              <Text style={{ color: color.white }}>
                 @{state.username}@{state.host}
               </Text>
             </View>

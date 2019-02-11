@@ -18,6 +18,11 @@ let color = {}
 @observer
 export default class Login extends Component {
   componentDidMount() {
+    fetch('theme').then(theme => {
+      if (theme) {
+        mobx.updateTheme(theme)
+      }
+    })
     // codePush.sync({
     //   updateDialog: {
     //     appendReleaseDescription: true,
@@ -29,7 +34,6 @@ export default class Login extends Component {
     //   mandatoryInstallMode: codePush.InstallMode.IMMEDIATE,
     //   deploymentKey: deploymentKey
     // })
-    // return
     save('access_token', token).then(() => {
       mobx.updateAccessToken(token)
       this.props.navigation.navigate('Home', {
@@ -54,7 +58,6 @@ export default class Login extends Component {
   }
 
   render() {
-    // return <ProfileSpruce />
     color = themeData[mobx.theme]
     const barStyle = mobx.theme === 'black' ? 'light-content' : 'dark-content'
 
