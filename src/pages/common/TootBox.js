@@ -685,13 +685,7 @@ export default class TootBox extends Component {
       // 如果是在toot详情页面，无须显示该字符
       return null
     }
-    // 如果不是自己的嘟文
-    if (mobx.account.id !== data.account.id) {
-      return null
-    }
-    if (mobx.account.id !== data.in_reply_to_account_id) {
-      return null
-    }
+
     return (
       <TouchableOpacity
         style={styles.showTreadButton}
