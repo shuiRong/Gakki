@@ -677,12 +677,20 @@ export default class TootBox extends Component {
   }
 
   /**
-   * @description 嘟文下方显示‘显示前文’
+   * @description 嘟文下方显示‘显示前文’：只有自己回复自己的嘟文才会出现
    * @param {data}: 嘟文数据
    */
   showTread = data => {
     if (!this.props.showTread) {
       // 如果是在toot详情页面，无须显示该字符
+      return null
+    }
+
+    if (!data.in_reply_to_id || !data.in_reply_to_account_id) {
+      return null
+    }
+
+    if (data.in_reply_to_account_id !== data.account.id) {
       return null
     }
 
