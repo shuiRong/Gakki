@@ -26,7 +26,6 @@ export default class TootScreen extends Component {
     }
   }
   componentDidMount() {
-    console.log('did___')
     this.getUserPinnedStatuses()
   }
 
@@ -132,6 +131,9 @@ export default class TootScreen extends Component {
   }
 
   getUserPinnedStatuses = () => {
+    this.setState({
+      loading: true
+    })
     getUserStatuses(this.props.navigation.getParam('id'), {
       pinned: true
     })
@@ -225,7 +227,7 @@ export default class TootScreen extends Component {
     }
     return (
       <FlatList
-        contentContainerStyle={this.props.style}
+        contentContainerStyle={{ paddingTop: 500, ...this.props.style }}
         ItemSeparatorComponent={() => <Divider />}
         showsVerticalScrollIndicator={false}
         data={state.pinnedList.concat(state.list)}

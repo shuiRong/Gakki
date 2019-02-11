@@ -14,6 +14,7 @@ const {
 } = ReactNative
 import HTMLView from './HTMLView'
 const deviceWidth = require('Dimensions').get('window').width
+import { ProfileSpruce } from './Spruce'
 
 const Button = props => {
   return (
@@ -93,104 +94,125 @@ const DefaultTabBar = createReactClass({
     const color = this.props.color || {}
 
     return (
-      <Animated.View style={{ ...this.props.style }}>
+      <Animated.View
+        style={{
+          backgroundColor: color.themeColor,
+          height: 500,
+          ...this.props.style
+        }}
+      >
         <View onLayout={this.props.onLayout}>
-          <View>
-            <Image
-              source={{ uri: profile.header }}
-              style={{
-                width: deviceWidth,
-                height: 155,
-                overlayColor: color.themeColor
-              }}
-            />
-            <View style={{ padding: 15 }}>
-              <View
+          {!profile.id ? (
+            <ProfileSpruce />
+          ) : (
+            <View>
+              <Image
+                source={{ uri: profile.header }}
                 style={{
-                  width: 80,
-                  height: 80,
-                  borderRadius: 10,
-                  position: 'absolute',
-                  left: 15,
-                  top: -40,
-                  overflow: 'hidden'
-                }}
-              >
-                <Image
-                  source={{ uri: profile.avatar }}
-                  style={{
-                    width: 80,
-                    height: 80
-                  }}
-                />
-              </View>
-              {this.props.getRelationship(profile)}
-              <View>
-                <HTMLView
-                  data={profile.display_name}
-                  pTagStyle={{
-                    color: color.contrastColor,
-                    fontWeight: 'bold'
-                  }}
-                />
-                <Text style={[styles.userName, { color: color.contrastColor }]}>
-                  @{profile.username}
-                </Text>
-              </View>
-              <HTMLView
-                navigation={this.props.navigation}
-                data={profile.note}
-                pTagStyle={{
-                  color: color.contrastColor,
-                  fontSize: 14,
-                  textAlign: 'center',
-                  lineHeight: 18
+                  width: deviceWidth,
+                  height: 155,
+                  overlayColor: color.themeColor
                 }}
               />
-              <View style={styles.followInfoBox}>
-                <TouchableOpacity
-                  onPress={() =>
-                    this.props.navigation.navigate('Followers', {
-                      id: profile.id,
-                      limit: profile.followers_count
-                    })
-                  }
-                  style={styles.sideInfoBox}
+              <View style={{ padding: 15 }}>
+                <View
+                  style={{
+                    width: 80,
+                    height: 80,
+                    borderRadius: 10,
+                    position: 'absolute',
+                    left: 15,
+                    top: -40,
+                    overflow: 'hidden'
+                  }}
                 >
+                  <Image
+                    source={{ uri: profile.avatar }}
+                    style={{
+                      width: 80,
+                      height: 80
+                    }}
+                  />
+                </View>
+                {this.props.getRelationship(profile)}
+                <View>
+                  <HTMLView
+                    data={profile.display_name}
+                    pTagStyle={{
+                      color: color.contrastColor,
+                      fontWeight: 'bold'
+                    }}
+                  />
                   <Text
-                    style={[styles.followCount, { color: color.contrastColor }]}
+                    style={[styles.userName, { color: color.contrastColor }]}
                   >
-                    {profile.followers_count}
+                    @{profile.username}
                   </Text>
-                  <Text style={{ color: color.contrastColor }}>关注者</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() =>
-                    this.props.navigation.navigate('Following', {
-                      id: profile.id,
-                      limit: profile.following_count
-                    })
-                  }
-                  style={styles.insideInfoBox}
-                >
-                  <Text
-                    style={[styles.followCount, { color: color.contrastColor }]}
+                </View>
+                <HTMLView
+                  navigation={this.props.navigation}
+                  data={profile.note}
+                  pTagStyle={{
+                    color: color.contrastColor,
+                    fontSize: 14,
+                    textAlign: 'center',
+                    lineHeight: 18
+                  }}
+                />
+                <View style={styles.followInfoBox}>
+                  <TouchableOpacity
+                    onPress={() =>
+                      this.props.navigation.navigate('Followers', {
+                        id: profile.id,
+                        limit: profile.followers_count
+                      })
+                    }
+                    style={styles.sideInfoBox}
                   >
-                    {profile.following_count}
-                  </Text>
-                  <Text style={{ color: color.contrastColor }}>正在关注</Text>
-                </TouchableOpacity>
-                <View style={styles.insideInfoBox}>
-                  <Text
-                    style={[styles.followCount, { color: color.contrastColor }]}
+                    <Text
+                      style={[
+                        styles.followCount,
+                        { color: color.contrastColor }
+                      ]}
+                    >
+                      {profile.followers_count}
+                    </Text>
+                    <Text style={{ color: color.contrastColor }}>关注者</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() =>
+                      this.props.navigation.navigate('Following', {
+                        id: profile.id,
+                        limit: profile.following_count
+                      })
+                    }
+                    style={styles.insideInfoBox}
                   >
-                    {profile.statuses_count}
-                  </Text>
-                  <Text style={{ color: color.contrastColor }}>嘟文</Text>
+                    <Text
+                      style={[
+                        styles.followCount,
+                        { color: color.contrastColor }
+                      ]}
+                    >
+                      {profile.following_count}
+                    </Text>
+                    <Text style={{ color: color.contrastColor }}>正在关注</Text>
+                  </TouchableOpacity>
+                  <View style={styles.insideInfoBox}>
+                    <Text
+                      style={[
+                        styles.followCount,
+                        { color: color.contrastColor }
+                      ]}
+                    >
+                      {profile.statuses_count}
+                    </Text>
+                    <Text style={{ color: color.contrastColor }}>嘟文</Text>
+                  </View>
                 </View>
               </View>
             </View>
-          </View>
+          )}
           <View
             style={[
               styles.tabs,

@@ -27,12 +27,12 @@ import Fab from './common/Fab'
 import { themeData } from '../utils/color'
 import mobx from '../utils/mobx'
 import HTMLView from './common/HTMLView'
-import { ProfileSpruce } from './common/Spruce'
 import { observer } from 'mobx-react'
 
 /**
  * Toot详情页面
  */
+let currentTab = 0
 let color = {}
 @observer
 export default class Profile extends Component {
@@ -43,7 +43,7 @@ export default class Profile extends Component {
       relationship: {},
       headerTop: new Animated.Value(0),
       loading: true,
-      tabBarHeight: 100
+      tabBarHeight: 500
     }
   }
 
@@ -60,8 +60,8 @@ export default class Profile extends Component {
 
     this.distanceFromTop = headerTop.interpolate({
       inputRange: [0, this.state.tabBarHeight],
-      outputRange: [0, -this.state.tabBarHeight]
-      // extrapolate: 'clamp'
+      outputRange: [0, -this.state.tabBarHeight],
+      extrapolate: 'clamp'
     })
 
     this.opacity = headerTop.interpolate({
@@ -198,6 +198,11 @@ export default class Profile extends Component {
       relationship: {}
     })
     this.fetchData()
+    if (currentTab === 0) {
+      this.ref1.getUserPinnedStatuses()
+      return
+    }
+    this.ref2.getUserMediaStatuses()
   }
 
   /**
@@ -313,6 +318,9 @@ export default class Profile extends Component {
         </View>
         <ScrollableTabView
           initialPage={0}
+          onChangeTab={({ i }) => {
+            currentTab = i
+          }}
           renderTabBar={() => (
             <DefaultTabBar
               profile={profile}
@@ -339,12 +347,14 @@ export default class Profile extends Component {
           )}
         >
           <TootScreen
+            ref={ref => (this.ref1 = ref)}
             style={{ paddingTop: state.tabBarHeight }}
             tabLabel={'嘟文'}
             onScroll={this.animatedEvent}
             navigation={this.props.navigation}
           />
           <MediaScreen
+            ref={ref => (this.ref2 = ref)}
             style={{ paddingTop: state.tabBarHeight }}
             tabLabel={'媒体'}
             onScroll={this.animatedEvent}

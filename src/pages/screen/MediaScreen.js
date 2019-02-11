@@ -90,6 +90,9 @@ export default class TootScreen extends Component {
    * @param {params}: 参数
    */
   getUserMediaStatuses = (cb, params) => {
+    this.setState({
+      loading: true
+    })
     const id = this.props.navigation.getParam('id')
     getUserStatuses(id, {
       only_media: true,
@@ -165,7 +168,7 @@ export default class TootScreen extends Component {
     return (
       <View style={styles.container}>
         <FlatList
-          contentContainerStyle={this.props.style}
+          contentContainerStyle={{ paddingTop: 500, ...this.props.style }}
           numColumns={3}
           showsVerticalScrollIndicator={false}
           data={this.state.list}
