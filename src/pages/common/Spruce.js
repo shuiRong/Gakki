@@ -74,7 +74,9 @@ export class CodeStyleSpruce extends Component {
     const barStyle = mobx.theme === 'black' ? 'light-content' : 'dark-content'
 
     return (
-      <View style={{ marginTop: 20, alignItems: 'center' }}>
+      <View
+        style={{ marginTop: 20, alignItems: 'center', ...this.props.style }}
+      >
         <StatusBar backgroundColor={color.themeColor} barStyle={barStyle} />
         <ContentLoader height={80} duration={1000}>
           <Rect x="0" y="0" rx="3" ry="3" width="70" height="10" />

@@ -90,9 +90,6 @@ export default class TootScreen extends Component {
    * @param {params}: 参数
    */
   getUserMediaStatuses = (cb, params) => {
-    this.setState({
-      loading: true
-    })
     const id = this.props.navigation.getParam('id')
     getUserStatuses(id, {
       only_media: true,
@@ -163,7 +160,7 @@ export default class TootScreen extends Component {
     color = themeData[mobx.theme]
 
     if (this.state.loading) {
-      return <CodeStyleSpruce />
+      return <CodeStyleSpruce style={{ marginTop: 450 }} />
     }
     return (
       <View style={styles.container}>
@@ -176,12 +173,6 @@ export default class TootScreen extends Component {
           onEndReached={this.onEndReached}
           onScroll={this.props.onScroll}
           keyExtractor={item => item.id}
-          refreshControl={
-            <RefreshControl
-              refreshing={this.state.loading}
-              onRefresh={this.refreshHandler}
-            />
-          }
           ListFooterComponent={() => <ListFooterComponent />}
           renderItem={({ item }) => (
             <TouchableOpacity

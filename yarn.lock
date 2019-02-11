@@ -7729,15 +7729,6 @@ rimraf@~2.2.6:
   resolved "http://registry.npm.taobao.org/rimraf/download/rimraf-2.2.8.tgz#e439be2aaee327321952730f99a8929e4fc50582"
   integrity sha1-5Dm+Kq7jJzIZUnMPmaiSnk/FBYI=
 
-rn-collapsing-tab-bar@^0.1.4:
-  version "0.1.4"
-  resolved "http://registry.npm.taobao.org/rn-collapsing-tab-bar/download/rn-collapsing-tab-bar-0.1.4.tgz#c63f63946ec4ee3a0c0f2868c3d70fd0864f499b"
-  integrity sha1-xj9jlG7E7joMDyhow9cP0IZPSZs=
-  dependencies:
-    create-react-class "^15.6.2"
-    prop-types "^15.6.0"
-    react-timer-mixin "^0.13.3"
-
 rsvp@^3.3.3:
   version "3.6.2"
   resolved "http://registry.npm.taobao.org/rsvp/download/rsvp-3.6.2.tgz#2e96491599a96cde1b515d5674a8f7a91452926a"

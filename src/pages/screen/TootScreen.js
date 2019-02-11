@@ -157,8 +157,6 @@ export default class TootScreen extends Component {
   }
 
   refreshHandler = () => {
-    alert(1)
-    return
     this.setState({
       loading: true,
       list: []
@@ -235,12 +233,6 @@ export default class TootScreen extends Component {
         onEndReached={this.onEndReached}
         onScroll={this.props.onScroll}
         keyExtractor={item => item.id}
-        refreshControl={
-          <RefreshControl
-            refreshing={this.state.loading}
-            onRefresh={this.refreshHandler}
-          />
-        }
         ListFooterComponent={() => <ListFooterComponent />}
         renderItem={({ item }) => (
           <TootBox

@@ -20,7 +20,6 @@ import {
 } from '../utils/api'
 import ScrollableTabView from 'react-native-scrollable-tab-view'
 import DefaultTabBar from './common/DefaultTabBar'
-// import ScrollableTabView from 'rn-collapsing-tab-bar'
 import TootScreen from './screen/TootScreen'
 import MediaScreen from './screen/MediaScreen'
 import Fab from './common/Fab'
@@ -48,13 +47,20 @@ export default class Profile extends Component {
   }
 
   componentWillMount() {
-    this.animatedEvent = Animated.event([
+    this.animatedEvent = Animated.event(
+      [
+        {
+          nativeEvent: {
+            contentOffset: { y: this.state.headerTop }
+          }
+        }
+      ],
       {
-        nativeEvent: {
-          contentOffset: { y: this.state.headerTop }
+        listener: e => {
+          mobx.updateEnabled(e.nativeEvent.contentOffset.y == 0)
         }
       }
-    ])
+    )
 
     const headerTop = this.state.headerTop
 
@@ -199,10 +205,10 @@ export default class Profile extends Component {
     })
     this.fetchData()
     if (currentTab === 0) {
-      this.ref1.getUserPinnedStatuses()
+      this.ref1.refreshHandler()
       return
     }
-    this.ref2.getUserMediaStatuses()
+    this.ref2.refreshHandler()
   }
 
   /**
@@ -276,6 +282,7 @@ export default class Profile extends Component {
       <ScrollView
         refreshControl={
           <RefreshControl
+            enabled={mobx.enabled}
             refreshing={state.loading}
             onRefresh={this.refreshHandler}
           />
