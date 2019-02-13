@@ -8,6 +8,7 @@ import {
   Clipboard,
   StatusBar
 } from 'react-native'
+import PropTypes from 'prop-types'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import {
   favourite,
@@ -30,6 +31,16 @@ import { observer } from 'mobx-react'
 
 let color = {}
 class TootContent extends Component {
+  static propTypes = {
+    sensitive: PropTypes.bool,
+    navigation: PropTypes.object.isRequired,
+    data: PropTypes.object.isRequired
+  }
+
+  static defaultProps = {
+    sensitive: false
+  }
+
   constructor(props) {
     super(props)
     this.state = {
@@ -54,6 +65,15 @@ class TootContent extends Component {
       hide: sensitive,
       isNotificationPage
     })
+  }
+
+  shouldComponentUpdate(_, { toot }) {
+    const currentToot = this.state.toot
+    if (currentToot && currentToot.id === toot.id) {
+      return false
+    }
+
+    return true
   }
 
   render() {
@@ -142,9 +162,24 @@ class TootContent extends Component {
  */
 @observer
 export default class TootBox extends Component {
+  static proptyoes = {
+    showTread: PropTypes.bool,
+    isMaster: PropTypes.bool,
+    data: PropTypes.object.isRequired,
+    deleteToot: PropTypes.func,
+    setPin: PropTypes.func,
+    muteAccount: PropTypes.func,
+    blockAccount: PropTypes.func,
+    navigation: PropTypes.object.isRequired
+  }
+
   static defaultProps = {
     showTread: true, // 是否显示'显示前文字符'
-    isMaster: false // 当前的嘟文再详情页面展示时是主要还是次要（主要区别是头像是和用户名展示在一起还是单独一列）
+    isMaster: false, // 当前的嘟文再详情页面展示时是主要还是次要（主要区别是头像是和用户名展示在一起还是单独一列）
+    deleteToot: () => {},
+    setPin: () => {},
+    muteAccount: () => {},
+    blockAccount: () => {}
   }
 
   constructor(props) {
@@ -174,6 +209,15 @@ export default class TootBox extends Component {
       isNotificationPage: Boolean(data.type),
       notification: data
     })
+  }
+
+  shouldComponentUpdate(_, { toot }) {
+    const currentToot = this.state.toot
+    if (currentToot && currentToot.id === toot.id) {
+      return false
+    }
+
+    return true
   }
 
   /**

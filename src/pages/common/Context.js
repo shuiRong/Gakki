@@ -1,12 +1,18 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import { StyleSheet, FlatList, View } from 'react-native'
+import PropTypes from 'prop-types'
 import TootBox from './TootBox'
 import Divider from './Divider'
 
 /**
  * 评论组件
  */
-export default class Context extends Component {
+export default class Context extends PureComponent {
+  static propTypes = {
+    data: PropTypes.object.isRequired,
+    navigation: PropTypes.object.isRequired
+  }
+
   constructor(props) {
     super(props)
     this.state = {
@@ -14,7 +20,7 @@ export default class Context extends Component {
     }
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.setState({
       data: this.props.data
     })

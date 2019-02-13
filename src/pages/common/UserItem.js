@@ -6,12 +6,22 @@ import { themeData } from '../../utils/color'
 import mobx from '../../utils/mobx'
 import HTMLView from './HTMLView'
 import { observer } from 'mobx-react'
+import PropTypes from 'prop-types'
 
 let color = {}
 @observer
 export default class UserList extends Component {
+  static propTypes = {
+    data: PropTypes.object.isRequired,
+    relationship: PropTypes.object,
+    deleteUser: PropTypes.func.isRequired,
+    model: PropTypes.string,
+    navigation: PropTypes.object.isRequired
+  }
+
   static defaultProps = {
-    model: '' // 当前组件使用的模式，模式不同展示的右侧图标不同
+    model: '', // 当前组件使用的模式，模式不同展示的右侧图标不同
+    relationship: {}
   }
 
   constructor(props) {
@@ -35,6 +45,15 @@ export default class UserList extends Component {
       account: data,
       relationship
     })
+  }
+
+  shouldComponentUpdate(_, { data }) {
+    const account = this.state.account
+    if (account && account.id === data.id) {
+      return false
+    }
+
+    return true
   }
 
   /**

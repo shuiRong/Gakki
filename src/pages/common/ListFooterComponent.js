@@ -6,7 +6,7 @@ export default class ListFooterComponent extends Component {
     return (
       <View
         style={{
-          height: 300,
+          height: 100,
           justifyContent: 'flex-start',
           alignItems: 'center'
         }}

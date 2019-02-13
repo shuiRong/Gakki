@@ -21,9 +21,12 @@ service.interceptors.response.use(
   response => {
     return response.data
   },
-  ({ error }) => {
-    console.log('拦截器err:', error)
-    Toast.message(error)
+  err => {
+    console.log('拦截器err:', err)
+    if (err && err.error) {
+      Toast.message(err.error)
+    }
+
     return Promise.reject(error)
   }
 )

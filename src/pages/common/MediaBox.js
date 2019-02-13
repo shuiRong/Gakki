@@ -2,7 +2,7 @@
  * 多媒体展示组件
  */
 
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import {
   StyleSheet,
   View,
@@ -16,13 +16,19 @@ import { themeData } from '../../utils/color'
 import { Overlay } from 'teaset'
 import { observer } from 'mobx-react'
 import mobx from '../../utils/mobx'
+import PropTypes from 'prop-types'
 
 let color = {}
 const width = Dimensions.get('window').width
 const height = Dimensions.get('window').height
 
 // 多媒体的黑色隐藏框
-class BlackMirror extends Component {
+class BlackMirror extends PureComponent {
+  static propTypes = {
+    showMedia: PropTypes.func.isRequired,
+    text: PropTypes.string.isRequired
+  }
+
   /**
    * @description 根据不同的主题返回不同的敏感内容遮罩颜色
    */
@@ -56,7 +62,11 @@ class BlackMirror extends Component {
   }
 }
 
-class ImageBox extends Component {
+class ImageBox extends PureComponent {
+  static propTypes = {
+    data: PropTypes.object.isRequired
+  }
+
   constructor(props) {
     super(props)
     this.state = {
@@ -68,6 +78,15 @@ class ImageBox extends Component {
     this.setState({
       image: { ...this.props.data }
     })
+  }
+
+  shouldComponentUpdate(_, { data }) {
+    const image = this.state.image
+    if (image && image.id === data.id) {
+      return false
+    }
+
+    return true
   }
 
   /**
@@ -146,7 +165,12 @@ class ImageBox extends Component {
 }
 
 @observer
-export default class MediaBox extends Component {
+export default class MediaBox extends PureComponent {
+  static propTypes = {
+    data: PropTypes.object.isRequired,
+    sensitive: PropTypes.bool.isRequired
+  }
+
   getVideoElement = data => {}
 
   render() {
