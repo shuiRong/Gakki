@@ -143,7 +143,7 @@ export default class Notifications extends Component {
             ItemSeparatorComponent={() => <Divider />}
             showsVerticalScrollIndicator={false}
             data={state.list}
-            onEndReachedThreshold={0.1}
+            onEndReachedThreshold={0.3}
             onEndReached={this.onEndReached}
             keyExtractor={item => item.id}
             refreshControl={

@@ -229,7 +229,7 @@ export default class TootScreen extends Component {
         ItemSeparatorComponent={() => <Divider />}
         showsVerticalScrollIndicator={false}
         data={state.pinnedList.concat(state.list)}
-        onEndReachedThreshold={0.1}
+        onEndReachedThreshold={0.3}
         onEndReached={this.onEndReached}
         onScroll={this.props.onScroll}
         keyExtractor={item => item.id}

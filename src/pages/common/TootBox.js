@@ -67,13 +67,17 @@ class TootContent extends Component {
     })
   }
 
-  shouldComponentUpdate(_, { toot }) {
+  shouldComponentUpdate(_, { toot, hide }) {
     const currentToot = this.state.toot
-    if (currentToot && currentToot.id === toot.id) {
-      return false
+    if (
+      !currentToot ||
+      currentToot.id !== toot.id ||
+      this.state.hide !== hide
+    ) {
+      return true
     }
 
-    return true
+    return false
   }
 
   render() {

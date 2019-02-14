@@ -273,6 +273,48 @@ export default class Profile extends Component {
     )
   }
 
+  getHeader = profile => {
+    if (profile) {
+      return null
+    }
+
+    return (
+      <View style={styles.header}>
+        <Animated.View
+          scrollEventThrottle={20}
+          style={{
+            backgroundColor: color.themeColor,
+            color: color.contrastColor,
+            ...styles.headerStyle,
+            opacity: this.opacity
+          }}
+        >
+          <View style={styles.headerView}>
+            <HTMLView
+              data={profile.display_name}
+              pTagStyle={{ color: color.contrastColor, fontWeight: 'bold' }}
+            />
+            <Text
+              numberOfLines={1}
+              style={{ fontSize: 14, color: color.contrastColor }}
+            >
+              &nbsp;@{profile.username}
+            </Text>
+          </View>
+        </Animated.View>
+        <TouchableOpacity
+          style={{ marginLeft: 20 }}
+          onPress={() => this.props.navigation.goBack()}
+        >
+          <Icon
+            style={{ fontSize: 20, color: color.subColor }}
+            name={'arrow-left'}
+          />
+        </TouchableOpacity>
+      </View>
+    )
+  }
+
   render() {
     const state = this.state
     const profile = state.profile
@@ -290,39 +332,7 @@ export default class Profile extends Component {
         contentContainerStyle={{ flex: 1 }}
         style={{ flex: 1, backgroundColor: color.themeColor }}
       >
-        <View style={styles.header}>
-          <Animated.View
-            scrollEventThrottle={20}
-            style={{
-              backgroundColor: color.themeColor,
-              color: color.contrastColor,
-              ...styles.headerStyle,
-              opacity: this.opacity
-            }}
-          >
-            <View style={styles.headerView}>
-              <HTMLView
-                data={profile.display_name}
-                pTagStyle={{ color: color.contrastColor, fontWeight: 'bold' }}
-              />
-              <Text
-                numberOfLines={1}
-                style={{ fontSize: 14, color: color.contrastColor }}
-              >
-                &nbsp;@{profile.username}
-              </Text>
-            </View>
-          </Animated.View>
-          <TouchableOpacity
-            style={{ marginLeft: 20 }}
-            onPress={() => this.props.navigation.goBack()}
-          >
-            <Icon
-              style={{ fontSize: 20, color: color.subColor }}
-              name={'arrow-left'}
-            />
-          </TouchableOpacity>
-        </View>
+        {this.getHeader(profile)}
         <ScrollableTabView
           initialPage={0}
           onChangeTab={({ i }) => {
@@ -332,6 +342,7 @@ export default class Profile extends Component {
             <DefaultTabBar
               profile={profile}
               color={color}
+              navigation={this.props.navigation}
               getRelationship={this.getRelationshipElement}
               backgroundColor={color.themeColor}
               activeTextColor={color.contrastColor}

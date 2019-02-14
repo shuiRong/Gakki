@@ -1,4 +1,4 @@
-import React, { PureComponent } from 'react'
+import React, { Component } from 'react'
 import { Dimensions, Linking } from 'react-native'
 import { themeData } from '../../utils/color'
 import mobx from '../../utils/mobx'
@@ -8,12 +8,12 @@ import PropTypes from 'prop-types'
 
 let color = {}
 @observer
-export default class HTMLView extends PureComponent {
+export default class HTMLView extends Component {
   static propTypes = {
     hide: PropTypes.bool,
     mentions: PropTypes.array,
-    data: PropTypes.object.isRequired,
-    navigation: PropTypes.object.isRequired,
+    data: PropTypes.string.isRequired,
+    navigation: PropTypes.object,
     pTagStyle: PropTypes.object,
     aTagStyle: PropTypes.object,
     containerStyle: PropTypes.object

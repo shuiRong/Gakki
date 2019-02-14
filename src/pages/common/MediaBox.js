@@ -2,7 +2,7 @@
  * 多媒体展示组件
  */
 
-import React, { PureComponent } from 'react'
+import React, { PureComponent, Component } from 'react'
 import {
   StyleSheet,
   View,
@@ -62,7 +62,7 @@ class BlackMirror extends PureComponent {
   }
 }
 
-class ImageBox extends PureComponent {
+class ImageBox extends Component {
   static propTypes = {
     data: PropTypes.object.isRequired
   }
@@ -80,13 +80,17 @@ class ImageBox extends PureComponent {
     })
   }
 
-  shouldComponentUpdate(_, { data }) {
-    const image = this.state.image
-    if (image && image.id === data.id) {
-      return false
+  shouldComponentUpdate(_, { image }) {
+    const currentImage = this.state.image
+    if (
+      !currentImage ||
+      currentImage.id !== image.id ||
+      currentImage.hide !== image.hide
+    ) {
+      return true
     }
 
-    return true
+    return false
   }
 
   /**
@@ -165,9 +169,9 @@ class ImageBox extends PureComponent {
 }
 
 @observer
-export default class MediaBox extends PureComponent {
+export default class MediaBox extends Component {
   static propTypes = {
-    data: PropTypes.object.isRequired,
+    data: PropTypes.array.isRequired,
     sensitive: PropTypes.bool.isRequired
   }
 

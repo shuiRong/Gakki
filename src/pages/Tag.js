@@ -105,7 +105,7 @@ export default class HashTag extends Component {
             ItemSeparatorComponent={() => <Divider />}
             ListFooterComponent={() => <ListFooterComponent />}
             showsVerticalScrollIndicator={false}
-            onEndReachedThreshold={0.1}
+            onEndReachedThreshold={0.3}
             onEndReached={this.onEndReached}
             data={state.list}
             keyExtractor={item => item.id}

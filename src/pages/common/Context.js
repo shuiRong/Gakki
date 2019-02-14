@@ -9,7 +9,7 @@ import Divider from './Divider'
  */
 export default class Context extends PureComponent {
   static propTypes = {
-    data: PropTypes.object.isRequired,
+    data: PropTypes.array.isRequired,
     navigation: PropTypes.object.isRequired
   }
 

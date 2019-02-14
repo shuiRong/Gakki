@@ -141,6 +141,7 @@ export default class Home extends Component {
                   backgroundColor={color.themeColor}
                   activeTextColor={color.contrastColor}
                   inactiveTextColor={color.subColor}
+                  navigation={this.props.navigation}
                   underlineStyle={{
                     backgroundColor: color.contrastColor
                   }}
