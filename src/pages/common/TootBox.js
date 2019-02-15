@@ -893,7 +893,8 @@ export default class TootBox extends Component {
                   {this.getAvatar(toot)}
                 </TouchableOpacity>
               )}
-              <View
+              <TouchableOpacity
+                onPress={() => this.goProfile(data.account.id)}
                 style={
                   data.type === 'follow'
                     ? styles.notificationTitleWidth
@@ -920,7 +921,7 @@ export default class TootBox extends Component {
                 >
                   &nbsp;@{data.account.username}
                 </Text>
-              </View>
+              </TouchableOpacity>
               {this.getRelativeTimeOrIcon(data, isNotificationPage)}
             </View>
             {this.getHTMLContent(data, isNotificationPage)}
@@ -991,10 +992,11 @@ const styles = StyleSheet.create({
     fontWeight: 'normal'
   },
   titleWidth: {
-    width: 170,
+    width: 220,
     flexDirection: 'row',
     alignItems: 'flex-end',
-    justifyContent: 'flex-start'
+    justifyContent: 'flex-start',
+    overflow: 'hidden'
   },
   notificationTitleWidth: {
     width: 170,

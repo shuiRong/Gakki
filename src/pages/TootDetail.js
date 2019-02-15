@@ -28,15 +28,29 @@ export default class TootDetail extends Component {
   }
 
   componentDidMount() {
-    const toot = this.props.navigation.getParam('data')
+    this.init(this.props.navigation.getParam('data'))
+  }
+
+  /**
+   * @description 页面初始化时需要加载的数据
+   * @param {toot}: 路由过来时附带的数据
+   */
+  init = toot => {
     // 设置为主体内容，这样详情页面展示的时候就会使用主体组件而不是评论组件
     toot['isMaster'] = true
     const id = toot.id
 
     this.setState({
-      toot: toot
+      toot: toot,
+      context: null,
+      ancestors: [],
+      descendants: []
     })
     this.getContext(id)
+  }
+
+  componentWillReceiveProps({ navigation }) {
+    this.init(navigation.getParam('data'))
   }
 
   fetchData = () => {
