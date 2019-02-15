@@ -37,7 +37,7 @@ export default class TootScreen extends Component {
    * @description 检测其他页面跳转过来的动作，比如发嘟页面跳转过来时可能带有toot数据，塞入数据流中
    * 如果带有一些参数；根据参数更新数据状态
    */
-  componentWillReceiveProps({ tab, navigation }) {
+  componentWillReceiveProps({ navigation }) {
     if (!navigation) {
       return
     }
@@ -106,7 +106,7 @@ export default class TootScreen extends Component {
           mediaList.forEach(media => {
             newList.push({
               preview_url: media.preview_url,
-              id: item.id
+              ...item
             })
           })
         })

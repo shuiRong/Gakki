@@ -9,12 +9,13 @@ import { getConversations } from '../utils/api'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import TootBox from './common/TootBox'
 import Header from './common/Header'
-import Loading from './common/Loading'
+// import Loading from './common/Loading'
 import ListFooterComponent from './common/ListFooterComponent'
 import { themeData } from '../utils/color'
 import mobx from '../utils/mobx'
 import Divider from './common/Divider'
 import { observer } from 'mobx-react'
+import { TootListSpruce } from './common/Spruce'
 
 @observer
 export default class Envelope extends Component {
@@ -107,7 +108,7 @@ export default class Envelope extends Component {
           right={'none'}
         />
         {state.loading ? (
-          <Loading />
+          <TootListSpruce />
         ) : (
           <FlatList
             ItemSeparatorComponent={() => <Divider />}

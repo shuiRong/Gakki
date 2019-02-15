@@ -47,9 +47,9 @@ export default class UserList extends Component {
     })
   }
 
-  shouldComponentUpdate(_, { data }) {
-    const account = this.state.account
-    if (account && account.id === data.id) {
+  shouldComponentUpdate(_, { account }) {
+    const currentAccount = this.state.account
+    if (currentAccount && currentAccount.id === account.id) {
       return false
     }
 

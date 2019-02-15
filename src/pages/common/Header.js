@@ -16,7 +16,7 @@ let color = {}
 @observer
 export default class HeaderItem extends Component {
   static propTypes = {
-    navigation: PropTypes.object.isRequired,
+    navigation: PropTypes.object,
     style: PropTypes.object,
     title: PropTypes.oneOfType([PropTypes.string, PropTypes.element])
       .isRequired,
