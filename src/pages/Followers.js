@@ -8,7 +8,7 @@ import { Button } from 'native-base'
 import { followers } from '../utils/api'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import Header from './common/Header'
-import Loading from './common/Loading'
+import { UserSpruce } from './common/Spruce'
 import { themeData } from '../utils/color'
 import mobx from '../utils/mobx'
 import Divider from './common/Divider'
@@ -80,7 +80,7 @@ export default class Followers extends Component {
           right={'none'}
         />
         {state.loading ? (
-          <Loading />
+          <UserSpruce />
         ) : (
           <FlatList
             ItemSeparatorComponent={() => <Divider />}
