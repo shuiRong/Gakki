@@ -217,11 +217,19 @@ export default class TootBox extends Component {
 
   shouldComponentUpdate(_, { toot }) {
     const currentToot = this.state.toot
-    if (currentToot && currentToot.id === toot.id) {
-      return false
+    if (
+      !currentToot ||
+      currentToot.id !== toot.id ||
+      currentToot.favourited !== toot.favourited ||
+      currentToot.favourites_count !== toot.favourites_count ||
+      currentToot.reblogged !== toot.reblogged ||
+      currentToot.reblogs_count !== toot.reblogs_count ||
+      currentToot.replies_count !== toot.replies_count
+    ) {
+      return true
     }
 
-    return true
+    return false
   }
 
   /**
