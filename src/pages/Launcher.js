@@ -25,7 +25,7 @@ export default class Login extends Component {
     codePush.sync({
       updateDialog: {
         appendReleaseDescription: true,
-        descriptionPrefix: '更新内容：\n',
+        descriptionPrefix: '更新内容：',
         title: '更新',
         mandatoryUpdateMessage: '',
         mandatoryContinueButtonLabel: '更新'
