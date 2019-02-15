@@ -27,9 +27,9 @@ yarn // or npm i
 新建`src/utils/config.js`，内容如下：
 
 ```javascript
-export const token = 'Bearer xxxxxxxx'
-export const deploymentKey = 'yyyyyyy'  // CodePush生成的应用发布key，非常重要，更多详情自行查文档
-export const version = '1.0' // 当前应用的版本，会用在About页面
+export const token = 'Bearer xxxxxxxx'  // 必须
+export const deploymentKey = 'yyyyyyy'  // CodePush生成的应用发布key，必须，更多详情自行查文档
+export const version = '1.0' // 当前应用的版本，会用在About页面，必须
 ```
 
 其中`xxxxxxxxx`为你申请的实例`token`，申请方法如下：
@@ -63,3 +63,25 @@ P.S. 如果遇到任何项目上的问题都可以在[issue](https://github.com/
 ![gakki](./preview/10.png)![gakki](./preview/11.png)
 ![gakki](./preview/12.png)![gakki](./preview/13.png)
 ![gakki](./preview/14.png)
+
+
+
+#### 待办事项
+
+---
+
+- [ ] 通知页面细分为：`提及`、`点赞`、`转发`、`关注`，四个Tab
+- [ ] 在本站Tab下，向右滑打开侧栏
+- [ ] 屏蔽某人后，其他嘟文中@此人的嘟文一并屏蔽（此功能可在设置页面手动启用）（by @shioko）
+- [ ] 支持DNS over HTTPS，免翻墙
+- [ ] 嘟文附近添加`翻译`按钮，翻译嘟文
+- [ ] 国际化：选择语言
+- [ ] 支持列表功能：自定义时间线
+- [ ] 支持多账号登陆
+- [ ] 增加设置：默认显示所有敏感文件/敏感内容（可手动启用/关闭）
+- [ ] 增加设置：删除前增加确认框（可手动启用/关闭）
+- [ ] 增加设置：是否启用GIF（因为有损性能）
+- [ ] 增加`删除并重新编辑`功能
+- [ ] 增加推送功能（附带提示音）
+- [ ] 增加设置：管理通知项
+- [ ] 增加更多主题
