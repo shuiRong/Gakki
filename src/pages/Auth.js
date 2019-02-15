@@ -44,9 +44,10 @@ export default class Auth extends Component {
       redirect_uri: 'https://linshuirong.cn'
     }).then(({ access_token }) => {
       mobx.updateAccessToken('Bearer ' + access_token)
-      save('access_token', 'Bearer ' + access_token)
-      this.props.navigation.navigate('Home', {
-        access_token: 'Bearer ' + access_token
+      save('access_token', 'Bearer ' + access_token).then(() => {
+        this.props.navigation.navigate('Home', {
+          access_token: 'Bearer ' + access_token
+        })
       })
     })
   }

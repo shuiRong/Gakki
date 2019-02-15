@@ -13,7 +13,7 @@ const {
   Dimensions
 } = ReactNative
 import HTMLView from './HTMLView'
-const deviceWidth = require('Dimensions').get('window').width
+const deviceWidth = Dimensions.get('window').width
 import { ProfileSpruce } from './Spruce'
 
 const Button = props => {

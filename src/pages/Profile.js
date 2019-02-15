@@ -7,7 +7,8 @@ import {
   Image,
   TouchableOpacity,
   Animated,
-  RefreshControl
+  RefreshControl,
+  Dimensions
 } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import {
@@ -31,6 +32,7 @@ import { observer } from 'mobx-react'
 /**
  * Toot详情页面
  */
+const deviceWidth = Dimensions.get('window').width
 let currentTab = 0
 let color = {}
 @observer
@@ -274,7 +276,7 @@ export default class Profile extends Component {
   }
 
   getHeader = profile => {
-    if (profile) {
+    if (!profile) {
       return null
     }
 
@@ -290,16 +292,41 @@ export default class Profile extends Component {
           }}
         >
           <View style={styles.headerView}>
-            <HTMLView
-              data={profile.display_name}
-              pTagStyle={{ color: color.contrastColor, fontWeight: 'bold' }}
-            />
-            <Text
-              numberOfLines={1}
-              style={{ fontSize: 14, color: color.contrastColor }}
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                width: deviceWidth * 0.7,
+                overflow: 'hidden'
+              }}
             >
-              &nbsp;@{profile.username}
-            </Text>
+              <HTMLView
+                data={profile.display_name}
+                pTagStyle={{
+                  color: color.contrastColor,
+                  fontWeight: 'bold',
+                  maxWidth: deviceWidth * 0.5,
+                  overflow: 'hidden'
+                }}
+              />
+              <Text
+                numberOfLines={1}
+                style={{
+                  marginLeft: 20,
+                  fontSize: 14,
+                  color: color.contrastColor,
+                  textAlignVertical: 'top'
+                }}
+              >
+                &nbsp;@{profile.username}
+              </Text>
+            </View>
+            <View style={styles.headerAvatar}>
+              <Image
+                source={{ uri: profile.avatar }}
+                style={styles.headerAvatar}
+              />
+            </View>
           </View>
         </Animated.View>
         <TouchableOpacity
@@ -408,7 +435,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     left: 0,
-    zIndex: 1
+    zIndex: 200
   },
   followButton: {
     width: 100,
@@ -440,8 +467,9 @@ const styles = StyleSheet.create({
     marginLeft: 50,
     flexDirection: 'row',
     alignItems: 'center',
-    width: '75%',
-    overflow: 'hidden'
+    width: '82%',
+    overflow: 'hidden',
+    justifyContent: 'space-between'
   },
   bgBox: {
     flex: 1,
@@ -473,5 +501,11 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     fontSize: 15,
     textAlign: 'center'
+  },
+  headerAvatar: {
+    width: 40,
+    height: 40,
+    borderRadius: 5,
+    overflow: 'hidden'
   }
 })

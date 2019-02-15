@@ -19,7 +19,7 @@ import { observer } from 'mobx-react'
 import { remove, save } from '../utils/store'
 
 let color = {}
-let deviceWidth = Dimensions.get('window').width
+const deviceWidth = Dimensions.get('window').width
 @observer
 export default class SideBar extends Component {
   constructor(props) {

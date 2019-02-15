@@ -13,6 +13,9 @@ export class TootListSpruce extends Component {
   render() {
     color = themeData[mobx.theme]
     const barStyle = mobx.theme === 'black' ? 'light-content' : 'dark-content'
+    const primaryColor = color.lightThemeColor
+    const secondaryColor =
+      mobx.theme === 'black' ? color.lightBlack : color.lightGrey
 
     return (
       <View>
@@ -25,7 +28,13 @@ export class TootListSpruce extends Component {
             marginTop: 20
           }}
         >
-          <ContentLoader width={width * 0.9} height={200} duration={1000}>
+          <ContentLoader
+            primaryColor={primaryColor}
+            secondaryColor={secondaryColor}
+            width={width * 0.9}
+            height={200}
+            duration={1000}
+          >
             <Circle cx="30" cy="30" r="30" />
             <Rect x="75" y="13" rx="4" ry="4" width="200" height="10" />
             <Rect x="75" y="37" rx="4" ry="4" width="140" height="8" />
@@ -40,7 +49,13 @@ export class TootListSpruce extends Component {
             marginTop: 20
           }}
         >
-          <ContentLoader width={width * 0.9} height={200} duration={1000}>
+          <ContentLoader
+            primaryColor={primaryColor}
+            secondaryColor={secondaryColor}
+            width={width * 0.9}
+            height={200}
+            duration={1000}
+          >
             <Circle cx="30" cy="30" r="30" />
             <Rect x="75" y="13" rx="4" ry="4" width="200" height="10" />
             <Rect x="75" y="37" rx="4" ry="4" width="140" height="8" />
@@ -55,7 +70,13 @@ export class TootListSpruce extends Component {
             marginTop: 20
           }}
         >
-          <ContentLoader width={width * 0.9} height={200} duration={1000}>
+          <ContentLoader
+            primaryColor={primaryColor}
+            secondaryColor={secondaryColor}
+            width={width * 0.9}
+            height={200}
+            duration={1000}
+          >
             <Circle cx="30" cy="30" r="30" />
             <Rect x="75" y="13" rx="4" ry="4" width="200" height="10" />
             <Rect x="75" y="37" rx="4" ry="4" width="140" height="8" />
@@ -72,13 +93,21 @@ export class CodeStyleSpruce extends Component {
   render() {
     color = themeData[mobx.theme]
     const barStyle = mobx.theme === 'black' ? 'light-content' : 'dark-content'
+    const primaryColor = color.lightThemeColor
+    const secondaryColor =
+      mobx.theme === 'black' ? color.lightBlack : color.lightGrey
 
     return (
       <View
         style={{ marginTop: 20, alignItems: 'center', ...this.props.style }}
       >
         <StatusBar backgroundColor={color.themeColor} barStyle={barStyle} />
-        <ContentLoader height={80} duration={1000}>
+        <ContentLoader
+          primaryColor={primaryColor}
+          secondaryColor={secondaryColor}
+          height={80}
+          duration={1000}
+        >
           <Rect x="0" y="0" rx="3" ry="3" width="70" height="10" />
           <Rect x="80" y="0" rx="3" ry="3" width="100" height="10" />
           <Rect x="190" y="0" rx="3" ry="3" width="10" height="10" />
@@ -99,11 +128,20 @@ export class ProfileSpruce extends Component {
   render() {
     color = themeData[mobx.theme]
     const barStyle = mobx.theme === 'black' ? 'light-content' : 'dark-content'
+    const primaryColor = color.lightThemeColor
+    const secondaryColor =
+      mobx.theme === 'black' ? color.lightBlack : color.lightGrey
 
     return (
       <View style={{ height: 330 }}>
         <StatusBar backgroundColor={color.themeColor} barStyle={barStyle} />
-        <ContentLoader width={width} height={500} duration={1000}>
+        <ContentLoader
+          primaryColor={primaryColor}
+          secondaryColor={secondaryColor}
+          width={width}
+          height={500}
+          duration={1000}
+        >
           <Rect x="0" y="0" rx="5" ry="5" width={width} height="155" />
           <Rect x="15" y="115" rx="3" ry="3" width="80" height="80" />
           <Rect x={width * 0.7} y="170" rx="3" ry="3" width="100" height="35" />
@@ -129,9 +167,18 @@ export class UserSpruce extends Component {
   render() {
     color = themeData[mobx.theme]
     const barStyle = mobx.theme === 'black' ? 'light-content' : 'dark-content'
+    const primaryColor = color.lightThemeColor
+    const secondaryColor =
+      mobx.theme === 'black' ? color.lightBlack : color.lightGrey
 
     const item = (
-      <ContentLoader width={width} height={60} duration={1000}>
+      <ContentLoader
+        primaryColor={primaryColor}
+        secondaryColor={secondaryColor}
+        width={width}
+        height={60}
+        duration={1000}
+      >
         <Rect x="15" y="15" rx="3" ry="3" width="40" height="40" />
         <Rect x="70" y="22" rx="3" ry="3" width="100" height="10" />
         <Rect x="70" y="40" rx="3" ry="3" width="200" height="10" />

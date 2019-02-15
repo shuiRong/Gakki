@@ -9,7 +9,7 @@ import {
   Image,
   FlatList,
   TouchableOpacity,
-  RefreshControl
+  Dimensions
 } from 'react-native'
 import { getUserStatuses } from '../../utils/api'
 import { CodeStyleSpruce } from '../common/Spruce'
@@ -19,7 +19,7 @@ import { observer } from 'mobx-react'
 import { themeData } from '../../utils/color'
 
 let color = {}
-let deviceWidth = require('Dimensions').get('window').width
+const deviceWidth = Dimensions.get('window').width
 @observer
 export default class TootScreen extends Component {
   constructor(props) {

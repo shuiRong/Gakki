@@ -22,39 +22,38 @@ export default class Login extends Component {
         mobx.updateTheme(theme)
       }
     })
-    codePush.sync({
-      updateDialog: {
-        appendReleaseDescription: true,
-        descriptionPrefix: '更新内容：',
-        title: '更新',
-        mandatoryUpdateMessage: '',
-        mandatoryContinueButtonLabel: '更新'
-      },
-      mandatoryInstallMode: codePush.InstallMode.IMMEDIATE,
-      deploymentKey: deploymentKey
-    })
-    // save('access_token', token).then(() => {
-    //   mobx.updateAccessToken(token)
-    //   this.props.navigation.navigate('Home', {
-    //     access_token: token
-    //   })
-    // })
-    // return
 
-    fetch('access_token').then(res => {
-      if (!res) {
-        this.props.navigation.navigate('Login')
-        return
-      }
-      verify_credentials(res).then(({ name }) => {
-        if (name) {
-          mobx.updateAccessToken(res)
-          this.props.navigation.navigate('Home', {
-            access_token: res
-          })
-        }
+    if (__DEV__) {
+      save('access_token', token).then(() => {
+        mobx.updateAccessToken(token)
+        this.props.navigation.navigate('Home')
       })
-    })
+    } else {
+      codePush.sync({
+        updateDialog: {
+          appendReleaseDescription: true,
+          descriptionPrefix: '更新内容：',
+          title: '更新',
+          mandatoryUpdateMessage: '',
+          mandatoryContinueButtonLabel: '更新'
+        },
+        mandatoryInstallMode: codePush.InstallMode.IMMEDIATE,
+        deploymentKey: deploymentKey
+      })
+
+      fetch('access_token').then(res => {
+        if (!res) {
+          this.props.navigation.navigate('Login')
+          return
+        }
+        verify_credentials(res).then(({ name }) => {
+          if (name) {
+            mobx.updateAccessToken(res)
+            this.props.navigation.navigate('Home')
+          }
+        })
+      })
+    }
   }
 
   render() {

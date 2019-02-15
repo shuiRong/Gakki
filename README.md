@@ -4,6 +4,8 @@
 >
 > 这是 [开发测试账号](https://cmx.im/web/accounts/81232) ，我会在上面更新最新的项目开发动态
 
+
+
 #### 本地运行：
 
 ---
@@ -25,10 +27,9 @@ yarn // or npm i
 新建`src/utils/config.js`，内容如下：
 
 ```javascript
-export default {
-  token: 'Bearer xxxxxxxxx'
-}
-
+export const token = 'Bearer xxxxxxxx'
+export const deploymentKey = 'yyyyyyy'  // CodePush生成的应用发布key，非常重要，更多详情自行查文档
+export const version = '1.0' // 当前应用的版本，会用在About页面
 ```
 
 其中`xxxxxxxxx`为你申请的实例`token`，申请方法如下：
@@ -47,11 +48,11 @@ export default {
 react-native run-android
 ```
 
-P.S. 如果遇到任何项目上的问题都可以在[issue](https://github.com/shuiRong/Gakki/issues)区提出，或者来Mastodon找[我](https://cmx.im/web/accounts/81232)
+P.S. 如果遇到任何项目上的问题都可以在[issue](https://github.com/shuiRong/Gakki/issues)区提出，或者来Mastodon[找我](https://cmx.im/web/accounts/81232)
 
 
 
-#### 预览
+#### 效果预览
 
 ---
 
@@ -60,4 +61,5 @@ P.S. 如果遇到任何项目上的问题都可以在[issue](https://github.com/
 ![gakki](./preview/5.png)![gakki](./preview/6.png)
 ![gakki](./preview/7.png)![gakki](./preview/8.png)
 ![gakki](./preview/10.png)![gakki](./preview/11.png)
-![gakki](./preview/12.png)
+![gakki](./preview/12.png)![gakki](./preview/13.png)
+![gakki](./preview/14.png)

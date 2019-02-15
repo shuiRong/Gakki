@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Animated } from 'react-native'
+import { View, Animated, Dimensions } from 'react-native'
 import HeaderItem from './common/Header'
 import HomeScreen from './screen/HomeScreen'
 import LocalScreen from './screen/LocalScreen'
@@ -18,7 +18,7 @@ import { observer } from 'mobx-react'
  * 主页
  */
 let color = {}
-let deviceHeight = require('Dimensions').get('window').height
+const deviceHeight = Dimensions.get('window').height
 
 @observer
 export default class Home extends Component {
