@@ -126,7 +126,11 @@ export default class Home extends Component {
       <View style={{ flex: 1, backgroundColor: color.themeColor }}>
         <View style={{ flex: 1 }}>
           <Animated.View style={{ top: this.top }}>
-            <HeaderItem title={'Gakki'} navigation={this.props.navigation} />
+            <HeaderItem
+              shadow={false}
+              title={'Gakki'}
+              navigation={this.props.navigation}
+            />
           </Animated.View>
           <Animated.View
             style={{

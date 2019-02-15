@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { StyleSheet, View, StatusBar } from 'react-native'
+import PropTypes from 'prop-types'
 import { Header, Left, Body, Right, Button, Title } from 'native-base'
 import SideBar from '../SideBar'
 import Icon from 'react-native-vector-icons/FontAwesome5'
@@ -14,6 +15,21 @@ import { Drawer } from 'teaset'
 let color = {}
 @observer
 export default class HeaderItem extends Component {
+  static propTypes = {
+    navigation: PropTypes.object.isRequired,
+    style: PropTypes.object,
+    title: PropTypes.oneOfType([PropTypes.string, PropTypes.element])
+      .isRequired,
+    left: PropTypes.element,
+    right: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
+    shadow: PropTypes.bool // 是否展示组件下方阴影
+  }
+
+  static defaultProps = {
+    style: {},
+    shadow: true
+  }
+
   closeDrawer = () => {
     this.drawer.close()
   }
@@ -64,7 +80,15 @@ export default class HeaderItem extends Component {
     const barStyle = mobx.theme === 'black' ? 'light-content' : 'dark-content'
 
     return (
-      <Header style={[props.style, { backgroundColor: color.themeColor }]}>
+      <Header
+        style={[
+          props.style,
+          {
+            backgroundColor: color.themeColor,
+            marginBottom: this.props.shadow ? 2 : 0
+          }
+        ]}
+      >
         <StatusBar backgroundColor={color.themeColor} barStyle={barStyle} />
         <Left>
           {props.left || (

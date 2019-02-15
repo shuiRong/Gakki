@@ -73,7 +73,6 @@ export default class Notifications extends Component {
         style={[styles.container, { backgroundColor: color.themeColor }]}
       >
         <Header
-          style={{ marginBottom: 2 }}
           left={
             <Button transparent>
               <Icon
