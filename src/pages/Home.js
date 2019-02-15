@@ -55,9 +55,11 @@ export default class Home extends Component {
       this.detectEmojiObj()
     })
 
-    getCurrentUser().then(res => {
-      mobx.updateAccount(res)
-    })
+    if (!mobx.account || !mobx.account.id) {
+      getCurrentUser().then(res => {
+        mobx.updateAccount(res)
+      })
+    }
   }
 
   componentWillUnmount() {

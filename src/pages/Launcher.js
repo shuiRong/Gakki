@@ -12,7 +12,6 @@ import { fetch, save } from '../utils/store'
 import Spinner from 'react-native-spinkit'
 import codePush from 'react-native-code-push'
 import { deploymentKey, token } from '../utils/config'
-import { ProfileSpruce } from './common/Spruce'
 
 let color = {}
 @observer
@@ -23,24 +22,24 @@ export default class Login extends Component {
         mobx.updateTheme(theme)
       }
     })
-    // codePush.sync({
-    //   updateDialog: {
-    //     appendReleaseDescription: true,
-    //     descriptionPrefix: '内容：\n',
-    //     title: '更新',
-    //     mandatoryUpdateMessage: '',
-    //     mandatoryContinueButtonLabel: '更新'
-    //   },
-    //   mandatoryInstallMode: codePush.InstallMode.IMMEDIATE,
-    //   deploymentKey: deploymentKey
-    // })
-    save('access_token', token).then(() => {
-      mobx.updateAccessToken(token)
-      this.props.navigation.navigate('Home', {
-        access_token: token
-      })
+    codePush.sync({
+      updateDialog: {
+        appendReleaseDescription: true,
+        descriptionPrefix: '更新内容：\n',
+        title: '更新',
+        mandatoryUpdateMessage: '',
+        mandatoryContinueButtonLabel: '更新'
+      },
+      mandatoryInstallMode: codePush.InstallMode.IMMEDIATE,
+      deploymentKey: deploymentKey
     })
-    return
+    // save('access_token', token).then(() => {
+    //   mobx.updateAccessToken(token)
+    //   this.props.navigation.navigate('Home', {
+    //     access_token: token
+    //   })
+    // })
+    // return
 
     fetch('access_token').then(res => {
       if (!res) {
@@ -49,6 +48,7 @@ export default class Login extends Component {
       }
       verify_credentials(res).then(({ name }) => {
         if (name) {
+          mobx.updateAccessToken(res)
           this.props.navigation.navigate('Home', {
             access_token: res
           })

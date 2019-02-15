@@ -8,6 +8,7 @@ import Header from './common/Header'
 import { Button } from 'native-base'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { themeData } from '../utils/color'
+import { version } from '../utils/config'
 import mobx from '../utils/mobx'
 import { observer } from 'mobx-react'
 
@@ -52,7 +53,7 @@ export default class About extends Component {
               margin: 20
             }}
           >
-            Gakki 1.0
+            Gakki {version}
           </Text>
           <Text
             style={{

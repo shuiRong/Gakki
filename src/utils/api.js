@@ -25,12 +25,12 @@ export const getToken = data => {
   })
 }
 
-export const getHomeTimelines = (url, params, accessToken) => {
+export const getHomeTimelines = (url, params) => {
   return request({
     url: `/api/v1/timelines/${url}`,
     method: 'get',
     headers: {
-      Authorization: accessToken || mobx.access_token
+      Authorization: mobx.access_token
     },
     params
   })

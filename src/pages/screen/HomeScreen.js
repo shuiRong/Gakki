@@ -8,7 +8,8 @@ import { getHomeTimelines } from '../../utils/api'
 import TootBox from '../common/TootBox'
 import ListFooterComponent from '../common/ListFooterComponent'
 import Divider from '../common/Divider'
-import { TootListSpruce, CodeStyleSpruce } from '../common/Spruce'
+import { TootListSpruce } from '../common/Spruce'
+import mobx from '../../utils/mobx'
 
 export default class HomeScreen extends Component {
   constructor(props) {
@@ -103,15 +104,10 @@ export default class HomeScreen extends Component {
    * @param {params}: 分页参数
    */
   fetchTimelines = (cb, params) => {
-    const accessToken = this.props.navigation.getParam('access_token')
-    getHomeTimelines(
-      this.state.url,
-      {
-        ...this.state.baseParams,
-        ...params
-      },
-      accessToken
-    )
+    getHomeTimelines(this.state.url, {
+      ...this.state.baseParams,
+      ...params
+    })
       .then(res => {
         // 同时将数据更新到state数据中，刷新视图
         this.setState({
