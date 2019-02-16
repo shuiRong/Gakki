@@ -51,6 +51,7 @@ react-native run-android
 P.S. 如果遇到任何项目上的问题都可以在[issue](https://github.com/shuiRong/Gakki/issues)区提出，或者来Mastodon[找我](https://cmx.im/web/accounts/81232)
 
 
+**[APK下载](https://github.com/shuiRong/Gakki/releases/download/v1.0/Gakki.apk)**
 
 #### 效果预览
 
