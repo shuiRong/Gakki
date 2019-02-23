@@ -6,6 +6,11 @@
 
 
 
+**Gakki开发系列文章/教程正在紧张的书写中...（将提供同时提供英文版的哦～）**
+**A series of tutorials are being prepared and will be available in English.**
+
+
+
 #### 本地运行：
 
 ---

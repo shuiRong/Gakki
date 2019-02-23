@@ -6,12 +6,8 @@ export const themeData = {
     lightContrastColor: '#464646',
     contrastColor: '#2F2F2F', // 对比色
     lightGrey: '#dddddd',
-    grey: '#999999',
     white: '#ffffff',
-    pColor: '#2b2e3d',
     lightBlack: '#555555',
-    moreBlack: '#2F2F2F',
-    black: '#000000',
     gold: '#F3AB27',
     lightgreen: '#1FC966',
     lightBlue: '#3F51B5'
@@ -23,12 +19,8 @@ export const themeData = {
     lightContrastColor: '#E8E8E8',
     contrastColor: '#FFFFFF', // 对比色
     lightGrey: '#dddddd',
-    grey: '#999999',
     white: '#ffffff',
-    pColor: '#2b2e3d',
     lightBlack: '#555555',
-    moreBlack: '#2F2F2F',
-    black: '#000000',
     gold: '#F3AB27',
     lightgreen: '#1FC966',
     lightBlue: '#3F51B5'
