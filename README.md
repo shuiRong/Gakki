@@ -7,8 +7,8 @@
 
 
 **Gakki开发系列文章/教程正在紧张的书写中...（将提供同时提供英文版的哦～）**
-**A series of tutorials are being prepared and will be available in English.**
 
+**A series of tutorials are being prepared and will be available in English.**
 
 
 #### 本地运行：
@@ -56,6 +56,7 @@ react-native run-android
 P.S. 如果遇到任何项目上的问题都可以在[issue](https://github.com/shuiRong/Gakki/issues)区提出，或者来Mastodon[找我](https://cmx.im/web/accounts/81232)
 
 
+**[APK下载](https://github.com/shuiRong/Gakki/releases/download/v1.0/Gakki.apk)**
 
 #### 效果预览
 
@@ -91,3 +92,4 @@ P.S. 如果遇到任何项目上的问题都可以在[issue](https://github.com/
 - [ ] 增加推送功能（附带提示音）
 - [ ] 增加设置：管理通知项
 - [ ] 增加更多主题
+- [ ] 支持视频上传和播放
