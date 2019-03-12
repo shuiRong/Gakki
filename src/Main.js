@@ -1,4 +1,5 @@
-import { createStackNavigator } from 'react-navigation'
+import { createStackNavigator, createDrawerNavigator } from 'react-navigation'
+import { Dimensions } from 'react-native'
 import Home from './pages/Home'
 import TootDetail from './pages/TootDetail'
 import Profile from './pages/Profile'
@@ -16,10 +17,25 @@ import OpenSource from './pages/OpenSource'
 import Search from './pages/Search'
 import SendToot from './pages/SendToot'
 import Test from './pages/Test'
+import SideBar from './pages/SideBar'
+
+const deviceWidth = Dimensions.get('window').width
+
+const Drawer = createDrawerNavigator(
+  { Home: Home },
+  {
+    initialRouteName: 'Home',
+    drawerWidth: deviceWidth * 0.78,
+    contentOptions: {
+      activeTintColor: '#e91e63'
+    },
+    contentComponent: SideBar
+  }
+)
 
 export default createStackNavigator(
   {
-    Home,
+    Drawer: Drawer,
     TootDetail,
     Profile,
     Notifications,
@@ -38,7 +54,7 @@ export default createStackNavigator(
     Test
   },
   {
-    initialRouteName: 'Home',
+    initialRouteName: 'Drawer',
     headerMode: 'none'
   }
 )

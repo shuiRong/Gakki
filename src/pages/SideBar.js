@@ -6,8 +6,7 @@ import {
   Image,
   StyleSheet,
   ImageBackground,
-  TouchableOpacity,
-  Dimensions
+  TouchableOpacity
 } from 'react-native'
 import { getCurrentUser } from '../utils/api'
 import mobx from '../utils/mobx'
@@ -19,7 +18,6 @@ import { observer } from 'mobx-react'
 import { remove, save } from '../utils/store'
 
 let color = {}
-const deviceWidth = Dimensions.get('window').width
 @observer
 export default class SideBar extends Component {
   constructor(props) {
@@ -324,7 +322,6 @@ export default class SideBar extends Component {
 
 const styles = StyleSheet.create({
   main: {
-    width: deviceWidth * 0.78,
     flex: 1
   },
   bg: {
