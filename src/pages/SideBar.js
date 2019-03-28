@@ -85,7 +85,6 @@ export default class SideBar extends Component {
   // 删除存储的access_token等信息，进入到登录页面
   logout = () => {
     remove('access_token').then(() => {
-      this.props.closeDrawer()
       this.props.navigation.navigate('Login')
     })
   }
@@ -134,7 +133,6 @@ export default class SideBar extends Component {
               }}
               activeOpacity={0.5}
               onPress={() => {
-                this.props.closeDrawer()
                 this.props.navigation.navigate('Profile', {
                   id: state.id
                 })
@@ -164,7 +162,6 @@ export default class SideBar extends Component {
             <TouchableOpacity
               activeOpacity={0.5}
               onPress={() => {
-                this.props.closeDrawer()
                 this.props.navigation.navigate('Envelope')
               }}
             >
@@ -183,7 +180,6 @@ export default class SideBar extends Component {
             <TouchableOpacity
               activeOpacity={0.5}
               onPress={() => {
-                this.props.closeDrawer()
                 this.props.navigation.navigate('BlockedUsers')
               }}
             >
@@ -202,7 +198,6 @@ export default class SideBar extends Component {
             <TouchableOpacity
               activeOpacity={0.5}
               onPress={() => {
-                this.props.closeDrawer()
                 this.props.navigation.navigate('MutedUsers')
               }}
             >
@@ -221,7 +216,6 @@ export default class SideBar extends Component {
             <TouchableOpacity
               activeOpacity={0.5}
               onPress={() => {
-                this.props.closeDrawer()
                 this.props.navigation.navigate('FollowRequestList')
               }}
             >
@@ -271,7 +265,6 @@ export default class SideBar extends Component {
             <TouchableOpacity
               activeOpacity={0.5}
               onPress={() => {
-                this.props.closeDrawer()
                 this.props.navigation.navigate('Profile', {
                   id: '81232'
                 })
@@ -292,7 +285,6 @@ export default class SideBar extends Component {
             <TouchableOpacity
               activeOpacity={0.5}
               onPress={() => {
-                this.props.closeDrawer()
                 this.props.navigation.navigate('About')
               }}
             >

@@ -128,11 +128,7 @@ export default class Home extends Component {
       <View style={{ flex: 1, backgroundColor: color.themeColor }}>
         <View style={{ flex: 1 }}>
           <Animated.View style={{ top: this.top }}>
-            <HeaderItem
-              shadow={false}
-              title={'Gakki'}
-              navigation={this.props.navigation}
-            />
+            <HeaderItem title={'Gakki'} navigation={this.props.navigation} />
           </Animated.View>
           <Animated.View
             style={{
@@ -146,12 +142,13 @@ export default class Home extends Component {
                 <DefaultTabBar
                   backgroundColor={color.themeColor}
                   activeTextColor={color.contrastColor}
+                  activeTabStyle={{ fontSize: 20 }}
                   inactiveTextColor={color.subColor}
                   navigation={this.props.navigation}
                   underlineStyle={{
-                    backgroundColor: color.contrastColor
+                    backgroundColor: 'transparent'
                   }}
-                  style={{ borderColor: color.subColor }}
+                  style={{ borderColor: 'transparent' }}
                 />
               )}
             >

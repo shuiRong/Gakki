@@ -373,8 +373,9 @@ export default class Profile extends Component {
               getRelationship={this.getRelationshipElement}
               backgroundColor={color.themeColor}
               activeTextColor={color.contrastColor}
+              activeTabStyle={{ fontSize: 20 }}
               inactiveTextColor={color.subColor}
-              underlineStyle={{ backgroundColor: color.contrastColor }}
+              underlineStyle={{ backgroundColor: 'transparent' }}
               style={{
                 position: 'absolute',
                 top: this.distanceFromTop,
@@ -382,7 +383,7 @@ export default class Profile extends Component {
                 height: state.tabBarHeight,
                 zIndex: 100
               }}
-              tabBarStyle={{ borderColor: color.subColor }}
+              tabBarStyle={{ borderColor: 'transparent' }}
               onLayout={e => {
                 this.setState({
                   tabBarHeight: e.nativeEvent.layout.height

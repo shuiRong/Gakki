@@ -56,3 +56,5 @@ buck-out/
 *.jsbundle
 
 src/utils/config.js
+
+android/gradle.properties

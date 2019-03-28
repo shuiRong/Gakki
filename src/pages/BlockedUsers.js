@@ -11,9 +11,10 @@ import Header from './common/Header'
 import { themeData } from '../utils/color'
 import mobx from '../utils/mobx'
 import Divider from './common/Divider'
+import Empty from './common/Empty'
 import UserItem from './common/UserItem'
 import { observer } from 'mobx-react'
-import { UserSpruce } from './common/Spruce';
+import { UserSpruce } from './common/Spruce'
 
 let color = {}
 @observer
@@ -113,7 +114,8 @@ export default class MutedUsers extends Component {
         ) : (
           <FlatList
             ItemSeparatorComponent={() => <Divider />}
-            ListFooterComponent={<Divider />}
+            ListFooterComponent={state.list.length ? <Divider /> : <View />}
+            ListEmptyComponent={<Empty />}
             showsVerticalScrollIndicator={false}
             data={state.list}
             onScroll={this.props.onScroll}

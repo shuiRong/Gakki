@@ -19,13 +19,11 @@ export default class HeaderItem extends Component {
     title: PropTypes.oneOfType([PropTypes.string, PropTypes.element])
       .isRequired,
     left: PropTypes.element,
-    right: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
-    shadow: PropTypes.bool // 是否展示组件下方阴影
+    right: PropTypes.oneOfType([PropTypes.string, PropTypes.element])
   }
 
   static defaultProps = {
-    style: {},
-    shadow: true
+    style: {}
   }
 
   /**
@@ -67,11 +65,11 @@ export default class HeaderItem extends Component {
 
     return (
       <Header
+        noShadow={true}
         style={[
           props.style,
           {
-            backgroundColor: color.themeColor,
-            marginBottom: this.props.shadow ? 2 : 0
+            backgroundColor: color.themeColor
           }
         ]}
       >

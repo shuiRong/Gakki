@@ -12,6 +12,7 @@ import { UserSpruce } from './common/Spruce'
 import { themeData } from '../utils/color'
 import mobx from '../utils/mobx'
 import Divider from './common/Divider'
+import Empty from './common/Empty'
 import UserItem from './common/UserItem'
 import { observer } from 'mobx-react'
 
@@ -84,7 +85,8 @@ export default class Followers extends Component {
         ) : (
           <FlatList
             ItemSeparatorComponent={() => <Divider />}
-            ListFooterComponent={<Divider />}
+            ListFooterComponent={state.list.length ? <Divider /> : <View />}
+            ListEmptyComponent={<Empty />}
             showsVerticalScrollIndicator={false}
             data={state.list}
             keyExtractor={item => item.id}
