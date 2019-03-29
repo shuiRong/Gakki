@@ -12,21 +12,34 @@ import mobx from '../../utils/mobx'
 import Divider from '../common/Divider'
 import { TootListSpruce } from '../common/Spruce'
 import { observer } from 'mobx-react'
+import PropTypes from 'prop-types'
 
-let color = {}
 @observer
-export default class TootScreen extends Component {
+export default class ProfileTab extends Component {
+  static propTypes = {
+    params: PropTypes.object,
+    navigation: PropTypes.object.isRequired,
+    onScroll: PropTypes.func.isRequired,
+    spruce: PropTypes.element,
+    style: PropTypes.object
+  }
+
+  static defaultProps = {
+    params: {},
+    style: {},
+    spruce: <TootListSpruce />
+  }
+
   constructor(props) {
     super(props)
     this.state = {
-      pinnedList: [], // 置顶嘟文列表
       list: [],
       loading: true,
       url: 'home'
     }
   }
   componentDidMount() {
-    this.getUserPinnedStatuses()
+    this.getUserStatuses()
   }
 
   /**
@@ -83,70 +96,22 @@ export default class TootScreen extends Component {
   /**
    * @description 获取用户发送的toot
    * @param {cb}: 成功后的回调函数
-   * @param {params}: 参数
    */
   getUserStatuses = (cb, params) => {
     const id = this.props.navigation.getParam('id')
     getUserStatuses(id, {
       exclude_replies: false,
-      pinned: false,
-      ...params
+      pinned: true,
+      ...params,
+      ...this.props.params
     })
       .then(res => {
-        // 手动移除已经被置顶的嘟文
-        // P.S. mastodon2.7.0的接口返回的status不存在pinned属性，疑似bug
-        // res = res.filter(toot => !toot.pinned)
-        res = res.filter(item => !this.isExist(this.state.pinnedList, item))
-
         // 同时将数据更新到state数据中，刷新视图
         this.setState({
           list: this.state.list.concat(res),
           loading: false
         })
         if (cb) cb()
-      })
-      .catch(() => {
-        this.setState({
-          loading: false
-        })
-      })
-  }
-
-  /**
-   * @description 判断数据中是否已经包含对应数据
-   * @param {data}: 数组
-   * @param {item}: 特定数据
-   */
-  isExist = (data, item) => {
-    let result = false
-    let done = false
-    data.forEach(toot => {
-      if (done) return
-      if (toot.id === item.id) {
-        result = true
-        done = true
-      }
-    })
-    return result
-  }
-
-  getUserPinnedStatuses = () => {
-    this.setState({
-      loading: true
-    })
-    getUserStatuses(this.props.navigation.getParam('id'), {
-      pinned: true
-    })
-      .then(res => {
-        this.setState(
-          {
-            pinnedList: res,
-            loading: false
-          },
-          () => {
-            this.getUserStatuses()
-          }
-        )
       })
       .catch(() => {
         this.setState({
@@ -227,7 +192,7 @@ export default class TootScreen extends Component {
         contentContainerStyle={{ paddingTop: 500, ...this.props.style }}
         ItemSeparatorComponent={() => <Divider />}
         showsVerticalScrollIndicator={false}
-        data={state.pinnedList.concat(state.list)}
+        data={state.list}
         onEndReachedThreshold={0.3}
         onEndReached={this.onEndReached}
         onScroll={this.props.onScroll}
