@@ -22,7 +22,7 @@ import SideBar from './pages/SideBar'
 const deviceWidth = Dimensions.get('window').width
 
 const Drawer = createDrawerNavigator(
-  { Home: Home },
+  { Home, Notifications },
   {
     initialRouteName: 'Home',
     drawerWidth: deviceWidth * 0.78,
@@ -35,10 +35,9 @@ const Drawer = createDrawerNavigator(
 
 export default createStackNavigator(
   {
-    Drawer: Drawer,
+    Drawer,
     TootDetail,
     Profile,
-    Notifications,
     Envelope,
     BlockedUsers,
     MutedUsers,
