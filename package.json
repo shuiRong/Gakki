@@ -24,7 +24,7 @@
     "react-native-image-picker": "^0.27.2",
     "react-native-material-ripple": "^0.8.0",
     "react-native-render-html": "^3.10.0",
-    "react-native-scrollable-tab-view": "^0.10.0",
+    "react-native-scrollable-tab-view": "git+ssh://git@github.com:shuiRong/react-native-scrollable-tab-view.git#master",
     "react-native-spinkit": "^1.1.1",
     "react-native-svg": "^9.2.3",
     "react-native-textinput-effects": "^0.4.2",

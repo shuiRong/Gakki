@@ -79,7 +79,7 @@ export default class HeaderItem extends Component {
             <Button
               transparent
               onPress={() => {
-                this.props.navigation.toggleDrawer()
+                props.navigation.toggleDrawer()
               }}
             >
               <Icon

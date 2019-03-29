@@ -62,10 +62,6 @@ export default class Home extends Component {
     }
   }
 
-  componentWillUnmount() {
-    this._navListener.remove()
-  }
-
   /**
    * @description 检测emoji对象是否存在
    */
@@ -154,19 +150,16 @@ export default class Home extends Component {
             >
               <LocalScreen
                 tabLabel={'本站'}
-                emojiObj={state.emojiObj}
                 onScroll={this.animatedEvent}
                 navigation={this.props.navigation}
               />
               <HomeScreen
                 tabLabel={'主页'}
-                emojiObj={state.emojiObj}
                 onScroll={this.animatedEvent}
                 navigation={this.props.navigation}
               />
               <PublicScreen
                 tabLabel={'跨站'}
-                emojiObj={state.emojiObj}
                 onScroll={this.animatedEvent}
                 navigation={this.props.navigation}
               />

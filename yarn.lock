@@ -7057,10 +7057,9 @@ react-native-screens@^1.0.0-alpha.11:
   resolved "http://registry.npm.taobao.org/react-native-screens/download/react-native-screens-1.0.0-alpha.19.tgz#ecf3c9023e169b7013266d40b9c5599f37667f6d"
   integrity sha1-7PPJAj4Wm3ATJm1AucVZnzdmf20=
 
-react-native-scrollable-tab-view@^0.10.0:
+"react-native-scrollable-tab-view@git+ssh://git@github.com:shuiRong/react-native-scrollable-tab-view.git#master":
   version "0.10.0"
-  resolved "http://registry.npm.taobao.org/react-native-scrollable-tab-view/download/react-native-scrollable-tab-view-0.10.0.tgz#8ce7908254685ee37d35df7d849676eaa1e81132"
-  integrity sha1-jOeQglRoXuN9Nd99hJZ26qHoETI=
+  resolved "git+ssh://git@github.com:shuiRong/react-native-scrollable-tab-view.git#4c5f2954310beca75dd0fa212c99d9acb64b8c5d"
   dependencies:
     create-react-class "^15.6.2"
     prop-types "^15.6.0"

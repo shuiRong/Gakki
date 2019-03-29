@@ -1,81 +1,90 @@
-/**
- * 通知页面
- */
-
 import React, { Component } from 'react'
-import { View, StyleSheet, FlatList, RefreshControl } from 'react-native'
+import { View, Animated, StyleSheet, Dimensions } from 'react-native'
 import { Button } from 'native-base'
-import { getNotifications, clearNotifications } from '../utils/api'
 import Icon from 'react-native-vector-icons/FontAwesome5'
-import TootBox from './common/TootBox'
-import Header from './common/Header'
-import { TootListSpruce } from './common/Spruce'
-import ListFooterComponent from './common/ListFooterComponent'
+import HeaderItem from './common/Header'
+import Tab from './notificationTab/index.js'
+import Fab from './common/Fab'
+import ScrollableTabView, {
+  DefaultTabBar
+} from 'react-native-scrollable-tab-view'
+import {
+  getCustomEmojis,
+  getCurrentUser,
+  clearNotifications
+} from '../utils/api'
 import { themeData } from '../utils/color'
+import { UserSpruce } from './common/Spruce'
+import { save, fetch } from '../utils/store'
 import mobx from '../utils/mobx'
-import Divider from './common/Divider'
-import { Confirm } from './common/Notice'
 import { observer } from 'mobx-react'
+import { Confirm } from './common/Notice'
 
 let color = {}
+const deviceHeight = Dimensions.get('window').height
+
 @observer
-export default class Notifications extends Component {
+export default class Home extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      list: [],
-      loading: true
+      headerTop: new Animated.Value(0),
+      emojiObj: {}
     }
   }
+  componentWillMount() {
+    this.top = this.state.headerTop.interpolate({
+      inputRange: [0, 270, 271, 280],
+      outputRange: [0, -50, -50, -50]
+    })
+    this.animatedEvent = Animated.event([
+      {
+        nativeEvent: {
+          contentOffset: { y: this.state.headerTop }
+        }
+      }
+    ])
+  }
+
   componentDidMount() {
-    this.getNotifications()
-  }
-
-  deleteToot = id => {
-    this.setState({
-      list: this.state.list.filter(toot => toot.id !== id)
+    fetch('emojis').then(res => {
+      // 检测是否保存有emoji数据，如果没有的话，从网络获取
+      if (!res || !res.length) {
+        // 如果之前没有存储，从网络获取
+        this.getCustomEmojis()
+        return
+      }
+      // 如果存在，则接着检测emoji 对象是否存在
+      this.detectEmojiObj()
     })
-  }
 
-  // 清空列表中刚被mute的人的所有消息
-  muteAccount = id => {
-    this.setState({
-      list: this.state.list.filter(toot => toot.account.id !== id)
-    })
-  }
-
-  // 清空列表中刚被mute的人的所有消息
-  blockAccount = id => {
-    this.setState({
-      list: this.state.list.filter(toot => toot.account.id !== id)
-    })
+    if (!mobx.account || !mobx.account.id) {
+      getCurrentUser().then(res => {
+        mobx.updateAccount(res)
+      })
+    }
   }
 
   /**
-   * @description 获取时间线数据
-   * @param {cb}: 成功后的回调函数
-   * @param {params}: 分页参数
+   * @description 检测emoji对象是否存在
    */
-  getNotifications = (cb, params) => {
-    getNotifications(params)
-      .then(res => {
-        // 同时将数据更新到state数据中，刷新视图
-        this.setState({
-          list: this.state.list.concat(res),
-          loading: false
-        })
-        if (cb) cb()
+  detectEmojiObj = () => {
+    fetch('emojiObj').then(res => {
+      // 如果不存在，重新根据emoji数据生成字典
+      if (!res || Object.keys(res).length) {
+        this.translateEmoji()
+        return
+      }
+
+      // 如果存在，保存一份到state中
+      this.setState({
+        emojiObj: res
       })
-      .catch(() => {
-        this.setState({
-          loading: false
-        })
-      })
+    })
   }
 
   /**
    * @description 清空通知
-   * @param {}:
    */
   clearNotifications = () => {
     Confirm.show('确定清空所有通知吗？', () => {
@@ -94,20 +103,40 @@ export default class Notifications extends Component {
     })
   }
 
-  refreshHandler = () => {
-    this.setState({
-      loading: true,
-      list: []
+  /**
+   * @description 从网络重新获取emojis数据
+   */
+  getCustomEmojis = () => {
+    getCustomEmojis().then(res => {
+      save('emojis', res)
+
+      this.translateEmoji(res)
     })
-    this.getNotifications()
   }
 
-  // 滚动到了底部，加载数据
-  onEndReached = () => {
-    const state = this.state
-    this.getNotifications(null, {
-      max_id: state.list[state.list.length - 1].id
-    })
+  /**
+   * @description 转换emojis Array数据为Object数据，留作后面HTML渲染时用
+   */
+
+  translateEmoji = emojis => {
+    const start = data => {
+      const emojiObj = {}
+      data.forEach(item => {
+        emojiObj[':' + item.shortcode + ':'] = item.static_url
+      })
+
+      save('emojiObj', emojiObj)
+      mobx.updateEmojiObj(emojiObj)
+    }
+
+    if (!emojis) {
+      fetch('emojis').then(res => {
+        start(res)
+      })
+      return
+    }
+
+    start(emojis)
   }
 
   render() {
@@ -115,67 +144,100 @@ export default class Notifications extends Component {
     color = themeData[mobx.theme]
 
     return (
-      <View style={[styles.container, { backgroundColor: color.themeColor }]}>
-        <Header
-          left={
-            <Button transparent>
-              <Icon
-                style={[styles.icon, { color: color.subColor }]}
-                name={'arrow-left'}
-                onPress={() => this.props.navigation.goBack()}
-              />
-            </Button>
-          }
-          title={'通知'}
-          right={
-            <Button transparent onPress={this.clearNotifications}>
-              <Icon
-                style={[styles.icon, { color: color.subColor }]}
-                name="trash-alt"
-              />
-            </Button>
-          }
-        />
-        {state.loading ? (
-          <TootListSpruce />
-        ) : (
-          <FlatList
-            ItemSeparatorComponent={() => <Divider />}
-            showsVerticalScrollIndicator={false}
-            data={state.list}
-            onEndReachedThreshold={0.3}
-            onEndReached={this.onEndReached}
-            keyExtractor={item => item.id}
-            refreshControl={
-              <RefreshControl
-                refreshing={state.loading}
-                onRefresh={this.refreshHandler}
-              />
-            }
-            ListFooterComponent={() => (
-              <ListFooterComponent info={'你还没有收到任何通知'} />
-            )}
-            renderItem={({ item }) => (
-              <TootBox
-                data={item}
+      <View style={{ flex: 1, backgroundColor: color.themeColor }}>
+        <View style={{ flex: 1 }}>
+          <Animated.View style={{ top: this.top }}>
+            <HeaderItem
+              left={
+                <Button transparent>
+                  <Icon
+                    style={[styles.icon, { color: color.subColor }]}
+                    name={'arrow-left'}
+                    onPress={() => this.props.navigation.goBack()}
+                  />
+                </Button>
+              }
+              title={'通知'}
+              right={
+                <Button transparent onPress={this.clearNotifications}>
+                  <Icon
+                    style={[styles.icon, { color: color.subColor }]}
+                    name="trash-alt"
+                  />
+                </Button>
+              }
+            />
+          </Animated.View>
+          <Animated.View
+            style={{
+              height: deviceHeight,
+              top: this.top
+            }}
+          >
+            <ScrollableTabView
+              initialPage={0}
+              renderTabBar={() => (
+                <DefaultTabBar
+                  backgroundColor={color.themeColor}
+                  activeTextColor={color.contrastColor}
+                  activeTabStyle={{ fontSize: 20 }}
+                  inactiveTextColor={color.subColor}
+                  navigation={this.props.navigation}
+                  underlineStyle={{
+                    backgroundColor: 'transparent'
+                  }}
+                  style={{ borderColor: 'transparent' }}
+                />
+              )}
+            >
+              <Tab
+                tabLabel={'所有'}
                 navigation={this.props.navigation}
-                deleteToot={this.deleteToot}
-                muteAccount={this.muteAccount}
-                blockAccount={this.blockAccount}
+                onScroll={this.animatedEvent}
               />
-            )}
-          />
-        )}
+              <Tab
+                tabLabel={'提及'}
+                params={{
+                  exclude_types: ['follow', 'reblog', 'favourite']
+                }}
+                navigation={this.props.navigation}
+                onScroll={this.animatedEvent}
+              />
+              <Tab
+                tabLabel={'收藏'}
+                params={{
+                  exclude_types: ['follow', 'reblog', 'mention']
+                }}
+                navigation={this.props.navigation}
+                onScroll={this.animatedEvent}
+              />
+              <Tab
+                tabLabel={'转嘟'}
+                params={{
+                  exclude_types: ['follow', 'mention', 'favourite']
+                }}
+                navigation={this.props.navigation}
+                onScroll={this.animatedEvent}
+              />
+              <Tab
+                tabLabel={'关注'}
+                params={{
+                  exclude_types: ['mention', 'reblog', 'favourite']
+                }}
+                spruce={<UserSpruce />}
+                navigation={this.props.navigation}
+                onScroll={this.animatedEvent}
+              />
+            </ScrollableTabView>
+          </Animated.View>
+          <Fab navigation={this.props.navigation} />
+        </View>
       </View>
     )
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingTop: 0
-  },
   icon: {
     fontSize: 17
   }

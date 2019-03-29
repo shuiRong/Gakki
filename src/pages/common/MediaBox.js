@@ -171,8 +171,13 @@ class ImageBox extends Component {
 @observer
 export default class MediaBox extends Component {
   static propTypes = {
-    data: PropTypes.array.isRequired,
-    sensitive: PropTypes.bool.isRequired
+    data: PropTypes.array,
+    sensitive: PropTypes.bool
+  }
+
+  static defaultProps = {
+    data: [],
+    sensitive: false
   }
 
   getVideoElement = data => {}
