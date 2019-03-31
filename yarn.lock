@@ -2032,6 +2032,11 @@ babel-plugin-transform-react-jsx@^6.8.0:
     babel-plugin-syntax-jsx "^6.8.0"
     babel-runtime "^6.22.0"
 
+babel-plugin-transform-remove-console@^6.9.4:
+  version "6.9.4"
+  resolved "http://registry.npm.taobao.org/babel-plugin-transform-remove-console/download/babel-plugin-transform-remove-console-6.9.4.tgz#b980360c067384e24b357a588d807d3c83527780"
+  integrity sha1-uYA2DAZzhOJLNXpYjYB9PINSd4A=
+
 babel-plugin-transform-strict-mode@^6.24.1:
   version "6.24.1"
   resolved "http://registry.npm.taobao.org/babel-plugin-transform-strict-mode/download/babel-plugin-transform-strict-mode-6.24.1.tgz#d5faf7aa578a65bbe591cf5edae04a0c67020758"
@@ -5148,6 +5153,11 @@ jws@^3.1.5:
     jwa "^1.2.0"
     safe-buffer "^5.0.1"
 
+keymirror@^0.1.1:
+  version "0.1.1"
+  resolved "http://registry.npm.taobao.org/keymirror/download/keymirror-0.1.1.tgz#918889ea13f8d0a42e7c557250eee713adc95c35"
+  integrity sha1-kYiJ6hP40KQufFVyUO7nE63JXDU=
+
 kind-of@^1.1.0:
   version "1.1.0"
   resolved "http://registry.npm.taobao.org/kind-of/download/kind-of-1.1.0.tgz#140a3d2d41a36d2efcfa9377b62c24f8495a5c44"
@@ -7059,7 +7069,7 @@ react-native-screens@^1.0.0-alpha.11:
 
 "react-native-scrollable-tab-view@git+ssh://git@github.com:shuiRong/react-native-scrollable-tab-view.git#master":
   version "0.10.0"
-  resolved "git+ssh://git@github.com:shuiRong/react-native-scrollable-tab-view.git#4c5f2954310beca75dd0fa212c99d9acb64b8c5d"
+  resolved "git+ssh://git@github.com:shuiRong/react-native-scrollable-tab-view.git#0c3008f5df46ae166a519f94f7ee3dbccc89ff70"
   dependencies:
     create-react-class "^15.6.2"
     prop-types "^15.6.0"
@@ -7104,6 +7114,15 @@ react-native-vector-icons@6.1.0, react-native-vector-icons@^6.1.0:
     lodash "^4.0.0"
     prop-types "^15.6.2"
     yargs "^8.0.2"
+
+react-native-video@^4.4.0:
+  version "4.4.0"
+  resolved "http://registry.npm.taobao.org/react-native-video/download/react-native-video-4.4.0.tgz#18012cb8ad90aac42be3d04c92430f820f3ab03b"
+  integrity sha1-GAEsuK2QqsQr49BMkkMPgg86sDs=
+  dependencies:
+    keymirror "^0.1.1"
+    prop-types "^15.5.10"
+    shaka-player "^2.4.4"
 
 react-native@*:
   version "0.57.8"
@@ -7920,6 +7939,11 @@ setprototypeof@1.1.0:
   version "1.1.0"
   resolved "http://registry.npm.taobao.org/setprototypeof/download/setprototypeof-1.1.0.tgz#d0bd85536887b6fe7c0d818cb962d9d91c54e656"
   integrity sha1-0L2FU2iHtv58DYGMuWLZ2RxU5lY=
+
+shaka-player@^2.4.4:
+  version "2.4.7"
+  resolved "http://registry.npm.taobao.org/shaka-player/download/shaka-player-2.4.7.tgz#8532e53ba7d8781b0785b552c7c68681c13c3206"
+  integrity sha1-hTLlO6fYeBsHhbVSx8aGgcE8MgY=
 
 shebang-command@^1.2.0:
   version "1.2.0"

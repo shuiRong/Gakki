@@ -1,99 +1,60 @@
-import React, { Component } from 'react'
-import { StyleSheet, Text, View, Animated, FlatList } from 'react-native'
+import { Component, default as React } from 'react'
+import { View, FlatList, ScrollView, Text } from 'react-native'
 
-class List extends Component {
-  render() {
-    // 模拟列表数据
-    const mockData = [
-      '富强',
-      '民主',
-      '文明',
-      '和谐',
-      '自由',
-      '平等',
-      '公正',
-      '法治',
-      '爱国',
-      '敬业',
-      '诚信',
-      '友善'
-    ]
-
-    return (
-      <FlatList
-        onScroll={this.props.onScroll}
-        data={mockData}
-        renderItem={({ item }) => (
-          <View style={styles.list}>
-            <Text>{item}</Text>
-          </View>
-        )}
-      />
-    )
-  }
-}
-
-export default class AnimatedScrollDemo extends Component {
+export default class LabScreen extends Component {
   constructor(props) {
     super(props)
-    this.state = {
-      headerTop: new Animated.Value(0)
-    }
-  }
-
-  componentWillMount() {
-    // P.S. 270,217,280区间的映射是告诉interpolate，所有大于270的值都映射成-50
-    // 这样就不会导致Header在上滑的过程中一直向上滑动了
-    this.top = this.state.headerTop.interpolate({
-      inputRange: [0, 270, 271, 280],
-      outputRange: [0, -50, -50, -50]
-    })
-
-    this.animatedEvent = Animated.event([
-      {
-        nativeEvent: {
-          contentOffset: { y: this.state.headerTop }
-        }
-      }
-    ])
+    this.state = { enableScrollViewScroll: true }
   }
 
   render() {
     return (
-      <View style={styles.container}>
-        <Animated.View style={{ top: this.top }}>
-          <View style={styles.header}>
-            <Text style={styles.text}>linshuirong.cn</Text>
-          </View>
-        </Animated.View>
-        {/* 在oHeader组件上移的同时，列表容器也需要同时向上移动，需要注意。 */}
-        <Animated.View style={{ top: this.top }}>
-          <List onScroll={this.animatedEvent} />
-        </Animated.View>
+      <View
+        onStartShouldSetResponderCapture={() => {
+          this.setState({ enableScrollViewScroll: true })
+        }}
+      >
+        <ScrollView
+          scrollEnabled={this.state.enableScrollViewScroll}
+          ref={myScroll => (this._myScroll = myScroll)}
+        >
+          {this.renderFlatList('red')}
+          {this.renderFlatList('green')}
+          {this.renderFlatList('purple')}
+          {this.renderFlatList('pink')}
+        </ScrollView>
+      </View>
+    )
+  }
+
+  getRandomData = () => {
+    return new Array(100).fill('').map((item, index) => {
+      return { title: 'Title ' + (index + 1) }
+    })
+  }
+
+  renderFlatList(color) {
+    return (
+      <View
+        onStartShouldSetResponderCapture={() => {
+          this.setState({ enableScrollViewScroll: false })
+          if (
+            this._myScroll.contentOffset === 0 &&
+            this.state.enableScrollViewScroll === false
+          ) {
+            this.setState({ enableScrollViewScroll: true })
+          }
+        }}
+      >
+        <FlatList
+          data={this.getRandomData()}
+          backgroundColor={color}
+          maxHeight={200}
+          marginBottom={50}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item }) => <Text>{item.title}</Text>}
+        />
       </View>
     )
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1
-  },
-  list: {
-    height: 80,
-    backgroundColor: 'pink',
-    marginBottom: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    color: 'white'
-  },
-  header: {
-    height: 50,
-    backgroundColor: '#3F51B5',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  text: {
-    color: 'white'
-  }
-})

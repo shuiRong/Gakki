@@ -1,8 +1,9 @@
 import axios from 'axios'
 import { Toast } from 'teaset'
+import mobx from './mobx'
 
 const service = axios.create({
-  baseURL: 'https://cmx.im',
+  baseURL: `https://${mobx.domain}`,
   timeout: 10000 // 请求超时时间限制
 })
 

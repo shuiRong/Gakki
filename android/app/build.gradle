@@ -122,6 +122,10 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0.0"
+        compileOptions {
+            sourceCompatibility JavaVersion.VERSION_1_8
+            targetCompatibility JavaVersion.VERSION_1_8
+        }
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
@@ -184,6 +188,7 @@ configurations.all {
 }
 
 dependencies {
+    compile project(':react-native-video')
     compile project(':react-native-svg')
     compile project(':react-native-code-push')
     compile project(':react-native-spinkit')

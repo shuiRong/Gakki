@@ -1,9 +1,7 @@
 import React, { Component } from 'react'
 import { View, Animated, Dimensions } from 'react-native'
 import HeaderItem from './common/Header'
-import HomeScreen from './screen/HomeScreen'
-import LocalScreen from './screen/LocalScreen'
-import PublicScreen from './screen/PublicScreen'
+import Tab from './screen/index'
 import Fab from './common/Fab'
 import ScrollableTabView, {
   DefaultTabBar
@@ -122,51 +120,52 @@ export default class Home extends Component {
 
     return (
       <View style={{ flex: 1, backgroundColor: color.themeColor }}>
-        <View style={{ flex: 1 }}>
-          <Animated.View style={{ top: this.top }}>
-            <HeaderItem title={'Gakki'} navigation={this.props.navigation} />
-          </Animated.View>
-          <Animated.View
-            style={{
-              height: deviceHeight,
-              top: this.top
-            }}
+        <Animated.View style={{ top: this.top }}>
+          <HeaderItem title={'Gakki'} navigation={this.props.navigation} />
+        </Animated.View>
+        <Animated.View
+          style={{
+            height: deviceHeight,
+            top: this.top
+          }}
+        >
+          <ScrollableTabView
+            initialPage={1}
+            renderTabBar={() => (
+              <DefaultTabBar
+                backgroundColor={color.themeColor}
+                activeTextColor={color.contrastColor}
+                activeTabStyle={{ fontSize: 20 }}
+                inactiveTextColor={color.subColor}
+                navigation={this.props.navigation}
+                underlineStyle={{
+                  backgroundColor: 'transparent'
+                }}
+                style={{ borderColor: 'transparent' }}
+              />
+            )}
           >
-            <ScrollableTabView
-              initialPage={1}
-              renderTabBar={() => (
-                <DefaultTabBar
-                  backgroundColor={color.themeColor}
-                  activeTextColor={color.contrastColor}
-                  activeTabStyle={{ fontSize: 20 }}
-                  inactiveTextColor={color.subColor}
-                  navigation={this.props.navigation}
-                  underlineStyle={{
-                    backgroundColor: 'transparent'
-                  }}
-                  style={{ borderColor: 'transparent' }}
-                />
-              )}
-            >
-              <LocalScreen
-                tabLabel={'本站'}
-                onScroll={this.animatedEvent}
-                navigation={this.props.navigation}
-              />
-              <HomeScreen
-                tabLabel={'主页'}
-                onScroll={this.animatedEvent}
-                navigation={this.props.navigation}
-              />
-              <PublicScreen
-                tabLabel={'跨站'}
-                onScroll={this.animatedEvent}
-                navigation={this.props.navigation}
-              />
-            </ScrollableTabView>
-          </Animated.View>
-          <Fab navigation={this.props.navigation} />
-        </View>
+            <Tab
+              tabLabel={'本站'}
+              params={{ local: true, only_media: false }}
+              onScroll={this.animatedEvent}
+              navigation={this.props.navigation}
+            />
+            <Tab
+              tabLabel={'主页'}
+              url={'home'}
+              onScroll={this.animatedEvent}
+              navigation={this.props.navigation}
+            />
+            <Tab
+              tabLabel={'跨站'}
+              params={{ only_media: false }}
+              onScroll={this.animatedEvent}
+              navigation={this.props.navigation}
+            />
+          </ScrollableTabView>
+        </Animated.View>
+        <Fab navigation={this.props.navigation} />
       </View>
     )
   }

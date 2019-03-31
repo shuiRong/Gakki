@@ -31,9 +31,15 @@ export default class MutedUsers extends Component {
     this.getBlocks()
   }
 
-  deleteToot = id => {
+  /**
+   * @description 删除嘟文
+   * @param {id}: 嘟文id
+   * @param {recycle}: 是否重新编辑嘟文
+   */
+  deleteToot = (id, recycle = false) => {
+    const list = this.state.list
     this.setState({
-      list: this.state.list.filter(toot => toot.id !== id)
+      list: list.filter(toot => toot.id !== id)
     })
   }
 

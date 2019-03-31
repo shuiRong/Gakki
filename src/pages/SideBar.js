@@ -83,8 +83,8 @@ export default class SideBar extends Component {
   }
 
   // 删除存储的access_token等信息，进入到登录页面
-  logout = () => {
-    remove('access_token').then(() => {
+  signout = () => {
+    remove('access_token').then(result => {
       this.props.navigation.navigate('Login')
     })
   }
@@ -300,7 +300,7 @@ export default class SideBar extends Component {
                 style={[styles.icon, { color: color.contrastColor }]}
               />
             </View>
-            <TouchableOpacity activeOpacity={0.5} onPress={this.logout}>
+            <TouchableOpacity activeOpacity={0.5} onPress={this.signout}>
               <Text style={[styles.text, { color: color.contrastColor }]}>
                 退出登录
               </Text>

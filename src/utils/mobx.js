@@ -17,6 +17,7 @@ class Globe {
   @observable emojiObj = {} // 当前实例的emoji对象
   @observable access_token = ''
   @observable enabled = true // 个人详情页面的下拉刷新组件是否启用
+  @observable domain = 'hncj.me' // 实例域名
 
   updateReply({
     reply_to_username,
@@ -114,6 +115,10 @@ class Globe {
 
   updateEnabled(status) {
     this.enabled = status
+  }
+
+  updateDomain(domain) {
+    this.domain = domain
   }
 }
 

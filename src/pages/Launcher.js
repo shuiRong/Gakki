@@ -17,12 +17,6 @@ let color = {}
 @observer
 export default class Login extends Component {
   componentDidMount() {
-    fetch('theme').then(theme => {
-      if (theme) {
-        mobx.updateTheme(theme)
-      }
-    })
-
     if (__DEV__) {
       save('access_token', token).then(() => {
         mobx.updateAccessToken(token)
@@ -54,6 +48,12 @@ export default class Login extends Component {
         })
       })
     }
+
+    fetch('theme').then(theme => {
+      if (theme) {
+        mobx.updateTheme(theme)
+      }
+    })
   }
 
   render() {

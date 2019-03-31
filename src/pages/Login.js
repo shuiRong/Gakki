@@ -24,7 +24,7 @@ export default class Login extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      domain: 'cmx.im'
+      domain: mobx.domain
     }
   }
 
@@ -40,12 +40,14 @@ export default class Login extends Component {
     }
     apps({
       website: `https://${state.domain}`,
-      client_name: 'Gakki',
+      client_name: 'TestGakki',
       redirect_uris: 'https://linshuirong.cn',
       scopes: 'read write follow push'
     }).then(({ client_id, client_secret }) => {
       save('client_id', client_id)
       save('client_secret', client_secret)
+      save('domain', state.domain)
+      mobx.updateDomain('domain', state.domain)
       this.props.navigation.navigate('Auth', {
         client_id,
         client_secret,

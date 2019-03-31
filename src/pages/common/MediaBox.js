@@ -17,6 +17,7 @@ import { Overlay } from 'teaset'
 import { observer } from 'mobx-react'
 import mobx from '../../utils/mobx'
 import PropTypes from 'prop-types'
+import Video from 'react-native-video'
 
 let color = {}
 const width = Dimensions.get('window').width
@@ -62,7 +63,7 @@ class BlackMirror extends PureComponent {
   }
 }
 
-class ImageBox extends Component {
+class MediaBox extends Component {
   static propTypes = {
     data: PropTypes.object.isRequired
   }
@@ -70,22 +71,22 @@ class ImageBox extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      image: {}
+      media: {}
     }
   }
 
   componentDidMount() {
     this.setState({
-      image: { ...this.props.data }
+      media: { ...this.props.data }
     })
   }
 
-  shouldComponentUpdate(_, { image }) {
-    const currentImage = this.state.image
+  shouldComponentUpdate(_, { media }) {
+    const currentMedia = this.state.media
     if (
-      !currentImage ||
-      currentImage.id !== image.id ||
-      currentImage.hide !== image.hide
+      !currentMedia ||
+      currentMedia.id !== media.id ||
+      currentMedia.hide !== media.hide
     ) {
       return true
     }
@@ -99,48 +100,69 @@ class ImageBox extends Component {
    */
   changeMediaStatus = show => {
     this.setState({
-      image: { ...this.state.image, hide: show }
+      media: { ...this.state.media, hide: show }
     })
   }
 
   /**
    * @description 预览图片模态框
-   * @param {url}: 图片url
    */
-  enlargeImage = url => {
+  enlargeMedia = () => {
+    const media = this.state.media
+    let inside = (
+      <Image
+        style={[styles.enlargeMedia, { overlayColor: color.themeColor }]}
+        resizeMode={'contain'}
+        source={{ uri: media.url }}
+      />
+    )
+    if (media.type === 'video') {
+      inside = (
+        <Video
+          source={{ uri: media.url }}
+          ref={ref => {
+            this.player = ref
+          }}
+          controls={true}
+          repeat={true}
+          resizeMode={'cover'}
+          style={[
+            styles.enlargeMedia,
+            { position: 'absolute', top: 0, left: 0 }
+          ]}
+          onError={err => {
+            console.log('err', err)
+          }}
+        />
+      )
+    }
     const overlayView = (
       <Overlay.View overlayOpacity={0.9} ref={v => (this.overlayView = v)}>
-        <View style={styles.enlargeImageBox}>
-          <Image
-            style={[styles.enlargeImage, { overlayColor: color.themeColor }]}
-            resizeMode={'contain'}
-            source={{ uri: url }}
-          />
-        </View>
+        <View style={styles.enlargeMediaBox}>{inside}</View>
       </Overlay.View>
     )
     Overlay.show(overlayView)
   }
 
   render() {
-    const image = this.state.image
+    const media = this.state.media
     const showMedia = () => this.changeMediaStatus(false)
 
-    if (image.sensitive && image.hide) {
+    if (media.sensitive && media.hide) {
       return (
-        <BlackMirror key={image.id} text={'敏感内容'} showMedia={showMedia} />
+        <BlackMirror key={media.id} text={'敏感内容'} showMedia={showMedia} />
       )
-    } else if (image.hide) {
+    } else if (media.hide) {
       return (
         <BlackMirror
-          key={image.id}
+          key={media.id}
           text={'隐藏媒体内容'}
           showMedia={showMedia}
         />
       )
     } else {
       return (
-        <View key={image.id} style={styles.mediaBox}>
+        <View key={media.id} style={styles.mediaBox}>
           <View
             zIndex={4}
             style={[styles.eyeSlashBox, { backgroundColor: color.subColor }]}
@@ -155,11 +177,11 @@ class ImageBox extends Component {
           <TouchableOpacity
             activeOpacity={0.9}
             style={{ flex: 1 }}
-            onPress={() => this.enlargeImage(image.preview_url)}
+            onPress={this.enlargeMedia}
           >
             <Image
-              source={{ uri: image.preview_url }}
-              style={[styles.mediaImage, { overlayColor: color.themeColor }]}
+              source={{ uri: media.preview_url }}
+              style={[styles.mediaMedia, { overlayColor: color.themeColor }]}
             />
           </TouchableOpacity>
         </View>
@@ -169,7 +191,7 @@ class ImageBox extends Component {
 }
 
 @observer
-export default class MediaBox extends Component {
+export default class Media extends Component {
   static propTypes = {
     data: PropTypes.array,
     sensitive: PropTypes.bool
@@ -179,8 +201,6 @@ export default class MediaBox extends Component {
     data: [],
     sensitive: false
   }
-
-  getVideoElement = data => {}
 
   render() {
     const data = this.props.data
@@ -193,16 +213,12 @@ export default class MediaBox extends Component {
     return (
       <View style={{ flex: 1, marginTop: 10 }}>
         {data.map(media => {
-          if (media.type === 'image') {
-            return (
-              <ImageBox
-                key={media.id}
-                data={{ ...media, sensitive, hide: sensitive }}
-              />
-            )
-          } else if (media.type === 'video') {
-            return this.getVideoElement(media)
-          }
+          return (
+            <MediaBox
+              key={media.id}
+              data={{ ...media, sensitive, hide: sensitive }}
+            />
+          )
         })}
       </View>
     )
@@ -233,17 +249,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center'
   },
-  mediaImage: {
+  mediaMedia: {
     flex: 1,
     borderRadius: 5
   },
-  enlargeImageBox: {
+  enlargeMediaBox: {
     alignItems: 'center',
     justifyContent: 'center',
     width: width,
     height: height
   },
-  enlargeImage: {
+  enlargeMedia: {
     width: width,
     height: height
   }

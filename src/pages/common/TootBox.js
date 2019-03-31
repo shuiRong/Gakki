@@ -22,7 +22,7 @@ import momentTimezone from 'moment-timezone'
 import jstz from 'jstz'
 import { RelativeTime } from 'relative-time-react-native-component'
 import { zh } from '../../utils/locale'
-import MediaBox from './MediaBox'
+import Media from './Media'
 import { themeData } from '../../utils/color'
 import { Menu } from 'teaset'
 import mobx from '../../utils/mobx'
@@ -286,6 +286,11 @@ export default class TootBox extends Component {
         icon: getIcon('trash-alt'),
         onPress: this.deleteStatuses
       },
+      // {
+      //   title: getTitle('删除且重新编辑'),
+      //   icon: getIcon('recycle'),
+      //   onPress: () => this.deleteStatuses(true)
+      // },
       {
         title: getTitle(toot.pinned ? '取消置顶' : '置顶'),
         icon: getIcon('thumbtack'),
@@ -319,10 +324,14 @@ export default class TootBox extends Component {
     })
   }
 
-  deleteStatuses = () => {
+  /**
+   * @description 删除嘟文
+   * @param {recycle}: 是否重新编辑
+   */
+  deleteStatuses = (recycle = false) => {
     const id = this.state.toot.id
     deleteStatuses(id).then(() => {
-      this.props.deleteToot && this.props.deleteToot(id)
+      this.props.deleteToot && this.props.deleteToot(id, recycle)
     })
   }
 
@@ -933,7 +942,7 @@ export default class TootBox extends Component {
               {this.getRelativeTimeOrIcon(data, isNotificationPage)}
             </View>
             {this.getHTMLContent(data, isNotificationPage)}
-            <MediaBox
+            <Media
               data={data && data.media_attachments}
               sensitive={data && data.sensitive}
             />

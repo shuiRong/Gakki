@@ -7,17 +7,30 @@ import { View, StyleSheet, FlatList, RefreshControl } from 'react-native'
 import { TootListSpruce } from '../common/Spruce'
 import { getHomeTimelines } from '../../utils/api'
 import TootBox from '../common/TootBox'
-import ListFooterComponent from '../common/ListFooterComponent'
 import Divider from '../common/Divider'
+import Empty from '../common/Empty'
+import PropTypes from 'prop-types'
 
 export default class LocalScreen extends Component {
+  static propTypes = {
+    params: PropTypes.object,
+    navigation: PropTypes.object.isRequired,
+    onScroll: PropTypes.func.isRequired,
+    spruce: PropTypes.element,
+    url: PropTypes.string
+  }
+
+  static defaultProps = {
+    params: {},
+    url: 'public',
+    spruce: <TootListSpruce />
+  }
+
   constructor(props) {
     super(props)
     this.state = {
       list: [],
-      loading: true,
-      url: 'public',
-      baseParams: { local: true, only_media: false }
+      loading: true
     }
   }
   componentDidMount() {
@@ -101,9 +114,9 @@ export default class LocalScreen extends Component {
    * @param {params}: 分页参数
    */
   fetchTimelines = (cb, params) => {
-    getHomeTimelines(this.state.url, {
-      ...this.state.baseParams,
-      ...params
+    getHomeTimelines(this.props.url, {
+      ...params,
+      ...this.props.params
     })
       .then(res => {
         // 同时将数据更新到state数据中，刷新视图
@@ -156,7 +169,7 @@ export default class LocalScreen extends Component {
               onRefresh={this.refreshHandler}
             />
           }
-          ListFooterComponent={() => <ListFooterComponent />}
+          ListEmptyComponent={<Empty />}
           renderItem={({ item }) => (
             <TootBox
               data={item}
