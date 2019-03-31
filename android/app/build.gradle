@@ -188,6 +188,7 @@ configurations.all {
 }
 
 dependencies {
+    compile project(':react-native-image-crop-picker')
     compile project(':react-native-video')
     compile project(':react-native-svg')
     compile project(':react-native-code-push')

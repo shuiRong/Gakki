@@ -8,8 +8,6 @@ import {
   TouchableOpacity,
   Dimensions,
   Image,
-  Animated,
-  Easing,
   FlatList
 } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
@@ -23,6 +21,7 @@ import mobx from '../../utils/mobx'
 import { themeData } from '../../utils/color'
 import { Menu, Overlay, Input } from 'teaset'
 import ImagePicker from 'react-native-image-picker'
+import VideoPicker from 'react-native-image-crop-picker'
 import { save, fetch } from '../../utils/store'
 
 let color = {}
@@ -275,19 +274,11 @@ export default class ReplyInput extends Component {
       whichIsFocused: '', // 当前哪个输入框被触发了
       visibility: mobx.visibility, // 当前选择的嘟文公开选项的图标名称
       mediaList: [],
-      rotateValue: new Animated.Value(0),
       stopRotate: true,
       customEmojis: [],
       emojiBoxIsShown: false, // 显示emojiBox吗？
       showNSFW: false // 显示NSFW按钮？（仅在存在媒体内容时显示）
     }
-  }
-
-  componentWillMount() {
-    this.spin = this.state.rotateValue.interpolate({
-      inputRange: [0, 1],
-      outputRange: ['0deg', '360deg']
-    })
   }
 
   componentDidMount() {
@@ -342,20 +333,10 @@ export default class ReplyInput extends Component {
     }
 
     ImagePicker.showImagePicker(options, response => {
-      // 开始旋转～
-      this.setState({
-        stopRotate: false
-      })
-      this.startRotate()
-
       if (response.didCancel) {
-        this.setState({
-          stopRotate: true
-        })
+        console.log('didCancel: ', response.didCancel)
       } else if (response.error) {
-        this.setState({
-          stopRotate: true
-        })
+        console.log('error: ', response.error)
       } else {
         upload({
           response: response,
@@ -368,22 +349,48 @@ export default class ReplyInput extends Component {
                 uri: res.preview_url,
                 id: res.id
               }),
-              stopRotate: true,
               showNSFW: true
             })
           })
-          .catch(() => {
-            this.setState({
-              stopRotate: true
-            })
+          .catch(err => {
+            console.log('error: ', err)
           })
       }
     })
   }
 
+  pickVideo = () => {
+    VideoPicker.openPicker({
+      mediaType: 'video'
+    })
+      .then(video => {
+        upload({
+          response: {
+            uri: video.path,
+            type: video.mime,
+            fileName: 'filename'
+          },
+          description: 'description',
+          focus: 'focus'
+        })
+          .then(res => {
+            this.setState({
+              mediaList: [...this.state.mediaList].concat({
+                uri: res.preview_url,
+                id: res.id
+              }),
+              showNSFW: true
+            })
+          })
+          .catch(() => {})
+      })
+      .catch(err => {
+        console.log('VideoPicker error', err)
+      })
+  }
+
   sendToot = () => {
     const props = this.props
-
     sendStatuses({
       in_reply_to_id: mobx.in_reply_to_id,
       status: mobx.inputValue,
@@ -551,47 +558,6 @@ export default class ReplyInput extends Component {
     return <EmojiBox data={this.state.customEmojis} />
   }
 
-  /**
-   * @description 旋转相机图标，表示正在上传文件
-   */
-  startRotate = () => {
-    this.state.rotateValue.setValue(0)
-    const rotate = Animated.timing(this.state.rotateValue, {
-      toValue: 1,
-      duration: 2000,
-      easing: Easing.linear
-    })
-    if (!this.state.stopRotate) {
-      rotate.start(() => this.startRotate())
-    }
-  }
-
-  // 根据文件是否在上传返回不同的图标
-  getMediaIcon = () => {
-    return (
-      <TouchableOpacity onPress={this.pickImage}>
-        {this.state.stopRotate ? (
-          <Icon name={'camera'} style={styles.icon} />
-        ) : (
-          <Animated.View
-            style={{
-              transform: [
-                {
-                  rotate: this.spin
-                }
-              ]
-            }}
-          >
-            <Icon
-              name={'sync-alt'}
-              style={[styles.syncIcon, { color: color.contrastColor }]}
-            />
-          </Animated.View>
-        )}
-      </TouchableOpacity>
-    )
-  }
-
   render() {
     const state = this.state
     color = themeData[mobx.theme]
@@ -717,7 +683,12 @@ export default class ReplyInput extends Component {
           />
         </View>
         <View style={styles.inputTools}>
-          {this.getMediaIcon()}
+          <TouchableOpacity onPress={this.pickImage}>
+            <Icon name={'image'} style={styles.icon} />
+          </TouchableOpacity>
+          <TouchableOpacity onPress={this.pickVideo}>
+            <Icon name={'video'} style={styles.icon} />
+          </TouchableOpacity>
           <TouchableOpacity onPress={this.showVisibilityOptions}>
             <Icon
               name={visibilityDict[state.visibility].iconName}

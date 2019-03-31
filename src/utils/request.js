@@ -28,7 +28,7 @@ service.interceptors.response.use(
       Toast.message(err.error)
     }
 
-    return Promise.reject(error)
+    return Promise.reject(err)
   }
 )
 

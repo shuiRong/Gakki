@@ -21,6 +21,7 @@
     "react-native-content-loader": "git+ssh://git@github.com:shuiRong/react-native-content-loader.git#master",
     "react-native-gesture-handler": "^1.0.12",
     "react-native-git-upgrade": "^0.2.7",
+    "react-native-image-crop-picker": "^0.23.1",
     "react-native-image-picker": "^0.27.2",
     "react-native-material-ripple": "^0.8.0",
     "react-native-render-html": "^3.10.0",
