@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Fab } from 'native-base'
+import { TouchableOpacity } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { themeData } from '../../utils/color'
 import mobx from '../../utils/mobx'
@@ -15,14 +15,26 @@ export default class FabTool extends Component {
   render() {
     color = themeData[mobx.theme]
     return (
-      <Fab
-        direction="up"
-        style={{ backgroundColor: color.contrastColor }}
-        position="bottomRight"
+      <TouchableOpacity
+        activeOpacity={0.8}
         onPress={this.sendToot}
+        style={{
+          width: 58,
+          height: 58,
+          borderRadius: 50,
+          backgroundColor: color.contrastColor,
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}
       >
-        <Icon name="pen" style={{ color: color.themeColor }} />
-      </Fab>
+        <Icon
+          name="pen"
+          style={{
+            fontSize: 22,
+            color: color.themeColor
+          }}
+        />
+      </TouchableOpacity>
     )
   }
 }

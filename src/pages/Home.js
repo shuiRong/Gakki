@@ -17,6 +17,7 @@ import { observer } from 'mobx-react'
  */
 let color = {}
 const deviceHeight = Dimensions.get('window').height
+let scrollY = 0 // 滚动条距离顶部的高度
 
 @observer
 export default class Home extends Component {
@@ -29,9 +30,16 @@ export default class Home extends Component {
   }
   componentWillMount() {
     this.top = this.state.headerTop.interpolate({
-      inputRange: [0, 270, 271, 280],
-      outputRange: [0, -50, -50, -50]
+      inputRange: [0, 270],
+      outputRange: [0, -50],
+      extrapolate: 'clamp'
     })
+    this.distanceFromBottom = this.state.headerTop.interpolate({
+      inputRange: [0, 70],
+      outputRange: [28, -50],
+      extrapolate: 'clamp'
+    })
+
     this.animatedEvent = Animated.event([
       {
         nativeEvent: {
@@ -42,6 +50,7 @@ export default class Home extends Component {
   }
 
   componentDidMount() {
+    this.props.navigation.navigate('Setting')
     fetch('emojis').then(res => {
       // 检测是否保存有emoji数据，如果没有的话，从网络获取
       if (!res || !res.length) {
@@ -115,7 +124,6 @@ export default class Home extends Component {
   }
 
   render() {
-    const state = this.state
     color = themeData[mobx.theme]
 
     return (
@@ -165,7 +173,17 @@ export default class Home extends Component {
             />
           </ScrollableTabView>
         </Animated.View>
-        <Fab navigation={this.props.navigation} />
+        <Animated.View
+          style={{
+            width: 50,
+            height: 50,
+            position: 'absolute',
+            right: 28,
+            bottom: mobx.hideSendTootButton ? this.distanceFromBottom : 28
+          }}
+        >
+          <Fab navigation={this.props.navigation} />
+        </Animated.View>
       </View>
     )
   }

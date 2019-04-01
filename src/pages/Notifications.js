@@ -34,8 +34,9 @@ export default class Home extends Component {
   }
   componentWillMount() {
     this.top = this.state.headerTop.interpolate({
-      inputRange: [0, 270, 271, 280],
-      outputRange: [0, -50, -50, -50]
+      inputRange: [0, 270],
+      outputRange: [0, -50],
+      extrapolate: 'clamp'
     })
     this.animatedEvent = Animated.event([
       {

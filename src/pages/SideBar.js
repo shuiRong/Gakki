@@ -3,6 +3,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5'
 import {
   View,
   Text,
+  ScrollView,
   Image,
   StyleSheet,
   ImageBackground,
@@ -84,7 +85,7 @@ export default class SideBar extends Component {
 
   // 删除存储的access_token等信息，进入到登录页面
   signout = () => {
-    remove('access_token').then(result => {
+    remove('access_token').then(() => {
       this.props.navigation.navigate('Login')
     })
   }
@@ -151,7 +152,7 @@ export default class SideBar extends Component {
             </View>
           </View>
         </ImageBackground>
-        <View style={styles.body}>
+        <ScrollView style={styles.body}>
           <View style={styles.list}>
             <View style={styles.iconBox}>
               <Icon
@@ -258,6 +259,24 @@ export default class SideBar extends Component {
           <View style={styles.list}>
             <View style={styles.iconBox}>
               <Icon
+                name="cog"
+                style={[styles.icon, { color: color.contrastColor }]}
+              />
+            </View>
+            <TouchableOpacity
+              activeOpacity={0.5}
+              onPress={() => {
+                this.props.navigation.navigate('Setting')
+              }}
+            >
+              <Text style={[styles.text, { color: color.contrastColor }]}>
+                设置
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.list}>
+            <View style={styles.iconBox}>
+              <Icon
                 name="book"
                 style={[styles.icon, { color: color.contrastColor }]}
               />
@@ -306,7 +325,7 @@ export default class SideBar extends Component {
               </Text>
             </TouchableOpacity>
           </View>
-        </View>
+        </ScrollView>
       </View>
     )
   }

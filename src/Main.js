@@ -13,6 +13,7 @@ import Tag from './pages/Tag'
 import Auth from './pages/Auth'
 import Following from './pages/Following'
 import About from './pages/About'
+import Setting from './pages/Setting'
 import OpenSource from './pages/OpenSource'
 import Search from './pages/Search'
 import SendToot from './pages/SendToot'
@@ -22,7 +23,7 @@ import SideBar from './pages/SideBar'
 const deviceWidth = Dimensions.get('window').width
 
 const Drawer = createDrawerNavigator(
-  { Home, Notifications },
+  { Home },
   {
     initialRouteName: 'Home',
     drawerWidth: deviceWidth * 0.78,
@@ -37,6 +38,7 @@ export default createStackNavigator(
   {
     Drawer,
     TootDetail,
+    Notifications,
     Profile,
     Envelope,
     BlockedUsers,
@@ -45,6 +47,7 @@ export default createStackNavigator(
     Following,
     FollowRequestList,
     About,
+    Setting,
     Tag,
     Auth,
     OpenSource,

@@ -18,6 +18,7 @@ class Globe {
   @observable access_token = ''
   @observable enabled = true // 个人详情页面的下拉刷新组件是否启用
   @observable domain = 'hncj.me' // 实例域名
+  @observable hideSendTootButton = true // 滑动时隐藏发嘟文按钮
 
   updateReply({
     reply_to_username,
@@ -119,6 +120,10 @@ class Globe {
 
   updateDomain(domain) {
     this.domain = domain
+  }
+
+  updateHideSendTooButtonStatus(status) {
+    this.hideSendTootButton = status
   }
 }
 
