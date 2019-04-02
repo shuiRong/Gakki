@@ -251,14 +251,14 @@ const styles = StyleSheet.create({
   },
   bg: {
     width: '100%',
-    height: 120
+    height: 150
   },
   infoBox: {
     height: 120,
     padding: 15
   },
   info: {
-    marginTop: 10
+    marginTop: 30
   },
   body: {
     paddingTop: 10,
