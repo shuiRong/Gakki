@@ -14,9 +14,8 @@ import mobx from '../utils/mobx'
 import { themeData } from '../utils/color'
 import HTMLView from './common/HTMLView'
 import Divider from './common/Divider'
-import { Radio } from './common/Notice'
 import { observer } from 'mobx-react'
-import { remove, save } from '../utils/store'
+import { remove } from '../utils/store'
 
 let color = {}
 @observer
@@ -57,66 +56,11 @@ export default class SideBar extends Component {
     }
   }
 
-  /**
-   * @description 展示主题切换弹框
-   */
-  showTheme = () => {
-    const newTheme = {
-      black: {
-        value: false,
-        label: '黑夜'
-      },
-      white: {
-        value: false,
-        label: '白天'
-      }
-    }
-    newTheme[mobx.theme].value = true
-    Radio.show(
-      '切换主题',
-      newTheme,
-      theme => {
-        mobx.updateTheme(theme)
-        save('theme', theme)
-      },
-      { height: 200 }
-    )
-  }
-
   // 删除存储的access_token等信息，进入到登录页面
   signout = () => {
     remove('access_token').then(() => {
       this.props.navigation.navigate('Login')
     })
-  }
-
-  /**
-   * @description 展示嘟文可见范围切换弹框
-   */
-  showVisibilityRange = () => {
-    const visibility = {
-      public: {
-        value: false,
-        label: '公开'
-      },
-      unlisted: {
-        value: false,
-        label: '不公开'
-      },
-      private: {
-        value: false,
-        label: '仅关注者'
-      }
-    }
-    visibility[mobx.visibility].value = true
-    Radio.show(
-      '选择可见范围',
-      visibility,
-      item => {
-        mobx.updateVisibility(item)
-      },
-      { height: 220 }
-    )
   }
 
   render() {
@@ -152,7 +96,7 @@ export default class SideBar extends Component {
             </View>
           </View>
         </ImageBackground>
-        <ScrollView style={styles.body}>
+        <ScrollView style={styles.body} showsVerticalScrollIndicator={false}>
           <View style={styles.list}>
             <View style={styles.iconBox}>
               <Icon
@@ -222,36 +166,6 @@ export default class SideBar extends Component {
             >
               <Text style={[styles.text, { color: color.contrastColor }]}>
                 请求关注列表
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <Divider style={{ marginTop: 5, marginBottom: 20 }} />
-          <View style={styles.list}>
-            <View style={styles.iconBox}>
-              <Icon
-                name="user"
-                style={[styles.icon, { color: color.contrastColor }]}
-              />
-            </View>
-            <TouchableOpacity activeOpacity={0.5} onPress={this.showTheme}>
-              <Text style={[styles.text, { color: color.contrastColor }]}>
-                切换主题
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.list}>
-            <View style={styles.iconBox}>
-              <Icon
-                name="list"
-                style={[styles.icon, { color: color.contrastColor }]}
-              />
-            </View>
-            <TouchableOpacity
-              activeOpacity={0.5}
-              onPress={this.showVisibilityRange}
-            >
-              <Text style={[styles.text, { color: color.contrastColor }]}>
-                设置嘟文默认可见范围
               </Text>
             </TouchableOpacity>
           </View>

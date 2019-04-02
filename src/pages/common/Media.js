@@ -24,6 +24,7 @@ const width = Dimensions.get('window').width
 const height = Dimensions.get('window').height
 
 // 多媒体的黑色隐藏框
+@observer
 class BlackMirror extends PureComponent {
   static propTypes = {
     showMedia: PropTypes.func.isRequired,
@@ -63,6 +64,7 @@ class BlackMirror extends PureComponent {
   }
 }
 
+@observer
 class MediaBox extends Component {
   static propTypes = {
     data: PropTypes.object.isRequired
@@ -216,7 +218,11 @@ export default class Media extends Component {
           return (
             <MediaBox
               key={media.id}
-              data={{ ...media, sensitive, hide: sensitive }}
+              data={{
+                ...media,
+                sensitive,
+                hide: mobx.alwaysShowSensitiveMedia ? false : sensitive
+              }}
             />
           )
         })}

@@ -4,7 +4,6 @@ import { Button } from 'native-base'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import HeaderItem from './common/Header'
 import Tab from './notificationTab/index.js'
-import Fab from './common/Fab'
 import ScrollableTabView, {
   DefaultTabBar
 } from 'react-native-scrollable-tab-view'
@@ -231,7 +230,6 @@ export default class Home extends Component {
               />
             </ScrollableTabView>
           </Animated.View>
-          <Fab navigation={this.props.navigation} />
         </View>
       </View>
     )

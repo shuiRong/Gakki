@@ -17,7 +17,6 @@ import { observer } from 'mobx-react'
  */
 let color = {}
 const deviceHeight = Dimensions.get('window').height
-let scrollY = 0 // 滚动条距离顶部的高度
 
 @observer
 export default class Home extends Component {

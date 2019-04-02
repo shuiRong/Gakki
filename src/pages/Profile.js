@@ -23,7 +23,6 @@ import ScrollableTabView from 'react-native-scrollable-tab-view'
 import DefaultTabBar from './common/DefaultTabBar'
 import TootScreen from './screen/TootScreen'
 import MediaScreen from './screen/MediaScreen'
-import Fab from './common/Fab'
 import { themeData } from '../utils/color'
 import mobx from '../utils/mobx'
 import HTMLView from './common/HTMLView'
@@ -407,7 +406,6 @@ export default class Profile extends Component {
             navigation={this.props.navigation}
           />
         </ScrollableTabView>
-        <Fab navigation={this.props.navigation} />
       </ScrollView>
     )
   }
