@@ -7,7 +7,8 @@ import {
   TouchableOpacity,
   Clipboard,
   StatusBar,
-  Share
+  Share,
+  Vibration
 } from 'react-native'
 import PropTypes from 'prop-types'
 import Icon from 'react-native-vector-icons/FontAwesome5'
@@ -429,6 +430,11 @@ export default class TootBox extends Component {
     this.props.navigation.navigate('TootDetail', {
       data: toot
     })
+  }
+
+  setClipboard = toot => {
+    Clipboard.setString(cheerio.load(toot.content).text())
+    Vibration.vibrate([0, 100])
   }
 
   /**
@@ -932,6 +938,7 @@ export default class TootBox extends Component {
           <TouchableOpacity
             activeOpacity={1}
             onPress={() => this.goTootDetail(data)}
+            onLongPress={() => this.setClipboard(data)}
           >
             <View style={styles.row}>
               {this.props.isMaster && (
