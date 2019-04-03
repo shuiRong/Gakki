@@ -6,7 +6,8 @@ import {
   Text,
   TouchableOpacity,
   Clipboard,
-  StatusBar
+  StatusBar,
+  Share
 } from 'react-native'
 import PropTypes from 'prop-types'
 import Icon from 'react-native-vector-icons/FontAwesome5'
@@ -28,6 +29,7 @@ import { Menu } from 'teaset'
 import mobx from '../../utils/mobx'
 import HTMLView from './HTMLView'
 import { observer } from 'mobx-react'
+const cheerio = require('react-native-cheerio')
 
 let color = {}
 class TootContent extends Component {
@@ -258,6 +260,34 @@ export default class TootBox extends Component {
     })
   }
 
+  /**
+   * @description 分享到其他应用
+   * @param {toot}: 嘟文数据
+   */
+  onShare = toot => {
+    let uri = toot.uri
+    if (/\/activity$/.test(uri)) {
+      uri = uri.replace('/activity', '')
+    }
+    Share.share({
+      message: `${cheerio.load(toot.content).text()}\n${uri}`
+    })
+      .then(result => {
+        if (result.action === Share.sharedAction) {
+          if (result.activityType) {
+            // shared with activity type of result.activityType
+          } else {
+            // shared
+          }
+        } else if (result.action === Share.dismissedAction) {
+          // dismissed
+        }
+      })
+      .catch(error => {
+        console.log(error.message)
+      })
+  }
+
   showMenu = () => {
     const toot = this.state.toot
     const getTitle = title => (
@@ -271,7 +301,7 @@ export default class TootBox extends Component {
       {
         title: getTitle('分享'),
         icon: getIcon('share'),
-        onPress: () => alert('分享功能正在实现哦～')
+        onPress: () => this.onShare(toot)
       },
       {
         title: getTitle('复制链接'),
@@ -313,6 +343,7 @@ export default class TootBox extends Component {
 
     this.ref.measureInWindow((x, y, width, height) => {
       let items = baseItems.concat(this.isMine() ? myToot : theirToot)
+      console.log('uite', items)
       Menu.show({ x: x - 20, y, width, height }, items, {
         popoverStyle: {
           backgroundColor: color.themeColor,
