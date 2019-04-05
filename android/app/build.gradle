@@ -110,6 +110,14 @@ def enableProguardInReleaseBuilds = false
 
 def pass = getPassword("shuirong1997","gakki_keystore")
 
+//获取配置文件的版本信息
+def getAppVersion() {
+    def inputFile = new File("../package.json")
+    def packageJson = new JsonSlurper().parseText(inputFile.text)
+    return packageJson["version"]
+}
+def appVersion = getAppVersion()
+
 Properties properties = new Properties()
 properties.load(project.rootProject.file('local.properties').newDataInputStream())
 android {
@@ -121,7 +129,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
-        versionName "1.0.0"
+        versionName appVersion
         compileOptions {
             sourceCompatibility JavaVersion.VERSION_1_8
             targetCompatibility JavaVersion.VERSION_1_8
