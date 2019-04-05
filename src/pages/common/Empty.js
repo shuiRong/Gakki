@@ -14,7 +14,8 @@ export default class Empty extends Component {
   }
 
   static defaultProps = {
-    text: '内容为空'
+    text: '内容为空',
+    style: {}
   }
 
   render() {

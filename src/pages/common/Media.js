@@ -6,6 +6,7 @@ import React, { PureComponent, Component } from 'react'
 import {
   StyleSheet,
   View,
+  ScrollView,
   Image,
   Text,
   Dimensions,
@@ -64,6 +65,66 @@ class BlackMirror extends PureComponent {
   }
 }
 
+// 增强版图片组件
+class ImageHence extends Component {
+  static propTypes = {
+    uri: PropTypes.string.isRequired
+  }
+
+  constructor(props) {
+    super(props)
+    this.state = {
+      width: width,
+      height: height
+    }
+    this.lastPress = 0
+  }
+
+  /**
+   * @description 双击放大图片
+   */
+  zoom = () => {
+    const time = new Date().getTime()
+    const delta = time - this.lastPress
+
+    const DOUBLE_PRESS_DELAY = 400
+    if (delta < DOUBLE_PRESS_DELAY) {
+      // 如果不是长图，什么都不做
+      if (this.imageHeight < height) {
+        return
+      }
+      this.setState({
+        height: this.imageHeight
+      })
+    }
+    this.lastPress = time
+  }
+
+  render() {
+    const state = this.state
+    return (
+      <TouchableOpacity
+        onPress={this.zoom}
+        activeOpacity={1}
+        style={{ flex: 1 }}
+      >
+        <Image
+          style={{
+            overlayColor: color.themeColor,
+            width: state.width,
+            height: state.height
+          }}
+          resizeMode={'contain'}
+          onLoad={e => {
+            this.imageHeight = e.nativeEvent.source.height
+          }}
+          source={[{ uri: this.props.uri }]}
+        />
+      </TouchableOpacity>
+    )
+  }
+}
+
 @observer
 class MediaBox extends Component {
   static propTypes = {
@@ -111,13 +172,7 @@ class MediaBox extends Component {
    */
   enlargeMedia = () => {
     const media = this.state.media
-    let inside = (
-      <Image
-        style={[styles.enlargeMedia, { overlayColor: color.themeColor }]}
-        resizeMode={'contain'}
-        source={{ uri: media.url }}
-      />
-    )
+    let inside = <ImageHence uri={media.url} />
     if (media.type === 'video') {
       inside = (
         <Video
@@ -127,7 +182,7 @@ class MediaBox extends Component {
           }}
           controls={true}
           repeat={true}
-          resizeMode={'cover'}
+          resizeMode={'contain'}
           style={[
             styles.enlargeMedia,
             { position: 'absolute', top: 0, left: 0 }
@@ -140,7 +195,7 @@ class MediaBox extends Component {
     }
     const overlayView = (
       <Overlay.View overlayOpacity={0.9} ref={v => (this.overlayView = v)}>
-        <View style={styles.enlargeMediaBox}>{inside}</View>
+        <ScrollView>{inside}</ScrollView>
       </Overlay.View>
     )
     Overlay.show(overlayView)
