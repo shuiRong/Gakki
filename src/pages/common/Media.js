@@ -185,6 +185,19 @@ class MediaBox extends Component {
               source={{ uri: media.preview_url }}
               style={[styles.mediaMedia, { overlayColor: color.themeColor }]}
             />
+            {media.type === 'video' ? (
+              <Icon
+                name={'play-circle'}
+                style={{
+                  fontSize: 30,
+                  color: color.subColor,
+                  position: 'absolute',
+                  top: 70,
+                  left: '45%'
+                }}
+                solid
+              />
+            ) : null}
           </TouchableOpacity>
         </View>
       )

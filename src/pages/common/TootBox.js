@@ -832,7 +832,8 @@ export default class TootBox extends Component {
     const iconColor = {
       favourite: color.gold,
       follow: color.lightgreen,
-      reblog: color.lightBlue
+      reblog: color.lightBlue,
+      pinned: color.lightContrastColor
     }
 
     if (state.isNotificationPage) {

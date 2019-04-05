@@ -15,7 +15,7 @@ import { themeData } from '../utils/color'
 import HTMLView from './common/HTMLView'
 import Divider from './common/Divider'
 import { observer } from 'mobx-react'
-import { remove } from '../utils/store'
+import { remove, save } from '../utils/store'
 
 let color = {}
 @observer
@@ -173,24 +173,6 @@ export default class SideBar extends Component {
           <View style={styles.list}>
             <View style={styles.iconBox}>
               <Icon
-                name="cog"
-                style={[styles.icon, { color: color.contrastColor }]}
-              />
-            </View>
-            <TouchableOpacity
-              activeOpacity={0.5}
-              onPress={() => {
-                this.props.navigation.navigate('Setting')
-              }}
-            >
-              <Text style={[styles.text, { color: color.contrastColor }]}>
-                设置
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.list}>
-            <View style={styles.iconBox}>
-              <Icon
                 name="book"
                 style={[styles.icon, { color: color.contrastColor }]}
               />
@@ -240,6 +222,79 @@ export default class SideBar extends Component {
             </TouchableOpacity>
           </View>
         </ScrollView>
+        <View
+          style={{
+            position: 'absolute',
+            left: 25,
+            bottom: 15,
+            flexDirection: 'row',
+            alignItems: 'center'
+          }}
+        >
+          <TouchableOpacity
+            style={{ alignItems: 'center' }}
+            activeOpacity={0.5}
+            onPress={() => {
+              this.props.navigation.navigate('Setting')
+            }}
+          >
+            <Icon
+              name="cog"
+              style={{
+                color: color.contrastColor,
+                fontSize: 18,
+                marginBottom: 10
+              }}
+            />
+            <Text
+              style={{
+                color: color.contrastColor,
+                fontSize: 15,
+                fontWeight: 'bold'
+              }}
+            >
+              设置
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{ alignItems: 'center', marginHorizontal: 20 }}
+            activeOpacity={0.5}
+            onPress={() => {
+              const theme = mobx.theme === 'white' ? 'black' : 'white'
+              mobx.updateTheme(theme)
+              save('theme', theme)
+            }}
+          >
+            {mobx.theme === 'white' ? (
+              <Icon
+                name={'moon'}
+                style={{
+                  color: color.contrastColor,
+                  fontSize: 18,
+                  marginBottom: 10
+                }}
+              />
+            ) : (
+              <Image
+                style={{
+                  width: 20,
+                  height: 20,
+                  marginBottom: 10
+                }}
+                source={require('../assets/image/sun.png')}
+              />
+            )}
+            <Text
+              style={{
+                color: color.contrastColor,
+                fontSize: 15,
+                fontWeight: 'bold'
+              }}
+            >
+              {mobx.theme === 'white' ? '夜间' : '白天'}
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     )
   }
