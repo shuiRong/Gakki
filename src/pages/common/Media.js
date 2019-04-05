@@ -66,6 +66,7 @@ class BlackMirror extends PureComponent {
 }
 
 // 增强版图片组件
+@observer
 class ImageHence extends Component {
   static propTypes = {
     uri: PropTypes.string.isRequired
