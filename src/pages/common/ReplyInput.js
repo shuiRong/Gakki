@@ -303,7 +303,7 @@ export default class ReplyInput extends Component {
       this.setState({
         customEmojis: res
       })
-      save('emojis', res)
+      save('emojis', res).then(() => {})
       // 另外，转换emojis Array数据为Object数据，留作后面HTML渲染时用
       this.translateEmoji()
     })
@@ -315,7 +315,7 @@ export default class ReplyInput extends Component {
       emojiObj[item.shortcode] = item.static_url
     })
 
-    save('emojiObj', emojiObj)
+    save('emojiObj', emojiObj).then(() => {})
     mobx.updateEmojiObj('emojiObj', emojiObj)
   }
 

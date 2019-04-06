@@ -42,21 +42,25 @@ export default class Login extends Component {
           loginPage()
           return
         }
-        fetch('domain').then(({ domain }) => {
-          if (!domain) {
-            loginPage()
-            return
-          }
-          verify_credentials(domain, access_token).then(({ name }) => {
-            if (!name) {
+        fetch('domain')
+          .then(domain => {
+            if (!domain) {
               loginPage()
               return
             }
-            mobx.updateDomain(domain)
-            mobx.updateAccessToken(access_token)
-            this.props.navigation.navigate('Home')
+            verify_credentials(domain, access_token).then(({ name }) => {
+              if (!name) {
+                loginPage()
+                return
+              }
+              mobx.updateDomain(domain)
+              mobx.updateAccessToken(access_token)
+              this.props.navigation.navigate('Home')
+            })
           })
-        })
+          .catch(err => {
+            console.log('er', err)
+          })
       })
     }
 

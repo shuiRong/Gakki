@@ -262,7 +262,7 @@ export default class SideBar extends Component {
             onPress={() => {
               const theme = mobx.theme === 'white' ? 'black' : 'white'
               mobx.updateTheme(theme)
-              save('theme', theme)
+              save('theme', theme).then(() => {})
             }}
           >
             {mobx.theme === 'white' ? (

@@ -15,7 +15,7 @@ import { apps } from '../utils/api'
 import { themeData } from '../utils/color'
 import mobx from '../utils/mobx'
 import { observer } from 'mobx-react'
-import { save } from '../utils/store'
+import { save, fetch } from '../utils/store'
 import { Confirm } from './common/Notice'
 
 let color = {}
@@ -30,15 +30,15 @@ export default class Login extends Component {
     if (!domain) {
       return
     }
-    apps(mobx.domain, {
-      website: `https://${mobx.domain}`,
+    apps(domain, {
+      website: `https://${domain}`,
       client_name: 'Gakki',
       redirect_uris: 'https://linshuirong.cn',
       scopes: 'read write follow push'
     }).then(({ client_id, client_secret }) => {
-      save('client_id', client_id)
-      save('client_secret', client_secret)
-      save('domain', mobx.domain)
+      save('client_id', client_id).then(() => {})
+      save('client_secret', client_secret).then(() => {})
+      save('domain', mobx.domain).then(() => {})
       this.props.navigation.navigate('Auth', {
         client_id,
         client_secret

@@ -17,7 +17,7 @@ class Globe {
   @observable emojiObj = {} // 当前实例的emoji对象
   @observable access_token = ''
   @observable enabled = true // 个人详情页面的下拉刷新组件是否启用
-  @observable domain = '' // 实例域名
+  @observable domain = 'cmx.im' // 实例域名
   @observable hideSendTootButton = false // 滑动时隐藏发嘟文按钮
   @observable alwaysShowSensitiveMedia = false // 总是显示媒体文件
 

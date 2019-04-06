@@ -65,7 +65,7 @@ export default class Setting extends Component {
       newTheme,
       theme => {
         mobx.updateTheme(theme)
-        save('theme', theme)
+        save('theme', theme).then(() => {})
       },
       { height: 200 }
     )

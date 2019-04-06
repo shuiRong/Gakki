@@ -91,7 +91,7 @@ export default class Home extends Component {
    */
   getCustomEmojis = () => {
     getCustomEmojis(mobx.domain).then(res => {
-      save('emojis', res)
+      save('emojis', res).then(() => {})
 
       this.translateEmoji(res)
     })
@@ -108,7 +108,7 @@ export default class Home extends Component {
         emojiObj[':' + item.shortcode + ':'] = item.static_url
       })
 
-      save('emojiObj', emojiObj)
+      save('emojiObj', emojiObj).then(() => {})
       mobx.updateEmojiObj(emojiObj)
     }
 

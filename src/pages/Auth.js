@@ -34,7 +34,7 @@ export default class Auth extends Component {
 
   getToken = code => {
     const state = this.state
-    getToken(mobx.domain,{
+    getToken(mobx.domain, {
       client_id: state.client_id,
       client_secret: state.client_secret,
       grant_type: 'authorization_code',
@@ -65,15 +65,6 @@ export default class Auth extends Component {
     if (!mobx.domain || !state.client_id) {
       return null
     }
-
-    console.log(
-      'tes',
-      `https://${
-        mobx.domain
-      }/oauth/authorize?scope=read%20write%20follow%20push&response_type=code&redirect_uri=https://linshuirong.cn&client_id=${
-        state.client_id
-      }`
-    )
 
     return (
       <View style={{ backgroundColor: color.themeColor, flex: 1 }}>
