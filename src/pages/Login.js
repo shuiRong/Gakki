@@ -21,37 +21,27 @@ import { Confirm } from './common/Notice'
 let color = {}
 @observer
 export default class Login extends Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      domain: mobx.domain
-    }
-  }
-
   openURL = url => {
     Linking.openURL(url).catch(err => console.error('An error occurred', err))
   }
 
   createApps = () => {
-    const state = this.state
-    const domain = state.domain
+    const domain = mobx.domain
     if (!domain) {
       return
     }
-    apps({
-      website: `https://${state.domain}`,
-      client_name: 'TestGakki',
+    apps(mobx.domain, {
+      website: `https://${mobx.domain}`,
+      client_name: 'Gakki',
       redirect_uris: 'https://linshuirong.cn',
       scopes: 'read write follow push'
     }).then(({ client_id, client_secret }) => {
       save('client_id', client_id)
       save('client_secret', client_secret)
-      save('domain', state.domain)
-      mobx.updateDomain('domain', state.domain)
+      save('domain', mobx.domain)
       this.props.navigation.navigate('Auth', {
         client_id,
-        client_secret,
-        domain: state.domain
+        client_secret
       })
     })
   }
@@ -135,8 +125,8 @@ export default class Login extends Component {
               color: color.contrastColor
             }}
             maxLength={20}
-            onChangeText={text => this.setState({ domain: text })}
-            value={this.state.domain}
+            onChangeText={text => mobx.updateDomain(text)}
+            value={mobx.domain}
           />
           <TouchableOpacity
             activeOpacity={0.7}

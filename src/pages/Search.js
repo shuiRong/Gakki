@@ -53,7 +53,7 @@ export default class Notifications extends Component {
   }
 
   search = () => {
-    search(this.state.text)
+    search(mobx.domain, this.state.text)
       .then(res => {
         this.setState(res)
       })

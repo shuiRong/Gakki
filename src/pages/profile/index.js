@@ -99,7 +99,7 @@ export default class ProfileTab extends Component {
    */
   getUserStatuses = (cb, params) => {
     const id = this.props.navigation.getParam('id')
-    getUserStatuses(id, {
+    getUserStatuses(mobx.domain, id, {
       exclude_replies: false,
       pinned: true,
       ...params,

@@ -10,6 +10,7 @@ import Icon from 'react-native-vector-icons/FontAwesome5'
 import { themeData } from '../utils/color'
 import mobx from '../utils/mobx'
 import { observer } from 'mobx-react'
+import { version } from '../utils/config'
 
 let color = {}
 @observer
@@ -52,7 +53,7 @@ export default class About extends Component {
               margin: 20
             }}
           >
-            Gakki 1.1.0
+            Gakki {version}
           </Text>
           <Text
             style={{

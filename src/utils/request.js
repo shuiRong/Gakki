@@ -1,15 +1,14 @@
 import axios from 'axios'
 import { Toast } from 'teaset'
-import mobx from './mobx'
 
 const service = axios.create({
-  baseURL: `https://${mobx.domain}`,
   timeout: 10000 // 请求超时时间限制
 })
 
 // 请求拦截器
 service.interceptors.request.use(
   config => {
+    console.log('config:', config)
     return config
   },
   err => {

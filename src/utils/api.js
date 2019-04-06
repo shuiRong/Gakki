@@ -1,32 +1,36 @@
 import request from './request'
 import mobx from './mobx'
 
-export const apps = data => {
+export const apps = (domain, data) => {
   return request({
+    baseURL: `https://${domain}`,
     url: '/api/v1/apps',
     method: 'post',
     data
   })
 }
 
-export const authorize = params => {
+export const authorize = (domain, params) => {
   return request({
+    baseURL: `https://${domain}`,
     url: '/oauth/authorize',
     method: 'get',
     params
   })
 }
 
-export const getToken = data => {
+export const getToken = (domain, data) => {
   return request({
+    baseURL: `https://${domain}`,
     url: `/oauth/token`,
     method: 'post',
     data
   })
 }
 
-export const getHomeTimelines = (url, params) => {
+export const getHomeTimelines = (domain, url, params) => {
   return request({
+    baseURL: `https://${domain}`,
     url: `/api/v1/timelines/${url}`,
     method: 'get',
     headers: {
@@ -36,8 +40,9 @@ export const getHomeTimelines = (url, params) => {
   })
 }
 
-export const getFavourites = params => {
+export const getFavourites = (domain, params) => {
   return request({
+    baseURL: `https://${domain}`,
     url: `api/v1/favourites`,
     method: 'get',
     headers: {
@@ -47,8 +52,9 @@ export const getFavourites = params => {
   })
 }
 
-export const getCurrentUser = () => {
+export const getCurrentUser = domain => {
   return request({
+    baseURL: `https://${domain}`,
     url: '/api/v1/accounts/verify_credentials',
     method: 'get',
     headers: {
@@ -58,8 +64,9 @@ export const getCurrentUser = () => {
 }
 
 // 获取时间线上的toot
-export const getStatuses = id => {
+export const getStatuses = (domain, id) => {
   return request({
+    baseURL: `https://${domain}`,
     url: `/api/v1/statuses/${id}`,
     method: 'get',
     headers: {
@@ -69,8 +76,9 @@ export const getStatuses = id => {
 }
 
 // 获取用户发送的toot
-export const getUserStatuses = (id, params) => {
+export const getUserStatuses = (domain, id, params) => {
   return request({
+    baseURL: `https://${domain}`,
     url: `/api/v1/accounts/${id}/statuses`,
     method: 'get',
     headers: {
@@ -81,8 +89,9 @@ export const getUserStatuses = (id, params) => {
 }
 
 // 删除toot
-export const deleteStatuses = id => {
+export const deleteStatuses = (domain, id) => {
   return request({
+    baseURL: `https://${domain}`,
     url: `/api/v1/statuses/${id}`,
     method: 'delete',
     headers: {
@@ -92,8 +101,9 @@ export const deleteStatuses = id => {
 }
 
 // 获取评论
-export const context = id => {
+export const context = (domain, id) => {
   return request({
+    baseURL: `https://${domain}`,
     url: `/api/v1/statuses/${id}/context`,
     method: 'get',
     headers: {
@@ -102,8 +112,9 @@ export const context = id => {
   })
 }
 
-export const favourite = (id, favourite) => {
+export const favourite = (domain, id, favourite) => {
   return request({
+    baseURL: `https://${domain}`,
     url: `/api/v1/statuses/${id}/${favourite ? 'favourite' : 'unfavourite'}`,
     method: 'post',
     headers: {
@@ -112,8 +123,9 @@ export const favourite = (id, favourite) => {
   })
 }
 
-export const reblog = (id, reblog) => {
+export const reblog = (domain, id, reblog) => {
   return request({
+    baseURL: `https://${domain}`,
     url: `/api/v1/statuses/${id}/${reblog ? 'reblog' : 'unreblog'}`,
     method: 'post',
     headers: {
@@ -126,8 +138,9 @@ export const reblog = (id, reblog) => {
  * @description 隐藏/取消隐藏 某人
  * @param {notificationStatus}: 是否同时隐藏该用户的通知
  */
-export const muteAccount = (id, mute, notificationStatus) => {
+export const muteAccount = (domain, id, mute, notificationStatus) => {
   return request({
+    baseURL: `https://${domain}`,
     url: `/api/v1/accounts/${id}/${mute ? 'mute' : 'unmute'}`,
     method: 'post',
     data: {
@@ -140,8 +153,9 @@ export const muteAccount = (id, mute, notificationStatus) => {
 }
 
 // 屏蔽/取消屏蔽 某人
-export const blockAccount = (id, block) => {
+export const blockAccount = (domain, id, block) => {
   return request({
+    baseURL: `https://${domain}`,
     url: `/api/v1/accounts/${id}/${block ? 'block' : 'unblock'}`,
     method: 'post',
     headers: {
@@ -151,8 +165,9 @@ export const blockAccount = (id, block) => {
 }
 
 // 获取隐藏用户列表
-export const mutesList = () => {
+export const mutesList = domain => {
   return request({
+    baseURL: `https://${domain}`,
     url: '/api/v1/mutes',
     method: 'get',
     headers: {
@@ -162,8 +177,9 @@ export const mutesList = () => {
 }
 
 // 发送toot
-export const sendStatuses = data => {
+export const sendStatuses = (domain, data) => {
   return request({
+    baseURL: `https://${domain}`,
     url: '/api/v1/statuses',
     method: 'post',
     data,
@@ -174,13 +190,14 @@ export const sendStatuses = data => {
 }
 
 // 获取和某人的关系数据
-export const getRelationship = id => {
+export const getRelationship = (domain, id) => {
   let query = ''
   id.forEach(item => {
     query += `id[]=${item}&`
   })
 
   return request({
+    baseURL: `https://${domain}`,
     url: `/api/v1/accounts/relationships?${query}`,
     method: 'get',
     headers: {
@@ -190,8 +207,9 @@ export const getRelationship = id => {
 }
 
 // 获取某人详情数据
-export const getAccountData = id => {
+export const getAccountData = (domain, id) => {
   return request({
+    baseURL: `https://${domain}`,
     url: `/api/v1/accounts/${id}`,
     method: 'get',
     headers: {
@@ -201,8 +219,9 @@ export const getAccountData = id => {
 }
 
 // 在个人资料页面置顶/取消置顶
-export const setPin = (id, pinned) => {
+export const setPin = (domain, id, pinned) => {
   return request({
+    baseURL: `https://${domain}`,
     url: `/api/v1/statuses/${id}/${pinned ? 'unpin' : 'pin'}`,
     method: 'post',
     headers: {
@@ -212,7 +231,7 @@ export const setPin = (id, pinned) => {
 }
 
 // 上传媒体文件：图片/视频
-export const upload = ({ response, description, focus }) => {
+export const upload = ({ domain, response, description, focus }) => {
   const data = new FormData()
 
   data.append('file', {
@@ -223,6 +242,7 @@ export const upload = ({ response, description, focus }) => {
   data.append('description', description)
   data.append('focus', focus)
   return request({
+    baseURL: `https://${domain}`,
     url: '/api/v1/media',
     method: 'post',
     data: data,
@@ -234,8 +254,9 @@ export const upload = ({ response, description, focus }) => {
 }
 
 // 更新媒体文件参数
-export const updateMedia = (id, data) => {
+export const updateMedia = (domain, id, data) => {
   return request({
+    baseURL: `https://${domain}`,
     url: `/api/v1/media/${id}`,
     method: 'put',
     data,
@@ -246,8 +267,9 @@ export const updateMedia = (id, data) => {
 }
 
 // 获取当前实例的emoji
-export const getCustomEmojis = () => {
+export const getCustomEmojis = domain => {
   return request({
+    baseURL: `https://${domain}`,
     url: '/api/v1/custom_emojis',
     method: 'get',
     headers: {
@@ -257,8 +279,9 @@ export const getCustomEmojis = () => {
 }
 
 // 获取通知消息
-export const getNotifications = params => {
+export const getNotifications = (domain, params) => {
   return request({
+    baseURL: `https://${domain}`,
     url: '/api/v1/notifications',
     method: 'get',
     params,
@@ -269,8 +292,9 @@ export const getNotifications = params => {
 }
 
 // 清空通知消息
-export const clearNotifications = () => {
+export const clearNotifications = domain => {
   return request({
+    baseURL: `https://${domain}`,
     url: '/api/v1/notifications/clear',
     method: 'post',
     headers: {
@@ -280,8 +304,9 @@ export const clearNotifications = () => {
 }
 
 // 获取通知消息
-export const setProfile = data => {
+export const setProfile = domain => {
   return request({
+    baseURL: `https://${domain}`,
     url: '/settings/profile',
     method: 'get',
     params,
@@ -292,8 +317,9 @@ export const setProfile = data => {
 }
 
 // 获取私信数据
-export const getConversations = params => {
+export const getConversations = (domain, params) => {
   return request({
+    baseURL: `https://${domain}`,
     url: '/api/v1/conversations',
     method: 'get',
     params,
@@ -304,8 +330,9 @@ export const getConversations = params => {
 }
 
 // 获取屏蔽用户
-export const getBlocks = () => {
+export const getBlocks = domain => {
   return request({
+    baseURL: `https://${domain}`,
     url: '/api/v1/blocks',
     method: 'get',
     params: {
@@ -318,8 +345,9 @@ export const getBlocks = () => {
 }
 
 // 获取隐藏用户
-export const getMutes = () => {
+export const getMutes = domain => {
   return request({
+    baseURL: `https://${domain}`,
     url: '/api/v1/mutes',
     method: 'get',
     params: {
@@ -332,8 +360,9 @@ export const getMutes = () => {
 }
 
 // 正在关注
-export const following = (id, limit) => {
+export const following = (domain, id, limit) => {
   return request({
+    baseURL: `https://${domain}`,
     url: `api/v1/accounts/${id}/following`,
     method: 'get',
     params: {
@@ -346,8 +375,9 @@ export const following = (id, limit) => {
 }
 
 // 关注者
-export const followers = (id, limit) => {
+export const followers = (domain, id, limit) => {
   return request({
+    baseURL: `https://${domain}`,
     url: `api/v1/accounts/${id}/followers`,
     method: 'get',
     params: {
@@ -360,8 +390,9 @@ export const followers = (id, limit) => {
 }
 
 // 关注/取关
-export const follow = (id, follow) => {
+export const follow = (domain, id, follow) => {
   return request({
+    baseURL: `https://${domain}`,
     url: `/api/v1/accounts/${id}/${follow ? 'follow' : 'unfollow'}`,
     method: 'post',
     data: {
@@ -374,8 +405,9 @@ export const follow = (id, follow) => {
 }
 
 // 关注请求列表
-export const followRequests = () => {
+export const followRequests = domain => {
   return request({
+    baseURL: `https://${domain}`,
     url: `/api/v1/follow_requests`,
     method: 'get',
     headers: {
@@ -385,8 +417,9 @@ export const followRequests = () => {
 }
 
 // 审核关注请求
-export const checkRequest = (id, status) => {
+export const checkRequest = (domain, id, status) => {
   return request({
+    baseURL: `https://${domain}`,
     url: `/api/v1/follow_requests/${id}/${status ? 'authorize' : 'reject'}`,
     method: 'post',
     headers: {
@@ -396,12 +429,13 @@ export const checkRequest = (id, status) => {
 }
 
 // 搜索
-export const search = q => {
+export const search = (query, domain) => {
   return request({
+    baseURL: `https://${domain}`,
     url: `/api/v2/search`,
     method: 'get',
     params: {
-      q
+      query
     },
     headers: {
       Authorization: mobx.access_token
@@ -412,6 +446,7 @@ export const search = q => {
 // 获取标签内容
 export const getTag = (tag, params) => {
   return request({
+    baseURL: `https://${domain}`,
     url: `/api/v1/timelines/tag/${tag}`,
     method: 'get',
     params,
@@ -422,8 +457,9 @@ export const getTag = (tag, params) => {
 }
 
 // 验证token是否有效
-export const verify_credentials = access_token => {
+export const verify_credentials = (domain, access_token) => {
   return request({
+    baseURL: `https://${domain}`,
     url: `/api/v1/apps/verify_credentials`,
     method: 'get',
     headers: {

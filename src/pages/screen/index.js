@@ -10,6 +10,7 @@ import TootBox from '../common/TootBox'
 import Divider from '../common/Divider'
 import Empty from '../common/Empty'
 import PropTypes from 'prop-types'
+import mobx from '../../utils/mobx'
 
 export default class LocalScreen extends Component {
   static propTypes = {
@@ -114,7 +115,7 @@ export default class LocalScreen extends Component {
    * @param {params}: 分页参数
    */
   fetchTimelines = (cb, params) => {
-    getHomeTimelines(this.props.url, {
+    getHomeTimelines(mobx.domain, this.props.url, {
       ...params,
       ...this.props.params
     })

@@ -20,8 +20,7 @@ export default class Auth extends Component {
     super(props)
     this.state = {
       client_id: '',
-      client_secret: '',
-      domain: ''
+      client_secret: ''
     }
   }
 
@@ -29,14 +28,13 @@ export default class Auth extends Component {
     const { getParam } = this.props.navigation
     this.setState({
       client_id: getParam('client_id'),
-      client_secret: getParam('client_secret'),
-      domain: getParam('domain')
+      client_secret: getParam('client_secret')
     })
   }
 
   getToken = code => {
     const state = this.state
-    getToken({
+    getToken(mobx.domain,{
       client_id: state.client_id,
       client_secret: state.client_secret,
       grant_type: 'authorization_code',
@@ -64,9 +62,18 @@ export default class Auth extends Component {
     color = themeData[mobx.theme]
     const state = this.state
 
-    if (!state.domain) {
+    if (!mobx.domain || !state.client_id) {
       return null
     }
+
+    console.log(
+      'tes',
+      `https://${
+        mobx.domain
+      }/oauth/authorize?scope=read%20write%20follow%20push&response_type=code&redirect_uri=https://linshuirong.cn&client_id=${
+        state.client_id
+      }`
+    )
 
     return (
       <View style={{ backgroundColor: color.themeColor, flex: 1 }}>
@@ -82,11 +89,11 @@ export default class Auth extends Component {
           title={'授权'}
           right={'none'}
         />
-        {state.domain ? (
+        {mobx.domain ? (
           <WebView
             source={{
               uri: `https://${
-                state.domain
+                mobx.domain
               }/oauth/authorize?scope=read%20write%20follow%20push&response_type=code&redirect_uri=https://linshuirong.cn&client_id=${
                 state.client_id
               }`

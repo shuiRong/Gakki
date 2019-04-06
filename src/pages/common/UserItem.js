@@ -62,7 +62,7 @@ export default class UserList extends Component {
   blockAccount = block => {
     const state = this.state
     const id = state.account.id
-    blockAccount(id, block).then(() => {
+    blockAccount(mobx.domain, id, block).then(() => {
       if (!block) {
         this.props.deleteUser(id)
         return
@@ -76,7 +76,7 @@ export default class UserList extends Component {
   muteAccount = (mute, notification) => {
     const state = this.state
     const id = state.account.id
-    muteAccount(id, mute, notification).then(() => {
+    muteAccount(mobx.domain, id, mute, notification).then(() => {
       if (!mute) {
         this.props.deleteUser(id)
         return
@@ -92,7 +92,7 @@ export default class UserList extends Component {
 
   checkRequest = status => {
     const id = this.state.account.id
-    checkRequest(id, status).then(() => {
+    checkRequest(mobx.domain, id, status).then(() => {
       this.props.deleteUser(id)
     })
   }

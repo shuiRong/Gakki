@@ -62,7 +62,7 @@ export default class Home extends Component {
     })
 
     if (!mobx.account || !mobx.account.id) {
-      getCurrentUser().then(res => {
+      getCurrentUser(mobx.domain).then(res => {
         mobx.updateAccount(res)
       })
     }
@@ -90,7 +90,7 @@ export default class Home extends Component {
    * @description 从网络重新获取emojis数据
    */
   getCustomEmojis = () => {
-    getCustomEmojis().then(res => {
+    getCustomEmojis(mobx.domain).then(res => {
       save('emojis', res)
 
       this.translateEmoji(res)

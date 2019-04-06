@@ -241,7 +241,7 @@ export default class TootBox extends Component {
    * @param {favourited}: 应该点赞？
    */
   favourite = (id, favourited) => {
-    favourite(id, favourited).then(res => {
+    favourite(mobx.domain, id, favourited).then(res => {
       this.setState({
         toot: res
       })
@@ -254,7 +254,7 @@ export default class TootBox extends Component {
    * @param {reblogged}: 转发状态
    */
   reblog = (id, reblogged) => {
-    reblog(id, reblogged).then(res => {
+    reblog(mobx.domain, id, reblogged).then(res => {
       this.setState({
         toot: res
       })
@@ -362,14 +362,14 @@ export default class TootBox extends Component {
    */
   deleteStatuses = (recycle = false) => {
     const id = this.state.toot.id
-    deleteStatuses(id).then(() => {
+    deleteStatuses(mobx.domain, id).then(() => {
       this.props.deleteToot && this.props.deleteToot(id, recycle)
     })
   }
 
   setPin = () => {
     const toot = this.state.toot
-    setPin(toot.id, toot.pinned).then(() => {
+    setPin(mobx.domain, toot.id, toot.pinned).then(() => {
       this.setState(
         {
           toot: { ...toot, pinned: !toot.pinned }
@@ -383,14 +383,14 @@ export default class TootBox extends Component {
 
   muteAccount = () => {
     const accountId = this.state.toot.account.id
-    muteAccount(accountId, true).then(() => {
+    muteAccount(mobx.domain, accountId, true).then(() => {
       this.props.muteAccount && this.props.muteAccount(accountId)
     })
   }
 
   blockAccount = () => {
     const accountId = this.state.toot.account.id
-    blockAccount(accountId, true).then(() => {
+    blockAccount(mobx.domain, accountId, true).then(() => {
       this.props.blockAccount && this.props.blockAccount(accountId)
     })
   }
@@ -939,6 +939,7 @@ export default class TootBox extends Component {
           <TouchableOpacity
             activeOpacity={1}
             onPress={() => this.goTootDetail(data)}
+            delayLongPress={2000}
             onLongPress={() => this.setClipboard(data)}
           >
             <View style={styles.row}>

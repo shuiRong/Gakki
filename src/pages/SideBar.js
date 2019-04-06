@@ -26,7 +26,7 @@ export default class SideBar extends Component {
       username: '',
       avatar: '',
       header: '',
-      host: 'cmx.im',
+      host: mobx.domain,
       display_name: '',
       id: '',
       black: false,
@@ -47,7 +47,7 @@ export default class SideBar extends Component {
 
     // 如果没获取到的account数据，重新拉取
     if (!mobx.account || !mobx.account.id) {
-      getCurrentUser().then(res => {
+      getCurrentUser(mobx.domain).then(res => {
         update(res)
         mobx.updateAccount(res)
       })

@@ -58,7 +58,7 @@ export default class MutedUsers extends Component {
    * @param {params}: 分页参数
    */
   getBlocks = (cb, params) => {
-    getBlocks(params)
+    getBlocks(mobx.domain, params)
       .then(res => {
         // 同时将数据更新到state数据中，刷新视图
         this.setState({
@@ -76,7 +76,7 @@ export default class MutedUsers extends Component {
   }
 
   getRelationship = ids => {
-    getRelationship(ids).then(res => {
+    getRelationship(mobx.domain, ids).then(res => {
       this.setState({
         relationships: res
       })

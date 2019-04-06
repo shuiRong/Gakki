@@ -55,7 +55,7 @@ export default class Envelope extends Component {
    * @param {params}: 分页参数
    */
   getConversations = (cb, params) => {
-    getConversations(params)
+    getConversations(mobx.domain, params)
       .then(res => {
         // 同时将数据更新到state数据中，刷新视图
         this.setState({

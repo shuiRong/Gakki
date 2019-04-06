@@ -62,7 +62,7 @@ export default class Tab extends Component {
    * @param {params}: 分页参数
    */
   getNotifications = (cb, params) => {
-    getNotifications(params)
+    getNotifications(mobx.domain, params)
       .then(res => {
         // 同时将数据更新到state数据中，刷新视图
         this.setState({

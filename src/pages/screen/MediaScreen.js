@@ -91,7 +91,7 @@ export default class TootScreen extends Component {
    */
   getUserMediaStatuses = (cb, params) => {
     const id = this.props.navigation.getParam('id')
-    getUserStatuses(id, {
+    getUserStatuses(mobx.domain, id, {
       only_media: true,
       ...params
     })

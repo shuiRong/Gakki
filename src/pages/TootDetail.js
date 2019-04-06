@@ -61,7 +61,7 @@ export default class TootDetail extends Component {
     const toot = this.props.navigation.getParam('data')
     const id = toot.id
 
-    getStatuses(id).then(res => {
+    getStatuses(mobx.domain, id).then(res => {
       this.setState({
         toot: res
       })
@@ -71,7 +71,7 @@ export default class TootDetail extends Component {
   }
 
   getContext = id => {
-    context(id).then(res => {
+    context(mobx.domain, id).then(res => {
       this.setState(res)
     })
   }

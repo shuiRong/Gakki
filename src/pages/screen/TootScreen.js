@@ -87,7 +87,7 @@ export default class TootScreen extends Component {
    */
   getUserStatuses = (cb, params) => {
     const id = this.props.navigation.getParam('id')
-    getUserStatuses(id, {
+    getUserStatuses(mobx.domain, id, {
       exclude_replies: false,
       pinned: false,
       ...params
@@ -134,7 +134,7 @@ export default class TootScreen extends Component {
     this.setState({
       loading: true
     })
-    getUserStatuses(this.props.navigation.getParam('id'), {
+    getUserStatuses(mobx.domain, this.props.navigation.getParam('id'), {
       pinned: true
     })
       .then(res => {

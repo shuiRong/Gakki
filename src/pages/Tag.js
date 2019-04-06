@@ -52,7 +52,7 @@ export default class HashTag extends Component {
   }
 
   getTag = params => {
-    getTag(this.tag, params)
+    getTag(mobx.domain, this.tag, params)
       .then(res => {
         this.setState({
           list: this.state.list.concat(res),

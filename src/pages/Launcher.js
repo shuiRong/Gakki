@@ -18,6 +18,7 @@ let color = {}
 export default class Login extends Component {
   componentDidMount() {
     if (__DEV__) {
+      mobx.updateDomain('cmx.im')
       save('access_token', token).then(() => {
         mobx.updateAccessToken(token)
         this.props.navigation.navigate('Home')
@@ -35,16 +36,26 @@ export default class Login extends Component {
         deploymentKey: deploymentKey
       })
 
-      fetch('access_token').then(res => {
-        if (!res) {
-          this.props.navigation.navigate('Login')
+      const loginPage = () => this.props.navigation.navigate('Login')
+      fetch('access_token').then(access_token => {
+        if (!access_token) {
+          loginPage()
           return
         }
-        verify_credentials(res).then(({ name }) => {
-          if (name) {
-            mobx.updateAccessToken(res)
-            this.props.navigation.navigate('Home')
+        fetch('domain').then(({ domain }) => {
+          if (!domain) {
+            loginPage()
+            return
           }
+          verify_credentials(domain, access_token).then(({ name }) => {
+            if (!name) {
+              loginPage()
+              return
+            }
+            mobx.updateDomain(domain)
+            mobx.updateAccessToken(access_token)
+            this.props.navigation.navigate('Home')
+          })
         })
       })
     }

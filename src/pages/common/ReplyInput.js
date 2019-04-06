@@ -299,7 +299,7 @@ export default class ReplyInput extends Component {
    * @description 从网络重新获取emojis数据
    */
   getCustomEmojis = () => {
-    getCustomEmojis().then(res => {
+    getCustomEmojis(mobx.domain).then(res => {
       this.setState({
         customEmojis: res
       })
@@ -338,7 +338,7 @@ export default class ReplyInput extends Component {
       } else if (response.error) {
         console.log('error: ', response.error)
       } else {
-        upload({
+        upload(mobx.domain, {
           response: response,
           description: 'description',
           focus: 'focus'
@@ -364,7 +364,7 @@ export default class ReplyInput extends Component {
       mediaType: 'video'
     })
       .then(video => {
-        upload({
+        upload(mobx.domain, {
           response: {
             uri: video.path,
             type: video.mime,
@@ -391,7 +391,7 @@ export default class ReplyInput extends Component {
 
   sendToot = () => {
     const props = this.props
-    sendStatuses({
+    sendStatuses(mobx.domain, {
       in_reply_to_id: mobx.in_reply_to_id,
       status: mobx.inputValue,
       spoiler_text: mobx.cw ? mobx.spoiler_text : '',
@@ -517,7 +517,7 @@ export default class ReplyInput extends Component {
     newList.forEach((media, index) => {
       if (index === mediaIndex) {
         media['description'] = description
-        updateMedia(media.id, {
+        updateMedia(mobx.domain, media.id, {
           description
         }).then(() => {
           // 更新媒体文件辅助标题参数

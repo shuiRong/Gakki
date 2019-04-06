@@ -2,7 +2,7 @@
  * 多媒体展示组件
  */
 
-import React, { PureComponent, Component } from 'react'
+import React, { Component } from 'react'
 import {
   StyleSheet,
   View,
@@ -26,7 +26,7 @@ const height = Dimensions.get('window').height
 
 // 多媒体的黑色隐藏框
 @observer
-class BlackMirror extends PureComponent {
+class BlackMirror extends Component {
   static propTypes = {
     showMedia: PropTypes.func.isRequired,
     text: PropTypes.string.isRequired

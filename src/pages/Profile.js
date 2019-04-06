@@ -97,7 +97,7 @@ export default class Profile extends Component {
    * @param {id}: id
    */
   getAccountData = id => {
-    getAccountData(id)
+    getAccountData(mobx.domain, id)
       .then(res => {
         this.setState({
           profile: res,
@@ -116,7 +116,7 @@ export default class Profile extends Component {
    * @param {id}: id
    */
   getRelationship = id => {
-    getRelationship([id]).then(res => {
+    getRelationship(mobx.domain, [id]).then(res => {
       this.setState({
         relationship: res[0]
       })
@@ -127,18 +127,22 @@ export default class Profile extends Component {
    * @description 给toot点赞，如果已经点过赞就取消点赞
    */
   favourite = () => {
-    favourite(this.state.toot.id, this.state.toot.favourited).then(() => {
-      this.update('favourited', 'favourites_count')
-    })
+    favourite(mobx.domain, this.state.toot.id, this.state.toot.favourited).then(
+      () => {
+        this.update('favourited', 'favourites_count')
+      }
+    )
   }
 
   /**
    * @description 转发toot
    */
   reblog = () => {
-    reblog(this.state.toot.id, this.state.toot.reblogged).then(() => {
-      this.update('reblogged', 'reblogs_count')
-    })
+    reblog(mobx.domain, this.state.toot.id, this.state.toot.reblogged).then(
+      () => {
+        this.update('reblogged', 'reblogs_count')
+      }
+    )
   }
 
   /**
@@ -191,7 +195,7 @@ export default class Profile extends Component {
    * @param {following}: 正在关注该用户
    */
   followTheAccount = following => {
-    follow(this.state.profile.id, !following).then(res => {
+    follow(mobx.domain, this.state.profile.id, !following).then(res => {
       this.setState({
         relationship: res
       })
