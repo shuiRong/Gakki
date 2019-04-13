@@ -18,7 +18,8 @@ export default class LocalScreen extends Component {
     navigation: PropTypes.object.isRequired,
     onScroll: PropTypes.func.isRequired,
     spruce: PropTypes.element,
-    url: PropTypes.string
+    url: PropTypes.string,
+    index: PropTypes.number.isRequired
   }
 
   static defaultProps = {
@@ -36,6 +37,9 @@ export default class LocalScreen extends Component {
   }
   componentDidMount() {
     this.fetchTimelines()
+    // setTimeout(() => {
+    //   this.ref.scrollToOffset({ offset: 200 })
+    // }, 10000)
   }
 
   /**
@@ -155,33 +159,32 @@ export default class LocalScreen extends Component {
       return <TootListSpruce />
     }
     return (
-      <View style={styles.container}>
-        <FlatList
-          ItemSeparatorComponent={() => <Divider />}
-          showsVerticalScrollIndicator={false}
-          data={state.list}
-          onEndReachedThreshold={0.3}
-          onEndReached={this.onEndReached}
-          onScroll={this.props.onScroll}
-          keyExtractor={item => item.id}
-          refreshControl={
-            <RefreshControl
-              refreshing={state.loading}
-              onRefresh={this.refreshHandler}
-            />
-          }
-          ListEmptyComponent={<Empty />}
-          renderItem={({ item }) => (
-            <TootBox
-              data={item}
-              navigation={this.props.navigation}
-              deleteToot={this.deleteToot}
-              muteAccount={this.muteAccount}
-              blockAccount={this.blockAccount}
-            />
-          )}
-        />
-      </View>
+      <FlatList
+        ref={ref => mobx.updateHomeTabRef(ref, this.props.index)}
+        ItemSeparatorComponent={() => <Divider />}
+        showsVerticalScrollIndicator={false}
+        data={state.list}
+        onEndReachedThreshold={0.3}
+        onEndReached={this.onEndReached}
+        onScroll={this.props.onScroll}
+        keyExtractor={item => item.id}
+        refreshControl={
+          <RefreshControl
+            refreshing={state.loading}
+            onRefresh={this.refreshHandler}
+          />
+        }
+        ListEmptyComponent={<Empty />}
+        renderItem={({ item }) => (
+          <TootBox
+            data={item}
+            navigation={this.props.navigation}
+            deleteToot={this.deleteToot}
+            muteAccount={this.muteAccount}
+            blockAccount={this.blockAccount}
+          />
+        )}
+      />
     )
   }
 }

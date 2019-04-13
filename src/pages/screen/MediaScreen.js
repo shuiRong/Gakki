@@ -165,6 +165,7 @@ export default class TootScreen extends Component {
     return (
       <View style={styles.container}>
         <FlatList
+          ref={ref => mobx.updateProfileTabRef(ref)}
           contentContainerStyle={{ paddingTop: 500, ...this.props.style }}
           numColumns={3}
           showsVerticalScrollIndicator={false}

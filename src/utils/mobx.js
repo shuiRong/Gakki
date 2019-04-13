@@ -20,6 +20,8 @@ class Globe {
   @observable domain = 'cmx.im' // 实例域名
   @observable hideSendTootButton = false // 滑动时隐藏发嘟文按钮
   @observable alwaysShowSensitiveMedia = false // 总是显示媒体文件
+  @observable homeTabRef = {} // 首页Tab的ref
+  @observable profileTabRef = {} // 个人主页Tab的ref
 
   updateReply({
     reply_to_username,
@@ -129,6 +131,14 @@ class Globe {
 
   updateAlwaysShowSensitiveMedia(status) {
     this.alwaysShowSensitiveMedia = status
+  }
+
+  updateHomeTabRef(ref, index) {
+    this.homeTabRef[index] = ref
+  }
+
+  updateProfileTabRef(ref) {
+    this.profileTabRef = ref
   }
 }
 

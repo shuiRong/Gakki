@@ -308,6 +308,11 @@ export default class TootBox extends Component {
         title: getTitle('复制链接'),
         icon: getIcon('share-alt'),
         onPress: this.copyLink
+      },
+      {
+        title: getTitle('复制嘟文'),
+        icon: getIcon('clone'),
+        onPress: () => this.setClipboard(toot)
       }
     ]
 
@@ -344,7 +349,6 @@ export default class TootBox extends Component {
 
     this.ref.measureInWindow((x, y, width, height) => {
       let items = baseItems.concat(this.isMine() ? myToot : theirToot)
-      console.log('uite', items)
       Menu.show({ x: x - 20, y, width, height }, items, {
         popoverStyle: {
           backgroundColor: color.themeColor,
@@ -434,7 +438,7 @@ export default class TootBox extends Component {
 
   setClipboard = toot => {
     Clipboard.setString(cheerio.load(toot.content).text())
-    Vibration.vibrate([0, 100])
+    Vibration.vibrate([0, 50])
   }
 
   /**
@@ -939,7 +943,7 @@ export default class TootBox extends Component {
           <TouchableOpacity
             activeOpacity={1}
             onPress={() => this.goTootDetail(data)}
-            delayLongPress={2000}
+            delayLongPress={2500}
             onLongPress={() => this.setClipboard(data)}
           >
             <View style={styles.row}>

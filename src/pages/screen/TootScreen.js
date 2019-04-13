@@ -224,6 +224,7 @@ export default class TootScreen extends Component {
     }
     return (
       <FlatList
+        ref={ref => mobx.updateProfileTabRef(ref, 0)}
         contentContainerStyle={{ paddingTop: 500, ...this.props.style }}
         ItemSeparatorComponent={() => <Divider />}
         showsVerticalScrollIndicator={false}

@@ -284,7 +284,10 @@ export default class Profile extends Component {
     }
 
     return (
-      <View style={styles.header}>
+      <TouchableOpacity
+        onPress={() => mobx.profileTabRef.scrollToOffset({ offset: 0 })}
+        style={styles.header}
+      >
         <Animated.View
           scrollEventThrottle={20}
           style={{
@@ -304,7 +307,7 @@ export default class Profile extends Component {
               }}
             >
               <HTMLView
-                data={profile.display_name}
+                data={profile.display_name || ''}
                 pTagStyle={{
                   color: color.contrastColor,
                   fontWeight: 'bold',
@@ -341,7 +344,7 @@ export default class Profile extends Component {
             name={'arrow-left'}
           />
         </TouchableOpacity>
-      </View>
+      </TouchableOpacity>
     )
   }
 

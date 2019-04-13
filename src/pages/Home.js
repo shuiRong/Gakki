@@ -3,9 +3,8 @@ import { View, Animated, Dimensions } from 'react-native'
 import HeaderItem from './common/Header'
 import Tab from './screen/index'
 import Fab from './common/Fab'
-import ScrollableTabView, {
-  DefaultTabBar
-} from 'react-native-scrollable-tab-view'
+import ScrollableTabView from 'react-native-scrollable-tab-view'
+import DefaultTabBar from './common/DefaultTabBar.home'
 import { getCustomEmojis, getCurrentUser } from '../utils/api'
 import { themeData } from '../utils/color'
 import { save, fetch } from '../utils/store'
@@ -140,6 +139,7 @@ export default class Home extends Component {
             initialPage={1}
             renderTabBar={() => (
               <DefaultTabBar
+                tabRef={this.tabref}
                 backgroundColor={color.themeColor}
                 activeTextColor={color.contrastColor}
                 activeTabStyle={{ fontSize: 20 }}
@@ -149,6 +149,9 @@ export default class Home extends Component {
                   backgroundColor: 'transparent'
                 }}
                 style={{ borderColor: 'transparent' }}
+                goToPage={number => {
+                  alert(number)
+                }}
               />
             )}
           >
@@ -156,17 +159,20 @@ export default class Home extends Component {
               tabLabel={'本站'}
               params={{ local: true, only_media: false }}
               onScroll={this.animatedEvent}
+              index={0}
               navigation={this.props.navigation}
             />
             <Tab
               tabLabel={'主页'}
               url={'home'}
               onScroll={this.animatedEvent}
+              index={1}
               navigation={this.props.navigation}
             />
             <Tab
               tabLabel={'跨站'}
               params={{ only_media: false }}
+              index={2}
               onScroll={this.animatedEvent}
               navigation={this.props.navigation}
             />
