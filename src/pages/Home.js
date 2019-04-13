@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, Animated, Dimensions } from 'react-native'
+import { View, Animated, Dimensions, BackHandler } from 'react-native'
 import HeaderItem from './common/Header'
 import Tab from './screen/index'
 import Fab from './common/Fab'
@@ -48,7 +48,13 @@ export default class Home extends Component {
   }
 
   componentDidMount() {
-    // this.props.navigation.navigate('Setting')
+    this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      if (this.props.navigation.isFocused()) {
+        BackHandler.exitApp()
+        return true
+      }
+      return false
+    })
     fetch('emojis').then(res => {
       // 检测是否保存有emoji数据，如果没有的话，从网络获取
       if (!res || !res.length) {
@@ -65,6 +71,10 @@ export default class Home extends Component {
         mobx.updateAccount(res)
       })
     }
+  }
+
+  componentWillUnmount() {
+    this.backHandler.remove()
   }
 
   /**
