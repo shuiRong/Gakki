@@ -49,6 +49,54 @@ export const version = '1.0' // required. app version used in About.js
 
 
 
+**[Signing APK](https://facebook.github.io/react-native/docs/signed-apk-android):**
+
+First of all, type this: `keytool -genkeypair -v -keystore my-release-key.keystore -alias my-key-alias -keyalg RSA -keysize 2048 -validity 10000`
+
+and then: 
+
+1. Place the `my-release-key.keystore` file under the `android/app` directory in your project folder.
+2. Edit the file `~/.gradle/gradle.properties` or `android/gradle.properties`, and add the following (replace `*****` with the correct keystore password, alias and key password),
+
+```bash
+MYAPP_RELEASE_STORE_FILE=my-release-key.keystore
+MYAPP_RELEASE_KEY_ALIAS=my-key-alias
+MYAPP_RELEASE_STORE_PASSWORD=*****
+MYAPP_RELEASE_KEY_PASSWORD=*****
+```
+
+
+
+**Comment out some codes:**
+
+> because you dont't need some `react-native-code-push` (hot reload library) codes.
+
+android/app/build.gradle
+
+```java
+// properties.load(project.rootProject.file('local.properties').newDataInputStream())
+...
+// buildConfigField "String", "CODEPUSH_KEY", '"'+properties.getProperty("code_push_key_staging")+'"'
+...
+// buildConfigField "String", "CODEPUSH_KEY", '"'+properties.getProperty("code_push_key_production")+'"'
+...
+```
+
+
+
+MainApplication.java
+
+```java
+// @Override
+// protected String getJSBundleFile() {
+//     return CodePush.getJSBundleFile();
+// }
+...
+// new CodePush(BuildConfig.CODEPUSH_KEY, MainApplication.this, BuildConfig.DEBUG)
+```
+
+
+
 **Connect Phone:** connect your phone to the computer using USB. see [Offcial Documentation](https://facebook.github.io/react-native/docs/running-on-device) and Google your question. 
 
 **Run Project:**

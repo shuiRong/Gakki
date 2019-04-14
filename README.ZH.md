@@ -44,6 +44,54 @@ export const version = '1.0' // 当前应用的版本，会用在About页面，�
 
 
 
+**[签名 APK](https://reactnative.cn/docs/signed-apk-android):**
+
+首先输入这条命令: `keytool -genkeypair -v -keystore my-release-key.keystore -alias my-key-alias -keyalg RSA -keysize 2048 -validity 10000`
+
+然后：
+
+1. 把`my-release-key.keystore`文件放到你工程中的`android/app`文件夹下。
+2. 编辑`~/.gradle/gradle.properties`（全局配置，对所有项目有效）或是`项目目录/android/gradle.properties`（项目配置，只对所在项目有效）。如果没有`gradle.properties`文件你就自己创建一个，添加如下的代码（注意把其中的`****`替换为相应密码）
+
+```bash
+MYAPP_RELEASE_STORE_FILE=my-release-key.keystore
+MYAPP_RELEASE_KEY_ALIAS=my-key-alias
+MYAPP_RELEASE_STORE_PASSWORD=*****
+MYAPP_RELEASE_KEY_PASSWORD=*****
+```
+
+
+
+**注释掉一些代码:**
+
+> 因为你只是本地运行的话，不需要 `react-native-code-push` 的代码（热更新用的）.
+
+android/app/build.gradle
+
+```java
+// properties.load(project.rootProject.file('local.properties').newDataInputStream())
+...
+// buildConfigField "String", "CODEPUSH_KEY", '"'+properties.getProperty("code_push_key_staging")+'"'
+...
+// buildConfigField "String", "CODEPUSH_KEY", '"'+properties.getProperty("code_push_key_production")+'"'
+...
+```
+
+
+
+MainApplication.java
+
+```java
+// @Override
+// protected String getJSBundleFile() {
+//     return CodePush.getJSBundleFile();
+// }
+...
+// new CodePush(BuildConfig.CODEPUSH_KEY, MainApplication.this, BuildConfig.DEBUG)
+```
+
+
+
 **运行项目前**需要通过 USB 将手机连接到电脑上，遵循[官方教程](https://facebook.github.io/react-native/docs/running-on-device) [中文教程](https://reactnative.cn/docs/0.51/getting-started/)或者自行 Google 教程
 
 然后运行项目：
