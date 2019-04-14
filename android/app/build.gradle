@@ -129,7 +129,7 @@ android {
         applicationId "com.gakki"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
+        versionCode 2
         versionName '1.1.2'  // appVersion 这样有点问题，code-push打包报错；还是先写死
         compileOptions {
             sourceCompatibility JavaVersion.VERSION_1_8
