@@ -7174,10 +7174,10 @@ react-native-screens@^1.0.0-alpha.11:
     prop-types "^15.6.0"
     react-timer-mixin "^0.13.3"
 
-react-native-spinkit@^1.1.1:
-  version "1.1.1"
-  resolved "http://registry.npm.taobao.org/react-native-spinkit/download/react-native-spinkit-1.1.1.tgz#3ae512f3978bc750b7c02639911e1710750d8539"
-  integrity sha1-OuUS85eLx1C3wCY5kR4XEHUNhTk=
+react-native-spinkit@^1.2.0:
+  version "1.2.0"
+  resolved "http://registry.npm.taobao.org/react-native-spinkit/download/react-native-spinkit-1.2.0.tgz#bc3eb2cf44f0233928721b53f3eb1d6bfb1322e4"
+  integrity sha1-vD6yz0TwIzkochtT8+sda/sTIuQ=
   dependencies:
     prop-types "^15.5.8"
 

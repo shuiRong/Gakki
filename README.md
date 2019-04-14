@@ -1,6 +1,6 @@
 # Gakki
 
-> This is a three-part client of [Mastodon](https://joinmastodon.org/) written by `React Native`（only Android is considered recently）.
+> This is a third-part client of [Mastodon](https://joinmastodon.org/) written by `React Native`（only Android is considered recently）.
 >
 > That's my  [Mastodon Account](https://cmx.im/web/accounts/81232), welcome to feedback. 
 
