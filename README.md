@@ -47,9 +47,9 @@ export const version = '1.0' // required. app version used in About.js
 >
 > Click the Application you just created. You can see `Your access token`, that's it.
 
-**Connect Phone: **connect your phone to the computer using USB. see [Offcial Documentation](https://facebook.github.io/react-native/docs/running-on-device) and Google your question. 
+**Connect Phone: ** connect your phone to the computer using USB. see [Offcial Documentation](https://facebook.github.io/react-native/docs/running-on-device) and Google your question. 
 
-**Run Project: **
+**Run Project: ** 
 
 ```bash
 react-native run-android
