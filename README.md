@@ -10,7 +10,7 @@
 
 > a series of development tutorials are being prepared.
 
-
+**More Details is coming**
 
 
 #### Getting Started：
