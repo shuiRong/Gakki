@@ -69,6 +69,19 @@ export default class Home extends Component {
     if (!mobx.account || !mobx.account.id) {
       getCurrentUser(mobx.domain).then(res => {
         mobx.updateAccount(res)
+
+        fetch('userData').then(data => {
+          const userData = {
+            ...data,
+            [mobx.access_token]: {
+              domain: mobx.domain,
+              account: res
+            }
+          }
+          // 更新用户数据中对应的token的account数据
+          save('userData', userData)
+          mobx.updateUserData(userData)
+        })
       })
     }
   }

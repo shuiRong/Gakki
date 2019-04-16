@@ -4,14 +4,29 @@ export const save = (key, value) => {
   return AsyncStorage.setItem(key, JSON.stringify(value))
 }
 
-export const fetch = key => {
-  return AsyncStorage.getItem(key).then(res => JSON.parse(res))
+export const fetch = (
+  key,
+  cb = err => {
+    console.log(err)
+  }
+) => {
+  return AsyncStorage.getItem(key, cb).then(res => JSON.parse(res))
 }
 
-export const merge = (key, value, cb) => {
-  return AsyncStorage.mergeItem(key, value, cb)
+export const multiMerge = (
+  multi_set_pairs,
+  cb = err => {
+    console.log(err)
+  }
+) => {
+  return AsyncStorage.multiMerge(multi_set_pairs, cb)
 }
 
-export const remove = (key, cb) => {
+export const remove = (
+  key,
+  cb = err => {
+    console.log(err)
+  }
+) => {
   return AsyncStorage.removeItem(key, cb)
 }

@@ -16,6 +16,7 @@ import HTMLView from './common/HTMLView'
 import Divider from './common/Divider'
 import { observer } from 'mobx-react'
 import { remove, save } from '../utils/store'
+import CodePush from 'react-native-code-push'
 
 let color = {}
 @observer
@@ -63,6 +64,55 @@ export default class SideBar extends Component {
     })
   }
 
+  /**
+   * @description 获取其他账户头像
+   */
+  getOtherAccount() {
+    const keys = Object.keys(mobx.userData)
+    const result = []
+    keys.forEach(key => {
+      const data = mobx.userData[key]
+      const account = data.account
+      if (mobx.account.id !== account.id) {
+        result.push({
+          ...account,
+          access_token: key,
+          domain: data.domain
+        })
+      }
+    })
+
+    return result.map(data => {
+      if (!data) return null
+      return (
+        <TouchableOpacity
+          style={{
+            ...styles.image,
+            height: 35,
+            width: 35,
+            margin: 5,
+            overflow: 'hidden'
+          }}
+          activeOpacity={0.5}
+          onPress={() => {
+            Promise.all([
+              save('access_token', data.access_token),
+              save('domain', data.domain),
+              save('account', data)
+            ]).then(() => {
+              CodePush.restartApp()
+            })
+          }}
+        >
+          <Image
+            source={{ uri: data.avatar }}
+            style={[styles.image, { height: 35, width: 35 }]}
+          />
+        </TouchableOpacity>
+      )
+    })
+  }
+
   render() {
     const state = this.state
     color = themeData[mobx.theme]
@@ -93,6 +143,16 @@ export default class SideBar extends Component {
               <Text style={{ color: color.white }}>
                 @{state.username}@{state.host}
               </Text>
+            </View>
+            <View
+              style={{
+                position: 'absolute',
+                right: 10,
+                top: 20,
+                flexDirection: 'row'
+              }}
+            >
+              {this.getOtherAccount()}
             </View>
           </View>
         </ImageBackground>

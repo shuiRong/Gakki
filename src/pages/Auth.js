@@ -11,7 +11,7 @@ import { getToken } from '../utils/api'
 import { themeData } from '../utils/color'
 import mobx from '../utils/mobx'
 import { observer } from 'mobx-react'
-import { save } from '../utils/store'
+import { save, fetch } from '../utils/store'
 
 let color = {}
 @observer
@@ -41,11 +41,27 @@ export default class Auth extends Component {
       code: code,
       redirect_uri: 'https://linshuirong.cn'
     }).then(({ access_token }) => {
-      mobx.updateAccessToken('Bearer ' + access_token)
-      save('access_token', 'Bearer ' + access_token).then(() => {
+      const token = 'Bearer ' + access_token
+      mobx.updateAccessToken(token)
+      save('domain', mobx.domain).then(() => {})
+      save('access_token', token).then(() => {
         this.props.navigation.navigate('Home', {
-          access_token: 'Bearer ' + access_token
+          access_token: token
         })
+      })
+
+      // 保存到多账户数据数组中
+      fetch('userData').then(res => {
+        // 如果还没有数据，或不存在当前用户token，存一份
+        let userData = res
+        if (!res || !res[access_token]) {
+          userData = {
+            ...res,
+            [token]: { domain: mobx.domain, account: {} }
+          }
+          save('userData', userData)
+        }
+        mobx.updateUserData(userData)
       })
     })
   }

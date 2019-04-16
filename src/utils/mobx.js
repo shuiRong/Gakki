@@ -7,7 +7,6 @@ class Globe {
   @observable in_reply_to_account_id = undefined // 回复对象的id
   @observable in_reply_to_id = undefined // 回复嘟文的id
   @observable mentions = [] // 当前嘟文提到的账号
-  @observable account = {} // 当前用户的账户信息
   @observable cw = false // 输入框的CW模式
   @observable NSFW = false // 针对媒体内容的模式 not safe for work
   @observable spoiler_text = undefined // CW模式的警告语
@@ -15,9 +14,11 @@ class Globe {
   @observable theme = 'white' // 当前用户选择主题   // black white
   @observable visibility = 'public' // 当前用户选择主题
   @observable emojiObj = {} // 当前实例的emoji对象
+  @observable account = {} // 当前用户的账户信息
   @observable access_token = ''
-  @observable enabled = true // 个人详情页面的下拉刷新组件是否启用
   @observable domain = 'cmx.im' // 实例域名
+  @observable userData = {} // 多用户、账户数据，token为key
+  @observable enabled = true // 个人详情页面的下拉刷新组件是否启用
   @observable hideSendTootButton = false // 滑动时隐藏发嘟文按钮
   @observable alwaysShowSensitiveMedia = false // 总是显示媒体文件
   @observable homeTabRef = {} // 首页Tab的ref
@@ -139,6 +140,10 @@ class Globe {
 
   updateProfileTabRef(ref) {
     this.profileTabRef = ref
+  }
+
+  updateUserData(data) {
+    this.userData = data
   }
 }
 
