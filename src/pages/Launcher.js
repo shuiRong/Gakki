@@ -17,24 +17,24 @@ let color = {}
 @observer
 export default class Login extends Component {
   componentDidMount() {
-    if (!__DEV__) {
+    if (__DEV__) {
       mobx.updateDomain('cmx.im')
       save('access_token', token).then(() => {
         mobx.updateAccessToken(token)
         this.props.navigation.navigate('Home')
       })
     } else {
-      // codePush.sync({
-      //   updateDialog: {
-      //     appendReleaseDescription: true,
-      //     descriptionPrefix: '更新内容：',
-      //     title: '更新',
-      //     mandatoryUpdateMessage: '',
-      //     mandatoryContinueButtonLabel: '更新'
-      //   },
-      //   mandatoryInstallMode: codePush.InstallMode.IMMEDIATE,
-      //   deploymentKey: deploymentKey
-      // })
+      codePush.sync({
+        updateDialog: {
+          appendReleaseDescription: true,
+          descriptionPrefix: '更新内容：',
+          title: '更新',
+          mandatoryUpdateMessage: '',
+          mandatoryContinueButtonLabel: '更新'
+        },
+        mandatoryInstallMode: codePush.InstallMode.IMMEDIATE,
+        deploymentKey: deploymentKey
+      })
 
       const loginPage = () => this.props.navigation.navigate('Login')
       fetch('access_token').then(access_token => {
