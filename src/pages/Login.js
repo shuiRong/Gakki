@@ -9,18 +9,49 @@ import {
   Image,
   TextInput,
   TouchableOpacity,
-  Linking
+  Linking,
+  BackHandler
 } from 'react-native'
+import Header from './common/Header'
 import { apps } from '../utils/api'
 import { themeData } from '../utils/color'
 import mobx from '../utils/mobx'
 import { observer } from 'mobx-react'
 import { save } from '../utils/store'
 import { Confirm } from './common/Notice'
+import { Button } from 'native-base'
+import Icon from 'react-native-vector-icons/FontAwesome5'
 
 let color = {}
 @observer
 export default class Login extends Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      canBack: false
+    }
+  }
+
+  componentDidMount() {
+    const { navigate, getParam } = this.props.navigation
+
+    const canBack = getParam('canBack')
+    this.setState({
+      canBack: canBack
+    })
+    this.backHandler = BackHandler.addEventListener('hardwareBackPress', () => {
+      if (canBack) {
+        navigate('Home')
+        return true
+      }
+      return false
+    })
+  }
+
+  componentWillUnmount() {
+    this.backHandler.remove()
+  }
+
   openURL = url => {
     Linking.openURL(url).catch(err => console.error('An error occurred', err))
   }
@@ -36,8 +67,6 @@ export default class Login extends Component {
       redirect_uris: 'https://linshuirong.cn',
       scopes: 'read write follow push'
     }).then(({ client_id, client_secret }) => {
-      save('client_id', client_id).then(() => {})
-      save('client_secret', client_secret).then(() => {})
       this.props.navigation.navigate('Auth', {
         client_id,
         client_secret
@@ -77,7 +106,8 @@ export default class Login extends Component {
         isModal: false,
         hideCancel: true,
         style: {
-          height: 400
+          height: 400,
+          backgroundColor: color.themeColor
         }
       }
     )
@@ -89,71 +119,87 @@ export default class Login extends Component {
       <View
         style={{
           backgroundColor: color.themeColor,
-          flex: 1,
-          alignItems: 'center'
+          flex: 1
         }}
       >
-        <Image
-          style={{
-            overlayColor: color.themeColor,
-            marginTop: 100,
-            width: 300,
-            height: 130,
-            borderRadius: 5
-          }}
-          source={require('../assets/image/mastodon.jpg')}
+        <Header
+          left={
+            <Button
+              transparent
+              onPress={() => this.props.navigation.navigate('Home')}
+            >
+              <Icon
+                style={{ color: color.subColor, fontSize: 17 }}
+                name={'arrow-left'}
+              />
+            </Button>
+          }
+          title={''}
+          right={'none'}
         />
-        <View style={{ width: 300, marginTop: 30 }}>
-          <Text
+        <View style={{ flex: 1, alignItems: 'center' }}>
+          <Image
             style={{
-              fontSize: 13,
-              color: color.subColor,
-              alignSelf: 'flex-start'
-            }}
-          >
-            域名
-          </Text>
-          <TextInput
-            style={{
-              padding: 3,
-              paddingLeft: 0,
-              fontSize: 20,
-              borderWidth: 0,
-              borderBottomWidth: 1,
-              borderColor: color.contrastColor,
-              color: color.contrastColor
-            }}
-            maxLength={20}
-            onChangeText={text => mobx.updateDomain(text)}
-            value={mobx.domain}
-          />
-          <TouchableOpacity
-            activeOpacity={0.7}
-            style={{
+              overlayColor: color.themeColor,
+              marginTop: 100,
               width: 300,
-              height: 40,
-              marginTop: 30,
-              borderRadius: 5,
-              justifyContent: 'center',
-              alignItems: 'center',
-              backgroundColor: color.contrastColor
+              height: 130,
+              borderRadius: 5
             }}
-            onPress={this.createApps}
-          >
-            <Text style={{ color: color.themeColor }}>登陆Mastodon账号</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={this.showHelpInfo}>
+            source={require('../assets/image/mastodon.jpg')}
+          />
+          <View style={{ width: 300, marginTop: 30 }}>
             <Text
               style={{
-                marginTop: 10,
                 fontSize: 13,
                 color: color.subColor,
-                alignSelf: 'center'
+                alignSelf: 'flex-start'
               }}
             >
-              需要帮助？
+              域名
             </Text>
-          </TouchableOpacity>
+            <TextInput
+              style={{
+                padding: 3,
+                paddingLeft: 0,
+                fontSize: 20,
+                borderWidth: 0,
+                borderBottomWidth: 1,
+                borderColor: color.contrastColor,
+                color: color.contrastColor
+              }}
+              maxLength={20}
+              onChangeText={text => mobx.updateDomain(text)}
+              value={mobx.domain}
+            />
+            <TouchableOpacity
+              activeOpacity={0.7}
+              style={{
+                width: 300,
+                height: 40,
+                marginTop: 30,
+                borderRadius: 5,
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: color.contrastColor
+              }}
+              onPress={this.createApps}
+            >
+              <Text style={{ color: color.themeColor }}>登陆Mastodon账号</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={this.showHelpInfo}>
+              <Text
+                style={{
+                  marginTop: 10,
+                  fontSize: 13,
+                  color: color.subColor,
+                  alignSelf: 'center'
+                }}
+              >
+                需要帮助？
+              </Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     )

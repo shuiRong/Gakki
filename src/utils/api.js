@@ -52,13 +52,13 @@ export const getFavourites = (domain, params) => {
   })
 }
 
-export const getCurrentUser = domain => {
+export const getCurrentUser = (domain, access_token) => {
   return request({
     baseURL: `https://${domain}`,
     url: '/api/v1/accounts/verify_credentials',
     method: 'get',
     headers: {
-      Authorization: mobx.access_token
+      Authorization: access_token || mobx.access_token
     }
   })
 }

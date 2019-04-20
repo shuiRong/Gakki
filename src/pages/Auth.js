@@ -7,7 +7,7 @@ import { View, WebView } from 'react-native'
 import Header from './common/Header'
 import { Button } from 'native-base'
 import Icon from 'react-native-vector-icons/FontAwesome5'
-import { getToken } from '../utils/api'
+import { getToken, getCurrentUser } from '../utils/api'
 import { themeData } from '../utils/color'
 import mobx from '../utils/mobx'
 import { observer } from 'mobx-react'
@@ -40,30 +40,39 @@ export default class Auth extends Component {
       grant_type: 'authorization_code',
       code: code,
       redirect_uri: 'https://linshuirong.cn'
-    }).then(({ access_token }) => {
-      const token = 'Bearer ' + access_token
-      mobx.updateAccessToken(token)
-      save('domain', mobx.domain).then(() => {})
-      save('access_token', token).then(() => {
-        this.props.navigation.navigate('Home', {
-          access_token: token
+    })
+      .then(({ access_token }) => {
+        const token = 'Bearer ' + access_token
+        mobx.updateAccessToken(token)
+
+        Promise.all([
+          save('domain', mobx.domain),
+          save('access_token', token),
+          fetch('userData'),
+          getCurrentUser(mobx.domain, token)
+        ]).then(result => {
+          // 如果还没有数据，或不存在当前用户token，存一份
+          let userData = result[2]
+          const account = result[3]
+          if (!userData || !userData[token]) {
+            userData = {
+              ...userData,
+              [token]: { domain: mobx.domain, account }
+            }
+            save('userData', userData)
+          }
+
+
+          mobx.updateAccount(account)
+          mobx.updateUserData(userData)
+          this.props.navigation.navigate('Home', {
+            access_token: token
+          })
         })
       })
-
-      // 保存到多账户数据数组中
-      fetch('userData').then(res => {
-        // 如果还没有数据，或不存在当前用户token，存一份
-        let userData = res
-        if (!res || !res[access_token]) {
-          userData = {
-            ...res,
-            [token]: { domain: mobx.domain, account: {} }
-          }
-          save('userData', userData)
-        }
-        mobx.updateUserData(userData)
+      .catch(err => {
+        console.log('err', err)
       })
-    })
   }
 
   navigationChangeHandler = ({ url }) => {

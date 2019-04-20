@@ -15,7 +15,7 @@ import { themeData } from '../utils/color'
 import HTMLView from './common/HTMLView'
 import Divider from './common/Divider'
 import { observer } from 'mobx-react'
-import { remove, save } from '../utils/store'
+import { remove, save, fetch } from '../utils/store'
 import CodePush from 'react-native-code-push'
 
 let color = {}
@@ -27,12 +27,13 @@ export default class SideBar extends Component {
       username: '',
       avatar: '',
       header: '',
-      host: mobx.domain,
+      domain: mobx.domain,
       display_name: '',
       id: '',
       black: false,
       white: true,
-      night: false
+      night: false,
+      showMultiAccount: false
     }
   }
   componentDidMount() {
@@ -59,16 +60,42 @@ export default class SideBar extends Component {
 
   // 删除存储的access_token等信息，进入到登录页面
   signout = () => {
-    remove('access_token').then(() => {
-      this.props.navigation.navigate('Login')
+    fetch('userData').then(userData => {
+      const tempData = { ...userData }
+      delete tempData[mobx.access_token]
+
+      Promise.all([remove('access_token'), save('userData', tempData)])
+        .then(() => {
+          // 如果存储的没有其他账号数据了，那么就跳到登陆界面，如果还有账号，就自动登陆此账号。
+          const keys = Object.keys(tempData)
+          if (!keys.length) {
+            this.props.navigation.navigate('Login')
+            return
+          }
+          const nextAccount = tempData[keys[0]]
+
+          Promise.all([
+            save('access_token', keys[0]),
+            save('domain', nextAccount.domain)
+          ]).then(() => {
+            CodePush.restartApp()
+          })
+        })
+        .catch(err => {
+          console.log('er', err)
+        })
     })
   }
 
   /**
-   * @description 获取其他账户头像
+   * @description 从所有账户数据中，筛选出当前登陆账户外的账户数据
+   * @param {}:
    */
-  getOtherAccount() {
+  getOtherUserData = () => {
     const keys = Object.keys(mobx.userData)
+    if (keys.length === 1) {
+      return []
+    }
     const result = []
     keys.forEach(key => {
       const data = mobx.userData[key]
@@ -82,10 +109,21 @@ export default class SideBar extends Component {
       }
     })
 
+    return result
+  }
+
+  /**
+   * @description 获取其他账户头像
+   */
+  getOtherAccount() {
+    const result = this.getOtherUserData()
+    if (!result || !result.length) return null
+
     return result.map(data => {
       if (!data) return null
       return (
         <TouchableOpacity
+          key={data.access_token}
           style={{
             ...styles.image,
             height: 35,
@@ -95,13 +133,7 @@ export default class SideBar extends Component {
           }}
           activeOpacity={0.5}
           onPress={() => {
-            Promise.all([
-              save('access_token', data.access_token),
-              save('domain', data.domain),
-              save('account', data)
-            ]).then(() => {
-              CodePush.restartApp()
-            })
+            this.exchangeAccount(data)
           }}
         >
           <Image
@@ -110,6 +142,57 @@ export default class SideBar extends Component {
           />
         </TouchableOpacity>
       )
+    })
+  }
+
+  getOtherAccountList = () => {
+    const result = this.getOtherUserData()
+    if (!result || !result.length) return null
+
+    return result.map(data => {
+      if (!data) return null
+      return (
+        <TouchableOpacity
+          key={data.access_token}
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center'
+          }}
+          onPress={() => {
+            this.exchangeAccount(data)
+          }}
+        >
+          <View
+            style={{
+              ...styles.image,
+              margin: 10,
+              marginTop: 0,
+              overflow: 'hidden'
+            }}
+          >
+            <Image source={{ uri: data.avatar }} style={[styles.image]} />
+          </View>
+          <View>
+            <HTMLView
+              data={data.display_name}
+              pTagStyle={{ color: color.contrastColor, fontWeight: 'bold' }}
+            />
+            <Text style={{ color: color.contrastColor }}>
+              @{data.username}@{data.domain}
+            </Text>
+          </View>
+        </TouchableOpacity>
+      )
+    })
+  }
+
+  exchangeAccount = data => {
+    Promise.all([
+      save('access_token', data.access_token),
+      save('domain', data.domain),
+      save('account', data)
+    ]).then(() => {
+      CodePush.restartApp()
     })
   }
 
@@ -141,7 +224,7 @@ export default class SideBar extends Component {
                 pTagStyle={{ color: color.white, fontWeight: 'bold' }}
               />
               <Text style={{ color: color.white }}>
-                @{state.username}@{state.host}
+                @{state.username}@{state.domain}
               </Text>
             </View>
             <View
@@ -154,134 +237,198 @@ export default class SideBar extends Component {
             >
               {this.getOtherAccount()}
             </View>
+            <TouchableOpacity
+              activeOpacity={0.5}
+              style={{
+                position: 'absolute',
+                right: 20,
+                bottom: -20,
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: 30,
+                height: 30
+              }}
+              onPress={() =>
+                this.setState({
+                  showMultiAccount: !state.showMultiAccount
+                })
+              }
+            >
+              <Icon
+                name={state.showMultiAccount ? 'caret-up' : 'caret-down'}
+                style={[
+                  styles.icon,
+                  {
+                    color: color.lightThemeColor
+                  }
+                ]}
+              />
+            </TouchableOpacity>
           </View>
         </ImageBackground>
-        <ScrollView style={styles.body} showsVerticalScrollIndicator={false}>
-          <View style={styles.list}>
-            <View style={styles.iconBox}>
-              <Icon
-                name="envelope"
-                style={[styles.icon, { color: color.contrastColor }]}
-              />
-            </View>
+        {state.showMultiAccount ? (
+          <ScrollView style={styles.body} showsVerticalScrollIndicator={false}>
+            {this.getOtherAccountList()}
             <TouchableOpacity
-              activeOpacity={0.5}
-              onPress={() => {
-                this.props.navigation.navigate('Envelope')
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginTop: 10
               }}
-            >
-              <Text style={[styles.text, { color: color.contrastColor }]}>
-                私信
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.list}>
-            <View style={styles.iconBox}>
-              <Icon
-                name="ban"
-                style={[styles.icon, { color: color.contrastColor }]}
-              />
-            </View>
-            <TouchableOpacity
-              activeOpacity={0.5}
               onPress={() => {
-                this.props.navigation.navigate('BlockedUsers')
-              }}
-            >
-              <Text style={[styles.text, { color: color.contrastColor }]}>
-                被屏蔽用户
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.list}>
-            <View style={styles.iconBox}>
-              <Icon
-                name="bell-slash"
-                style={[styles.icon, { color: color.contrastColor }]}
-              />
-            </View>
-            <TouchableOpacity
-              activeOpacity={0.5}
-              onPress={() => {
-                this.props.navigation.navigate('MutedUsers')
-              }}
-            >
-              <Text style={[styles.text, { color: color.contrastColor }]}>
-                被隐藏用户
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.list}>
-            <View style={styles.iconBox}>
-              <Icon
-                name="users"
-                style={[styles.icon, { color: color.contrastColor }]}
-              />
-            </View>
-            <TouchableOpacity
-              activeOpacity={0.5}
-              onPress={() => {
-                this.props.navigation.navigate('FollowRequestList')
-              }}
-            >
-              <Text style={[styles.text, { color: color.contrastColor }]}>
-                请求关注列表
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <Divider style={{ marginTop: 5, marginBottom: 20 }} />
-          <View style={styles.list}>
-            <View style={styles.iconBox}>
-              <Icon
-                name="book"
-                style={[styles.icon, { color: color.contrastColor }]}
-              />
-            </View>
-            <TouchableOpacity
-              activeOpacity={0.5}
-              onPress={() => {
-                this.props.navigation.navigate('Profile', {
-                  id: '81232'
+                this.props.navigation.navigate('Login', {
+                  canBack: true
                 })
               }}
             >
-              <Text style={[styles.text, { color: color.contrastColor }]}>
-                官方账号
+              <View
+                style={[
+                  {
+                    width: 50,
+                    marginHorizontal: 10,
+                    justifyContent: 'center',
+                    alignItems: 'center'
+                  }
+                ]}
+              >
+                <Icon
+                  name="plus"
+                  style={[styles.icon, { color: color.contrastColor }]}
+                />
+              </View>
+              <Text style={{ color: color.contrastColor }}>
+                添加新的 Mastodon 账号
               </Text>
             </TouchableOpacity>
-          </View>
-          <View style={styles.list}>
-            <View style={styles.iconBox}>
-              <Icon
-                name="exclamation-circle"
-                style={[styles.icon, { color: color.contrastColor }]}
-              />
+          </ScrollView>
+        ) : (
+          <ScrollView style={styles.body} showsVerticalScrollIndicator={false}>
+            <View style={styles.list}>
+              <View style={styles.iconBox}>
+                <Icon
+                  name="envelope"
+                  style={[styles.icon, { color: color.contrastColor }]}
+                />
+              </View>
+              <TouchableOpacity
+                activeOpacity={0.5}
+                onPress={() => {
+                  this.props.navigation.navigate('Envelope')
+                }}
+              >
+                <Text style={[styles.text, { color: color.contrastColor }]}>
+                  私信
+                </Text>
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity
-              activeOpacity={0.5}
-              onPress={() => {
-                this.props.navigation.navigate('About')
-              }}
-            >
-              <Text style={[styles.text, { color: color.contrastColor }]}>
-                关于
-              </Text>
-            </TouchableOpacity>
-          </View>
-          <View style={styles.list}>
-            <View style={styles.iconBox}>
-              <Icon
-                name="sign-out-alt"
-                style={[styles.icon, { color: color.contrastColor }]}
-              />
+            <View style={styles.list}>
+              <View style={styles.iconBox}>
+                <Icon
+                  name="ban"
+                  style={[styles.icon, { color: color.contrastColor }]}
+                />
+              </View>
+              <TouchableOpacity
+                activeOpacity={0.5}
+                onPress={() => {
+                  this.props.navigation.navigate('BlockedUsers')
+                }}
+              >
+                <Text style={[styles.text, { color: color.contrastColor }]}>
+                  被屏蔽用户
+                </Text>
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity activeOpacity={0.5} onPress={this.signout}>
-              <Text style={[styles.text, { color: color.contrastColor }]}>
-                退出登录
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </ScrollView>
+            <View style={styles.list}>
+              <View style={styles.iconBox}>
+                <Icon
+                  name="bell-slash"
+                  style={[styles.icon, { color: color.contrastColor }]}
+                />
+              </View>
+              <TouchableOpacity
+                activeOpacity={0.5}
+                onPress={() => {
+                  this.props.navigation.navigate('MutedUsers')
+                }}
+              >
+                <Text style={[styles.text, { color: color.contrastColor }]}>
+                  被隐藏用户
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.list}>
+              <View style={styles.iconBox}>
+                <Icon
+                  name="users"
+                  style={[styles.icon, { color: color.contrastColor }]}
+                />
+              </View>
+              <TouchableOpacity
+                activeOpacity={0.5}
+                onPress={() => {
+                  this.props.navigation.navigate('FollowRequestList')
+                }}
+              >
+                <Text style={[styles.text, { color: color.contrastColor }]}>
+                  请求关注列表
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <Divider style={{ marginTop: 5, marginBottom: 20 }} />
+            <View style={styles.list}>
+              <View style={styles.iconBox}>
+                <Icon
+                  name="book"
+                  style={[styles.icon, { color: color.contrastColor }]}
+                />
+              </View>
+              <TouchableOpacity
+                activeOpacity={0.5}
+                onPress={() => {
+                  this.props.navigation.navigate('Profile', {
+                    id: '81232'
+                  })
+                }}
+              >
+                <Text style={[styles.text, { color: color.contrastColor }]}>
+                  官方账号
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.list}>
+              <View style={styles.iconBox}>
+                <Icon
+                  name="exclamation-circle"
+                  style={[styles.icon, { color: color.contrastColor }]}
+                />
+              </View>
+              <TouchableOpacity
+                activeOpacity={0.5}
+                onPress={() => {
+                  this.props.navigation.navigate('About')
+                }}
+              >
+                <Text style={[styles.text, { color: color.contrastColor }]}>
+                  关于
+                </Text>
+              </TouchableOpacity>
+            </View>
+            <View style={styles.list}>
+              <View style={styles.iconBox}>
+                <Icon
+                  name="sign-out-alt"
+                  style={[styles.icon, { color: color.contrastColor }]}
+                />
+              </View>
+              <TouchableOpacity activeOpacity={0.5} onPress={this.signout}>
+                <Text style={[styles.text, { color: color.contrastColor }]}>
+                  退出登录
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </ScrollView>
+        )}
         <View
           style={{
             position: 'absolute',

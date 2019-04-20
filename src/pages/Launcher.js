@@ -8,7 +8,7 @@ import { verify_credentials } from '../utils/api'
 import { themeData } from '../utils/color'
 import mobx from '../utils/mobx'
 import { observer } from 'mobx-react'
-import { fetch, save, multiMerge } from '../utils/store'
+import { fetch, save } from '../utils/store'
 import Spinner from 'react-native-spinkit'
 import codePush from 'react-native-code-push'
 import { deploymentKey, token } from '../utils/config'
@@ -17,24 +17,24 @@ let color = {}
 @observer
 export default class Login extends Component {
   componentDidMount() {
-    if (__DEV__) {
+    if (!__DEV__) {
       mobx.updateDomain('cmx.im')
       save('access_token', token).then(() => {
         mobx.updateAccessToken(token)
         this.props.navigation.navigate('Home')
       })
     } else {
-      codePush.sync({
-        updateDialog: {
-          appendReleaseDescription: true,
-          descriptionPrefix: '更新内容：',
-          title: '更新',
-          mandatoryUpdateMessage: '',
-          mandatoryContinueButtonLabel: '更新'
-        },
-        mandatoryInstallMode: codePush.InstallMode.IMMEDIATE,
-        deploymentKey: deploymentKey
-      })
+      // codePush.sync({
+      //   updateDialog: {
+      //     appendReleaseDescription: true,
+      //     descriptionPrefix: '更新内容：',
+      //     title: '更新',
+      //     mandatoryUpdateMessage: '',
+      //     mandatoryContinueButtonLabel: '更新'
+      //   },
+      //   mandatoryInstallMode: codePush.InstallMode.IMMEDIATE,
+      //   deploymentKey: deploymentKey
+      // })
 
       const loginPage = () => this.props.navigation.navigate('Login')
       fetch('access_token').then(access_token => {
@@ -55,7 +55,13 @@ export default class Login extends Component {
               }
               mobx.updateDomain(domain)
               mobx.updateAccessToken(access_token)
-              this.props.navigation.navigate('Home')
+
+              // 拉取用户数据到mobx中
+              fetch('userData').then(userData => {
+                mobx.updateUserData(userData)
+
+                this.props.navigation.navigate('Home')
+              })
             })
           })
           .catch(err => {
