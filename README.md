@@ -11,6 +11,22 @@
 > a series of development tutorials are being prepared.
 
 
+
+#### Features
+
+---
+
+* Immersive design
+* Most Mastodon functions implemented
+* Multi-Account support
+* Night, Day mode
+* Custom emoticon support (belong to cmx.im)
+* Open-source completely
+* No permission required（allow permission yourself if take pictures）
+
+
+
+
 #### Getting Started：
 
 ---
