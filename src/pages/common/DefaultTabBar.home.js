@@ -64,6 +64,9 @@ const DefaultTabBar = createReactClass({
         accessibilityTraits="button"
         onPress={() => {
           onPressHandler(page)
+          if (!mobx.homeTabRef[page]) {
+            return
+          }
           mobx.homeTabRef[page].scrollToOffset({ offset: 0 })
         }}
       >
