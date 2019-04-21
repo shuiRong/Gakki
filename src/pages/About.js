@@ -10,7 +10,8 @@ import Icon from 'react-native-vector-icons/FontAwesome5'
 import { themeData } from '../utils/color'
 import mobx from '../utils/mobx'
 import { observer } from 'mobx-react'
-import { version } from '../utils/config'
+import { version, deploymentKey } from '../utils/config'
+import codePush from 'react-native-code-push'
 
 let color = {}
 @observer
@@ -176,6 +177,40 @@ export default class About extends Component {
               }}
             >
               开源协议
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() =>
+              codePush.sync({
+                updateDialog: {
+                  appendReleaseDescription: true,
+                  descriptionPrefix: '更新内容：',
+                  title: '更新',
+                  mandatoryUpdateMessage: '',
+                  mandatoryContinueButtonLabel: '更新'
+                },
+                mandatoryInstallMode: codePush.InstallMode.IMMEDIATE,
+                deploymentKey: deploymentKey
+              })
+            }
+            activeOpacity={0.5}
+            style={{
+              marginTop: 20,
+              borderColor: color.contrastColor,
+              borderRadius: 3,
+              borderWidth: 1,
+              padding: 5,
+              paddingLeft: 10,
+              paddingRight: 10
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 17,
+                color: color.contrastColor
+              }}
+            >
+              检查更新
             </Text>
           </TouchableOpacity>
         </View>
