@@ -6,10 +6,11 @@
 
 [中文](./README.ZH.md)
 
-**[Download APK](https://github.com/shuiRong/Gakki/releases)**
+**[Download APK Directly](https://github.com/shuiRong/Gakki/releases)**
+
+[<img src="https://i.imgur.com/fTum3oy.png" alt="Get it on F-Droid" height="80" />](https://apt.izzysoft.de/fdroid/index/apk/com.gakki)
 
 > a series of development tutorials are being prepared.
-
 
 
 #### Features

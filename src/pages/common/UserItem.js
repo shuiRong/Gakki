@@ -242,7 +242,7 @@ export default class UserList extends Component {
             })
           }
         >
-          <HTMLView data={account.display_name || account.username} />
+          <HTMLView data={account.display_name || account.username || ''} />
           <Text style={{ color: color.subColor }}>@{account.username}</Text>
         </TouchableOpacity>
         <View
