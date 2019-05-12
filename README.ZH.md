@@ -49,7 +49,6 @@ yarn // or npm i
 
 ```javascript
 export const token = 'Bearer xxxxxxxx'  // 必须。
-export const deploymentKey = 'yyyyyyy'  // 必须。CodePush生成的应用发布key，更多详情自行查文档 https://github.com/Microsoft/react-native-code-push
 export const version = '1.0' // 当前应用的版本，会用在About页面，必须
 ```
 
@@ -75,36 +74,6 @@ MYAPP_RELEASE_STORE_FILE=my-release-key.keystore
 MYAPP_RELEASE_KEY_ALIAS=my-key-alias
 MYAPP_RELEASE_STORE_PASSWORD=*****
 MYAPP_RELEASE_KEY_PASSWORD=*****
-```
-
-
-
-**注释掉一些代码:**
-
-> 因为你只是本地运行的话，不需要 `react-native-code-push` 的代码（热更新用的）.
-
-android/app/build.gradle
-
-```java
-// properties.load(project.rootProject.file('local.properties').newDataInputStream())
-...
-// buildConfigField "String", "CODEPUSH_KEY", '"'+properties.getProperty("code_push_key_staging")+'"'
-...
-// buildConfigField "String", "CODEPUSH_KEY", '"'+properties.getProperty("code_push_key_production")+'"'
-...
-```
-
-
-
-MainApplication.java
-
-```java
-// @Override
-// protected String getJSBundleFile() {
-//     return CodePush.getJSBundleFile();
-// }
-...
-// new CodePush(BuildConfig.CODEPUSH_KEY, MainApplication.this, BuildConfig.DEBUG)
 ```
 
 

@@ -86,7 +86,7 @@ export default class Profile extends Component {
   }
 
   componentWillUnmount() {
-    this.cancel.forEach(cancel => cancel())
+    this.cancel.forEach(cancel => cancel && cancel())
   }
 
   fetchData = data => {

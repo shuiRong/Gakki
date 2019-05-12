@@ -51,7 +51,7 @@ export default class Login extends Component {
 
   componentWillUnmount() {
     this.backHandler.remove()
-    this.cancel()
+    this.cancel && this.cancel()
   }
 
   openURL = url => {

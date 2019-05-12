@@ -93,7 +93,7 @@ export default class LocalScreen extends Component {
   }
 
   componentWillUnmount() {
-    this.cancel()
+    this.cancel && this.cancel()
   }
 
   deleteToot = id => {

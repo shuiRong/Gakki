@@ -224,7 +224,7 @@ export default class TootBox extends Component {
   }
 
   componentWillUnmount() {
-    this.cancel.forEach(cancel => cancel())
+    this.cancel.forEach(cancel => cancel && cancel())
   }
 
   shouldComponentUpdate(_, { toot }) {
@@ -245,7 +245,7 @@ export default class TootBox extends Component {
   }
 
   componentWillUnmount() {
-    this.cancel.forEach(cancel => cancel())
+    this.cancel.forEach(cancel => cancel && cancel())
   }
 
   /**

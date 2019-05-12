@@ -26,8 +26,7 @@ export default class TootScreen extends Component {
       url: 'home'
     }
 
-    this.cancel = null
-    this.cancelPinned = null
+    this.cancel = []
   }
   componentDidMount() {
     this.getUserPinnedStatuses()
@@ -85,8 +84,7 @@ export default class TootScreen extends Component {
   }
 
   componentWillUnmount() {
-    this.cancelPinned()
-    this.cancel()
+    this.cancel.forEach(cancel => cancel && cancel())
   }
 
   /**
@@ -105,7 +103,7 @@ export default class TootScreen extends Component {
         ...params
       },
       {
-        cancelToken: new CancelToken(c => (this.cancel = c))
+        cancelToken: new CancelToken(c => this.cancel.push(c))
       }
     )
       .then(res => {
@@ -157,7 +155,7 @@ export default class TootScreen extends Component {
         pinned: true
       },
       {
-        cancelToken: new CancelToken(c => (this.cancelPinned = c))
+        cancelToken: new CancelToken(c => this.cancel.push(c))
       }
     )
       .then(res => {

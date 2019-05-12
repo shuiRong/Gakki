@@ -48,7 +48,7 @@ export default class Notifications extends Component {
   }
 
   componentWillUnmount() {
-    this.cancel()
+    this.cancel && this.cancel()
   }
 
   refreshHandler = () => {

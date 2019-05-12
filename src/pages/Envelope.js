@@ -33,7 +33,7 @@ export default class Envelope extends Component {
   }
 
   componentWillUnmount() {
-    this.cancel()
+    this.cancel && this.cancel()
   }
 
   deleteToot = id => {

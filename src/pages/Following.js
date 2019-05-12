@@ -37,7 +37,7 @@ export default class Following extends Component {
   }
 
   componentWillUnmount() {
-    this.cancel()
+    this.cancel && this.cancel()
   }
 
   /**

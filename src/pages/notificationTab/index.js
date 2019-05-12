@@ -40,7 +40,7 @@ export default class Tab extends Component {
   }
 
   componentWillUnmount() {
-    this.cancel()
+    this.cancel && this.cancel()
   }
 
   deleteToot = id => {

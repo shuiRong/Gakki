@@ -6,7 +6,6 @@ import com.facebook.react.ReactApplication;
 import com.reactnative.ivpusic.imagepicker.PickerPackage;
 import com.brentvatne.react.ReactVideoPackage;
 import com.horcrux.svg.SvgPackage;
-import com.microsoft.codepush.react.CodePush;
 import com.imagepicker.ImagePickerPackage;
 // import ui.popovermenu.RNPopoverMenuPackage;
 import com.oblador.vectoricons.VectorIconsPackage;
@@ -24,11 +23,6 @@ public class MainApplication extends Application implements ReactApplication {
 
   private final ReactNativeHost mReactNativeHost = new ReactNativeHost(this) {
 
-        @Override
-        protected String getJSBundleFile() {
-        return CodePush.getJSBundleFile();
-        }
-    
     @Override
     public boolean getUseDeveloperSupport() {
       return BuildConfig.DEBUG;
@@ -44,8 +38,7 @@ public class MainApplication extends Application implements ReactApplication {
           new ImagePickerPackage(),
           new VectorIconsPackage(),
           new RNGestureHandlerPackage(),
-          new RNSpinkitPackage(),
-          new CodePush(BuildConfig.CODEPUSH_KEY, MainApplication.this, BuildConfig.DEBUG)
+          new RNSpinkitPackage()
       );
     }
 

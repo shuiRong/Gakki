@@ -88,7 +88,7 @@ export default class TootScreen extends Component {
   }
 
   componentWillUnmount() {
-    this.cancel()
+    this.cancel && this.cancel()
   }
 
   /**

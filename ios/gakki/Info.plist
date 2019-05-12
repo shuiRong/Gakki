@@ -74,7 +74,6 @@
 		<string>FontAwesome5_Regular.ttf</string>
 		<string>FontAwesome5_Solid.ttf</string>
 	</array>
-	<key>CodePushDeploymentKey</key>
 	<string>deployment-key-here</string>
 </dict>
 </plist>

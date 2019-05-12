@@ -80,7 +80,7 @@ export default class Home extends Component {
 
   componentWillUnmount() {
     this.backHandler.remove()
-    this.cancel.forEach(cancel => cancel())
+    this.cancel.forEach(cancel => cancel && cancel())
   }
 
   /**

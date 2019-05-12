@@ -37,7 +37,7 @@ export default class Followers extends Component {
   }
 
   componentWillUnmount() {
-    this.cancel()
+    this.cancel && this.cancel()
   }
 
   /**

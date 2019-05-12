@@ -48,7 +48,6 @@ create file in `src/utils/config.js`, it contains：
 
 ```javascript
 export const token = 'Bearer xxxxxxxx'  // required. (Watch out: there is a blank space.)
-export const deploymentKey = 'yyyyyyy'  // only required for production. CodePush deployment key. For more detail, see https://github.com/Microsoft/react-native-code-push
 export const version = '1.0' // required. app version used in About.js
 ```
 
@@ -78,36 +77,6 @@ MYAPP_RELEASE_STORE_FILE=my-release-key.keystore
 MYAPP_RELEASE_KEY_ALIAS=my-key-alias
 MYAPP_RELEASE_STORE_PASSWORD=*****
 MYAPP_RELEASE_KEY_PASSWORD=*****
-```
-
-
-
-**Comment out some codes:**
-
-> because you dont't need some `react-native-code-push` (hot reload library) codes.
-
-android/app/build.gradle
-
-```java
-// properties.load(project.rootProject.file('local.properties').newDataInputStream())
-...
-// buildConfigField "String", "CODEPUSH_KEY", '"'+properties.getProperty("code_push_key_staging")+'"'
-...
-// buildConfigField "String", "CODEPUSH_KEY", '"'+properties.getProperty("code_push_key_production")+'"'
-...
-```
-
-
-
-MainApplication.java
-
-```java
-// @Override
-// protected String getJSBundleFile() {
-//     return CodePush.getJSBundleFile();
-// }
-...
-// new CodePush(BuildConfig.CODEPUSH_KEY, MainApplication.this, BuildConfig.DEBUG)
 ```
 
 

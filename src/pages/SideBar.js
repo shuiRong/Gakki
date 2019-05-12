@@ -62,7 +62,7 @@ export default class SideBar extends Component {
   }
 
   componentWillUnmount() {
-    this.cancel()
+    this.cancel && this.cancel()
   }
 
   // 删除存储的access_token等信息，进入到登录页面

@@ -35,7 +35,7 @@ export default class MutedUsers extends Component {
   }
 
   componentWillUnmount() {
-    this.cancel.forEach(cancel => cancel())
+    this.cancel.forEach(cancel => cancel && cancel())
   }
 
   deleteToot = id => {

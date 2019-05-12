@@ -92,7 +92,6 @@ project.ext.react = [
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
-apply from: "../../node_modules/react-native-code-push/android/codepush.gradle"
 
 /**
  * Set this to true to create two separate APKs instead of one:
@@ -163,7 +162,6 @@ android {
             zipAlignEnabled false
             shrinkResources false    // 移除无用的resource文件
             signingConfig signingConfigs.release
-            buildConfigField "String", "CODEPUSH_KEY", '"'+properties.getProperty("code_push_key_staging")+'"'
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
         }
 
@@ -171,7 +169,6 @@ android {
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
             signingConfig signingConfigs.release
-            buildConfigField "String", "CODEPUSH_KEY", '"'+properties.getProperty("code_push_key_production")+'"'
 
         }
     }
@@ -200,7 +197,6 @@ dependencies {
     compile project(':react-native-image-crop-picker')
     compile project(':react-native-video')
     compile project(':react-native-svg')
-    compile project(':react-native-code-push')
     compile project(':react-native-spinkit')
     compile project(':react-native-image-picker')
     // compile project(':react-native-popover-menu')

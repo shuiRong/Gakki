@@ -10,7 +10,6 @@ import mobx from '../utils/mobx'
 import { observer } from 'mobx-react'
 import { fetch, save } from '../utils/store'
 import Spinner from 'react-native-spinkit'
-import codePush from 'react-native-code-push'
 import { deploymentKey, token } from '../utils/config'
 import { CancelToken } from 'axios'
 
@@ -31,18 +30,6 @@ export default class Login extends Component {
         this.props.navigation.navigate('Home')
       })
     } else {
-      codePush.sync({
-        updateDialog: {
-          appendReleaseDescription: true,
-          descriptionPrefix: '更新内容：',
-          title: '更新',
-          mandatoryUpdateMessage: '',
-          mandatoryContinueButtonLabel: '更新'
-        },
-        mandatoryInstallMode: codePush.InstallMode.IMMEDIATE,
-        deploymentKey: deploymentKey
-      })
-
       const loginPage = () => this.props.navigation.navigate('Login')
       fetch('access_token').then(access_token => {
         if (!access_token) {
@@ -87,7 +74,7 @@ export default class Login extends Component {
   }
 
   componentWillUnmount() {
-    this.cancel()
+    this.cancel && this.cancel()
   }
 
   render() {

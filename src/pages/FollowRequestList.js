@@ -34,7 +34,7 @@ export default class FollowRequests extends Component {
   }
 
   componentWillUnmount() {
-    this.cancel()
+    this.cancel && this.cancel()
   }
 
   /**

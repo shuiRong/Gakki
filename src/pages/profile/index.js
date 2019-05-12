@@ -97,7 +97,7 @@ export default class ProfileTab extends Component {
   }
 
   componentWillUnmount() {
-    this.cancel()
+    this.cancel && this.cancel()
   }
 
   /**

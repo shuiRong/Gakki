@@ -11,7 +11,6 @@ import { themeData } from '../utils/color'
 import mobx from '../utils/mobx'
 import { observer } from 'mobx-react'
 import { version, deploymentKey } from '../utils/config'
-import codePush from 'react-native-code-push'
 
 let color = {}
 @observer
@@ -180,19 +179,9 @@ export default class About extends Component {
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() =>
-              codePush.sync({
-                updateDialog: {
-                  appendReleaseDescription: true,
-                  descriptionPrefix: '更新内容：',
-                  title: '更新',
-                  mandatoryUpdateMessage: '',
-                  mandatoryContinueButtonLabel: '更新'
-                },
-                mandatoryInstallMode: codePush.InstallMode.IMMEDIATE,
-                deploymentKey: deploymentKey
-              })
-            }
+            onPress={() => {
+              // 检查更新
+            }}
             activeOpacity={0.5}
             style={{
               marginTop: 20,

@@ -35,7 +35,7 @@ export default class HashTag extends Component {
   }
 
   componentWillUnmount() {
-    this.cancel()
+    this.cancel && this.cancel()
   }
 
   deleteToot = id => {
