@@ -12,6 +12,7 @@ import { themeData } from '../utils/color'
 import mobx from '../utils/mobx'
 import { observer } from 'mobx-react'
 import { save, fetch } from '../utils/store'
+import { CancelToken } from 'axios'
 
 let color = {}
 @observer
@@ -22,6 +23,8 @@ export default class Auth extends Component {
       client_id: '',
       client_secret: ''
     }
+    this.cancelGetToken = null
+    this.cancelGetCurrentUser = null
   }
 
   componentDidMount() {
@@ -32,15 +35,26 @@ export default class Auth extends Component {
     })
   }
 
+  componentWillUnmount() {
+    this.cancelGetToken()
+    this.cancelGetCurrentUser()
+  }
+
   getToken = code => {
     const state = this.state
-    getToken(mobx.domain, {
-      client_id: state.client_id,
-      client_secret: state.client_secret,
-      grant_type: 'authorization_code',
-      code: code,
-      redirect_uri: 'https://linshuirong.cn'
-    })
+    getToken(
+      mobx.domain,
+      {
+        client_id: state.client_id,
+        client_secret: state.client_secret,
+        grant_type: 'authorization_code',
+        code: code,
+        redirect_uri: 'https://linshuirong.cn'
+      },
+      {
+        cancelToken: new CancelToken(c => (this.cancelGetToken = c))
+      }
+    )
       .then(({ access_token }) => {
         const token = 'Bearer ' + access_token
         mobx.updateAccessToken(token)
@@ -49,7 +63,9 @@ export default class Auth extends Component {
           save('domain', mobx.domain),
           save('access_token', token),
           fetch('userData'),
-          getCurrentUser(mobx.domain, token)
+          getCurrentUser(mobx.domain, token, {
+            cancelToken: new CancelToken(c => (this.cancelGetCurrentUser = c))
+          })
         ]).then(result => {
           // 如果还没有数据，或不存在当前用户token，存一份
           let userData = result[2]
@@ -61,7 +77,6 @@ export default class Auth extends Component {
             }
             save('userData', userData)
           }
-
 
           mobx.updateAccount(account)
           mobx.updateUserData(userData)

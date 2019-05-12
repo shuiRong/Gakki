@@ -30,6 +30,7 @@ import { Menu } from 'teaset'
 import mobx from '../../utils/mobx'
 import HTMLView from './HTMLView'
 import { observer } from 'mobx-react'
+import { CancelToken } from 'axios'
 const cheerio = require('react-native-cheerio')
 
 let color = {}
@@ -51,6 +52,8 @@ class TootContent extends Component {
       toot: {},
       isNotificationPage: false
     }
+
+    this.cancel = []
   }
 
   componentDidMount() {
@@ -198,6 +201,8 @@ export default class TootBox extends Component {
       isNotificationPage: false, // 当前组件是否使用在通知页面，因为通知接口返回的数据格式稍有不同
       notification: null // 存储notification接口返回的嘟文数据
     }
+
+    this.cancel = []
   }
 
   componentDidMount() {
@@ -218,6 +223,10 @@ export default class TootBox extends Component {
     })
   }
 
+  componentWillUnmount() {
+    this.cancel.forEach(cancel => cancel())
+  }
+
   shouldComponentUpdate(_, { toot }) {
     const currentToot = this.state.toot
     if (
@@ -235,13 +244,19 @@ export default class TootBox extends Component {
     return false
   }
 
+  componentWillUnmount() {
+    this.cancel.forEach(cancel => cancel())
+  }
+
   /**
    * @description 给toot点赞，如果已经点过赞就取消点赞
    * @param {id}: id
    * @param {favourited}: 应该点赞？
    */
   favourite = (id, favourited) => {
-    favourite(mobx.domain, id, favourited).then(res => {
+    favourite(mobx.domain, id, favourited, {
+      cancelToken: new CancelToken(c => this.cancel.push(c))
+    }).then(res => {
       this.setState({
         toot: res
       })
@@ -254,7 +269,9 @@ export default class TootBox extends Component {
    * @param {reblogged}: 转发状态
    */
   reblog = (id, reblogged) => {
-    reblog(mobx.domain, id, reblogged).then(res => {
+    reblog(mobx.domain, id, reblogged, {
+      cancelToken: new CancelToken(c => this.cancel.push(c))
+    }).then(res => {
       this.setState({
         toot: res
       })
@@ -366,14 +383,18 @@ export default class TootBox extends Component {
    */
   deleteStatuses = (recycle = false) => {
     const id = this.state.toot.id
-    deleteStatuses(mobx.domain, id).then(() => {
+    deleteStatuses(mobx.domain, id, {
+      cancelToken: new CancelToken(c => this.cancel.push(c))
+    }).then(() => {
       this.props.deleteToot && this.props.deleteToot(id, recycle)
     })
   }
 
   setPin = () => {
     const toot = this.state.toot
-    setPin(mobx.domain, toot.id, toot.pinned).then(() => {
+    setPin(mobx.domain, toot.id, toot.pinned, {
+      cancelToken: new CancelToken(c => this.cancel.push(c))
+    }).then(() => {
       this.setState(
         {
           toot: { ...toot, pinned: !toot.pinned }
@@ -387,14 +408,18 @@ export default class TootBox extends Component {
 
   muteAccount = () => {
     const accountId = this.state.toot.account.id
-    muteAccount(mobx.domain, accountId, true).then(() => {
+    muteAccount(mobx.domain, accountId, true, {
+      cancelToken: new CancelToken(c => this.cancel.push(c))
+    }).then(() => {
       this.props.muteAccount && this.props.muteAccount(accountId)
     })
   }
 
   blockAccount = () => {
     const accountId = this.state.toot.account.id
-    blockAccount(mobx.domain, accountId, true).then(() => {
+    blockAccount(mobx.domain, accountId, true, {
+      cancelToken: new CancelToken(c => this.cancel.push(c))
+    }).then(() => {
       this.props.blockAccount && this.props.blockAccount(accountId)
     })
   }

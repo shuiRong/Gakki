@@ -11,6 +11,7 @@ import Divider from '../common/Divider'
 import Empty from '../common/Empty'
 import PropTypes from 'prop-types'
 import mobx from '../../utils/mobx'
+import { CancelToken } from 'axios'
 
 export default class LocalScreen extends Component {
   static propTypes = {
@@ -34,12 +35,10 @@ export default class LocalScreen extends Component {
       list: [],
       loading: true
     }
+    this.cancel = null
   }
   componentDidMount() {
     this.fetchTimelines()
-    // setTimeout(() => {
-    //   this.ref.scrollToOffset({ offset: 200 })
-    // }, 10000)
   }
 
   /**
@@ -93,6 +92,10 @@ export default class LocalScreen extends Component {
     }
   }
 
+  componentWillUnmount() {
+    this.cancel()
+  }
+
   deleteToot = id => {
     this.setState({
       list: this.state.list.filter(toot => toot.id !== id)
@@ -119,10 +122,17 @@ export default class LocalScreen extends Component {
    * @param {params}: 分页参数
    */
   fetchTimelines = (cb, params) => {
-    getHomeTimelines(mobx.domain, this.props.url, {
-      ...params,
-      ...this.props.params
-    })
+    getHomeTimelines(
+      mobx.domain,
+      this.props.url,
+      {
+        ...params,
+        ...this.props.params
+      },
+      {
+        cancelToken: new CancelToken(c => (this.cancel = c))
+      }
+    )
       .then(res => {
         // 同时将数据更新到state数据中，刷新视图
         this.setState({

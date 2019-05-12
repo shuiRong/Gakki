@@ -15,6 +15,7 @@ import Empty from './common/Empty'
 import UserItem from './common/UserItem'
 import { observer } from 'mobx-react'
 import { UserSpruce } from './common/Spruce'
+import { CancelToken } from 'axios'
 
 let color = {}
 @observer
@@ -26,9 +27,15 @@ export default class MutedUsers extends Component {
       relationships: [],
       loading: true
     }
+
+    this.cancel = []
   }
   componentDidMount() {
     this.getMutes()
+  }
+
+  componentWillUnmount() {
+    this.cancel.forEach(cancel => cancel())
   }
 
   deleteToot = id => {
@@ -52,7 +59,9 @@ export default class MutedUsers extends Component {
    * @param {params}: 分页参数
    */
   getMutes = (cb, params) => {
-    getMutes(mobx.domain, params)
+    getMutes(mobx.domain, params, {
+      cancelToken: new CancelToken(c => this.cancel.push(c))
+    })
       .then(res => {
         // 同时将数据更新到state数据中，刷新视图
         this.setState({
@@ -70,7 +79,9 @@ export default class MutedUsers extends Component {
   }
 
   getRelationship = ids => {
-    getRelationship(mobx.domain, ids)
+    getRelationship(mobx.domain, ids, {
+      cancelToken: new CancelToken(c => this.cancel.push(c))
+    })
       .then(res => {
         this.setState({
           relationships: res

@@ -12,10 +12,17 @@ import { fetch, save } from '../utils/store'
 import Spinner from 'react-native-spinkit'
 import codePush from 'react-native-code-push'
 import { deploymentKey, token } from '../utils/config'
+import { CancelToken } from 'axios'
 
 let color = {}
 @observer
 export default class Login extends Component {
+  constructor(props) {
+    super(props)
+
+    this.cancel = null
+  }
+
   componentDidMount() {
     if (__DEV__) {
       mobx.updateDomain('cmx.im')
@@ -48,7 +55,9 @@ export default class Login extends Component {
               loginPage()
               return
             }
-            verify_credentials(domain, access_token).then(({ name }) => {
+            verify_credentials(domain, access_token, {
+              cancelToken: new CancelToken(c => (this.cancel = c))
+            }).then(({ name }) => {
               if (!name) {
                 loginPage()
                 return
@@ -75,6 +84,10 @@ export default class Login extends Component {
         mobx.updateTheme(theme)
       }
     })
+  }
+
+  componentWillUnmount() {
+    this.cancel()
   }
 
   render() {

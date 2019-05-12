@@ -17,6 +17,7 @@ import ListFooterComponent from '../common/ListFooterComponent'
 import mobx from '../../utils/mobx'
 import { observer } from 'mobx-react'
 import { themeData } from '../../utils/color'
+import { CancelToken } from 'axios'
 
 let color = {}
 const deviceWidth = Dimensions.get('window').width
@@ -28,6 +29,8 @@ export default class TootScreen extends Component {
       list: [],
       loading: true
     }
+
+    this.cancel = null
   }
   componentDidMount() {
     this.getUserMediaStatuses()
@@ -84,6 +87,10 @@ export default class TootScreen extends Component {
     }
   }
 
+  componentWillUnmount() {
+    this.cancel()
+  }
+
   /**
    * @description 获取用户发送的toot
    * @param {cb}: 成功后的回调函数
@@ -91,10 +98,17 @@ export default class TootScreen extends Component {
    */
   getUserMediaStatuses = (cb, params) => {
     const id = this.props.navigation.getParam('id')
-    getUserStatuses(mobx.domain, id, {
-      only_media: true,
-      ...params
-    })
+    getUserStatuses(
+      mobx.domain,
+      id,
+      {
+        only_media: true,
+        ...params
+      },
+      {
+        cancelToken: new CancelToken(c => (this.cancel = c))
+      }
+    )
       .then(res => {
         // 同时将数据更新到state数据中，刷新视图
         const newList = []

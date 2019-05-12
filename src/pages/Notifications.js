@@ -18,6 +18,7 @@ import { save, fetch } from '../utils/store'
 import mobx from '../utils/mobx'
 import { observer } from 'mobx-react'
 import { Confirm } from './common/Notice'
+import { CancelToken } from 'axios'
 
 let color = {}
 const deviceHeight = Dimensions.get('window').height
@@ -30,6 +31,8 @@ export default class Home extends Component {
       headerTop: new Animated.Value(0),
       emojiObj: {}
     }
+
+    this.cancel = []
   }
   componentWillMount() {
     this.top = this.state.headerTop.interpolate({
@@ -59,10 +62,16 @@ export default class Home extends Component {
     })
 
     if (!mobx.account || !mobx.account.id) {
-      getCurrentUser(mobx.domain).then(res => {
+      getCurrentUser(mobx.domain, {
+        cancelToken: new CancelToken(c => this.cancel.push(c))
+      }).then(res => {
         mobx.updateAccount(res)
       })
     }
+  }
+
+  componentWillUnmount() {
+    this.cancel.forEach(cancel => cancel())
   }
 
   /**
@@ -88,7 +97,9 @@ export default class Home extends Component {
    */
   clearNotifications = () => {
     Confirm.show('确定清空所有通知吗？', () => {
-      clearNotifications(mobx.domain)
+      clearNotifications(mobx.domain, {
+        cancelToken: new CancelToken(c => this.cancel.push(c))
+      })
         .then(() => {
           this.setState({
             list: [],
@@ -107,7 +118,9 @@ export default class Home extends Component {
    * @description 从网络重新获取emojis数据
    */
   getCustomEmojis = () => {
-    getCustomEmojis(mobx.domain).then(res => {
+    getCustomEmojis(mobx.domain, {
+      cancelToken: new CancelToken(c => this.cancel.push(c))
+    }).then(res => {
       save('emojis', res).then(() => {})
 
       this.translateEmoji(res)

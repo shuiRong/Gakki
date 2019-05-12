@@ -12,6 +12,7 @@ import mobx from '../../utils/mobx'
 import Divider from '../common/Divider'
 import { TootListSpruce } from '../common/Spruce'
 import { observer } from 'mobx-react'
+import { CancelToken } from 'axios'
 
 let color = {}
 @observer
@@ -24,6 +25,9 @@ export default class TootScreen extends Component {
       loading: true,
       url: 'home'
     }
+
+    this.cancel = null
+    this.cancelPinned = null
   }
   componentDidMount() {
     this.getUserPinnedStatuses()
@@ -80,6 +84,11 @@ export default class TootScreen extends Component {
     }
   }
 
+  componentWillUnmount() {
+    this.cancelPinned()
+    this.cancel()
+  }
+
   /**
    * @description 获取用户发送的toot
    * @param {cb}: 成功后的回调函数
@@ -87,11 +96,18 @@ export default class TootScreen extends Component {
    */
   getUserStatuses = (cb, params) => {
     const id = this.props.navigation.getParam('id')
-    getUserStatuses(mobx.domain, id, {
-      exclude_replies: false,
-      pinned: false,
-      ...params
-    })
+    getUserStatuses(
+      mobx.domain,
+      id,
+      {
+        exclude_replies: false,
+        pinned: false,
+        ...params
+      },
+      {
+        cancelToken: new CancelToken(c => (this.cancel = c))
+      }
+    )
       .then(res => {
         // 手动移除已经被置顶的嘟文
         // P.S. mastodon2.7.0的接口返回的status不存在pinned属性，疑似bug
@@ -134,9 +150,16 @@ export default class TootScreen extends Component {
     this.setState({
       loading: true
     })
-    getUserStatuses(mobx.domain, this.props.navigation.getParam('id'), {
-      pinned: true
-    })
+    getUserStatuses(
+      mobx.domain,
+      this.props.navigation.getParam('id'),
+      {
+        pinned: true
+      },
+      {
+        cancelToken: new CancelToken(c => (this.cancelPinned = c))
+      }
+    )
       .then(res => {
         this.setState(
           {

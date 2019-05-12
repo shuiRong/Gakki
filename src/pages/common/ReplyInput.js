@@ -23,6 +23,7 @@ import { Menu, Overlay, Input } from 'teaset'
 import ImagePicker from 'react-native-image-picker'
 import VideoPicker from 'react-native-image-crop-picker'
 import { save, fetch } from '../../utils/store'
+import { CancelToken } from 'axios'
 
 let color = {}
 const width = Dimensions.get('window').width
@@ -279,6 +280,8 @@ export default class ReplyInput extends Component {
       emojiBoxIsShown: false, // 显示emojiBox吗？
       showNSFW: false // 显示NSFW按钮？（仅在存在媒体内容时显示）
     }
+
+    this.cancel = []
   }
 
   componentDidMount() {
@@ -295,11 +298,17 @@ export default class ReplyInput extends Component {
     })
   }
 
+  componentWillUnmount() {
+    this.cancel.forEach(cancel => cancel())
+  }
+
   /**
    * @description 从网络重新获取emojis数据
    */
   getCustomEmojis = () => {
-    getCustomEmojis(mobx.domain).then(res => {
+    getCustomEmojis(mobx.domain, {
+      cancelToken: new CancelToken(c => this.cancel.push(c))
+    }).then(res => {
       this.setState({
         customEmojis: res
       })
@@ -338,11 +347,17 @@ export default class ReplyInput extends Component {
       } else if (response.error) {
         console.log('error: ', response.error)
       } else {
-        upload(mobx.domain, {
-          response: response,
-          description: 'description',
-          focus: 'focus'
-        })
+        upload(
+          mobx.domain,
+          {
+            response: response,
+            description: 'description',
+            focus: 'focus'
+          },
+          {
+            cancelToken: new CancelToken(c => this.cancel.push(c))
+          }
+        )
           .then(res => {
             this.setState({
               mediaList: [...this.state.mediaList].concat({
@@ -364,15 +379,21 @@ export default class ReplyInput extends Component {
       mediaType: 'video'
     })
       .then(video => {
-        upload(mobx.domain, {
-          response: {
-            uri: video.path,
-            type: video.mime,
-            fileName: 'filename'
+        upload(
+          mobx.domain,
+          {
+            response: {
+              uri: video.path,
+              type: video.mime,
+              fileName: 'filename'
+            },
+            description: 'description',
+            focus: 'focus'
           },
-          description: 'description',
-          focus: 'focus'
-        })
+          {
+            cancelToken: new CancelToken(c => this.cancel.push(c))
+          }
+        )
           .then(res => {
             this.setState({
               mediaList: [...this.state.mediaList].concat({
@@ -391,14 +412,18 @@ export default class ReplyInput extends Component {
 
   sendToot = () => {
     const props = this.props
-    sendStatuses(mobx.domain, {
-      in_reply_to_id: mobx.in_reply_to_id,
-      status: mobx.inputValue,
-      spoiler_text: mobx.cw ? mobx.spoiler_text : '',
-      visibility: this.state.visibility,
-      sensitive: mobx.NSFW,
-      media_ids: this.state.mediaList.map(media => media.id)
-    }).then(res => {
+    sendStatuses(
+      mobx.domain,
+      {
+        in_reply_to_id: mobx.in_reply_to_id,
+        status: mobx.inputValue,
+        spoiler_text: mobx.cw ? mobx.spoiler_text : '',
+        visibility: this.state.visibility,
+        sensitive: mobx.NSFW,
+        media_ids: this.state.mediaList.map(media => media.id)
+      },
+      { cancelToken: new CancelToken(c => this.cancel.push(c)) }
+    ).then(res => {
       if (props.appendReply) {
         props.appendReply(res)
       }
@@ -517,9 +542,14 @@ export default class ReplyInput extends Component {
     newList.forEach((media, index) => {
       if (index === mediaIndex) {
         media['description'] = description
-        updateMedia(mobx.domain, media.id, {
-          description
-        }).then(() => {
+        updateMedia(
+          mobx.domain,
+          media.id,
+          {
+            description
+          },
+          { cancelToken: new CancelToken(c => this.cancel.push(c)) }
+        ).then(() => {
           // 更新媒体文件辅助标题参数
         })
       }

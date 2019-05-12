@@ -15,6 +15,7 @@ import Empty from './common/Empty'
 import UserItem from './common/UserItem'
 import { observer } from 'mobx-react'
 import { UserSpruce } from './common/Spruce'
+import { CancelToken } from 'axios'
 
 let color = {}
 @observer
@@ -25,16 +26,24 @@ export default class FollowRequests extends Component {
       list: [],
       loading: true
     }
+
+    this.cancel = null
   }
   componentDidMount() {
     this.followRequests()
+  }
+
+  componentWillUnmount() {
+    this.cancel()
   }
 
   /**
    * @description 获取关注请求列表
    */
   followRequests = () => {
-    followRequests(mobx.domain)
+    followRequests(mobx.domain, {
+      cancelToken: new CancelToken(c => (this.cancel = c))
+    })
       .then(res => {
         this.setState({
           list: this.state.list.concat(res),

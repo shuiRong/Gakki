@@ -15,6 +15,7 @@ import Divider from './common/Divider'
 import Empty from './common/Empty'
 import UserItem from './common/UserItem'
 import { observer } from 'mobx-react'
+import { CancelToken } from 'axios'
 
 let color = {}
 @observer
@@ -25,6 +26,8 @@ export default class Followers extends Component {
       list: [],
       loading: true
     }
+
+    this.cancel = null
   }
   componentDidMount() {
     const { navigation } = this.props
@@ -33,13 +36,19 @@ export default class Followers extends Component {
     this.followers(id, limit)
   }
 
+  componentWillUnmount() {
+    this.cancel()
+  }
+
   /**
    * @description 获取时间线数据
    * @param {id}: 用户id
    * @param {limit}: 获取数据数量
    */
   followers = (id, limit) => {
-    followers(mobx.domain, id, limit)
+    followers(mobx.domain, id, limit, {
+      cancelToken: new CancelToken(c => (this.cancel = c))
+    })
       .then(res => {
         // 同时将数据更新到state数据中，刷新视图
         this.setState({

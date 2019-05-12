@@ -15,6 +15,7 @@ import mobx from '../utils/mobx'
 import Divider from './common/Divider'
 import TootBox from './common/TootBox'
 import { observer } from 'mobx-react'
+import { CancelToken } from 'axios'
 
 let color = {}
 @observer
@@ -25,10 +26,16 @@ export default class HashTag extends Component {
       list: [],
       loading: true
     }
+
+    this.cancel = null
   }
   componentDidMount() {
     this.tag = this.props.navigation.getParam('id')
     this.getTag()
+  }
+
+  componentWillUnmount() {
+    this.cancel()
   }
 
   deleteToot = id => {
@@ -52,7 +59,9 @@ export default class HashTag extends Component {
   }
 
   getTag = params => {
-    getTag(mobx.domain, this.tag, params)
+    getTag(mobx.domain, this.tag, params, {
+      cancelToken: new CancelToken(c => (this.cancel = c))
+    })
       .then(res => {
         this.setState({
           list: this.state.list.concat(res),

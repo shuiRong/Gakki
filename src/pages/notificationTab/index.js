@@ -9,6 +9,7 @@ import Divider from '../common/Divider'
 import Empty from '../common/Empty'
 import { observer } from 'mobx-react'
 import PropTypes from 'prop-types'
+import { CancelToken } from 'axios'
 
 let color = {}
 @observer
@@ -31,9 +32,15 @@ export default class Tab extends Component {
       list: [],
       loading: true
     }
+
+    this.cancel = null
   }
   componentDidMount() {
     this.getNotifications(null, this.props.params)
+  }
+
+  componentWillUnmount() {
+    this.cancel()
   }
 
   deleteToot = id => {
@@ -62,7 +69,9 @@ export default class Tab extends Component {
    * @param {params}: 分页参数
    */
   getNotifications = (cb, params) => {
-    getNotifications(mobx.domain, params)
+    getNotifications(mobx.domain, params, {
+      cancelToken: new CancelToken(c => (this.cancel = c))
+    })
       .then(res => {
         // 同时将数据更新到state数据中，刷新视图
         this.setState({

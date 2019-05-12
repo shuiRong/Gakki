@@ -15,6 +15,7 @@ import mobx from '../utils/mobx'
 import Divider from './common/Divider'
 import { observer } from 'mobx-react'
 import { TootListSpruce } from './common/Spruce'
+import { CancelToken } from 'axios'
 
 @observer
 export default class Envelope extends Component {
@@ -24,9 +25,15 @@ export default class Envelope extends Component {
       list: [],
       loading: true
     }
+
+    this.cancel = null
   }
   componentDidMount() {
     this.getConversations()
+  }
+
+  componentWillUnmount() {
+    this.cancel()
   }
 
   deleteToot = id => {
@@ -55,7 +62,9 @@ export default class Envelope extends Component {
    * @param {params}: 分页参数
    */
   getConversations = (cb, params) => {
-    getConversations(mobx.domain, params)
+    getConversations(mobx.domain, params, {
+      cancelToken: new CancelToken(c => (this.cancel = c))
+    })
       .then(res => {
         // 同时将数据更新到state数据中，刷新视图
         this.setState({

@@ -13,6 +13,7 @@ import Divider from '../common/Divider'
 import { TootListSpruce } from '../common/Spruce'
 import { observer } from 'mobx-react'
 import PropTypes from 'prop-types'
+import { CancelToken } from 'axios'
 
 @observer
 export default class ProfileTab extends Component {
@@ -37,6 +38,8 @@ export default class ProfileTab extends Component {
       loading: true,
       url: 'home'
     }
+
+    this.cancel = null
   }
   componentDidMount() {
     this.getUserStatuses()
@@ -93,18 +96,27 @@ export default class ProfileTab extends Component {
     }
   }
 
+  componentWillUnmount() {
+    this.cancel()
+  }
+
   /**
    * @description 获取用户发送的toot
    * @param {cb}: 成功后的回调函数
    */
   getUserStatuses = (cb, params) => {
     const id = this.props.navigation.getParam('id')
-    getUserStatuses(mobx.domain, id, {
-      exclude_replies: false,
-      pinned: true,
-      ...params,
-      ...this.props.params
-    })
+    getUserStatuses(
+      mobx.domain,
+      id,
+      {
+        exclude_replies: false,
+        pinned: true,
+        ...params,
+        ...this.props.params
+      },
+      { cancelToken: new CancelToken(c => (this.cancel = c)) }
+    )
       .then(res => {
         // 同时将数据更新到state数据中，刷新视图
         this.setState({

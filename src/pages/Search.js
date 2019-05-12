@@ -24,6 +24,7 @@ import { themeData } from '../utils/color'
 import mobx from '../utils/mobx'
 import Divider from './common/Divider'
 import { observer } from 'mobx-react'
+import { CancelToken } from 'axios'
 
 let color = {}
 const deviceWidth = Dimensions.get('window').width
@@ -38,10 +39,16 @@ export default class Notifications extends Component {
       hashtags: [],
       statuses: []
     }
+
+    this.cancel = null
   }
 
   componentDidMount() {
     this.search()
+  }
+
+  componentWillUnmount() {
+    this.cancel()
   }
 
   refreshHandler = () => {
@@ -53,7 +60,9 @@ export default class Notifications extends Component {
   }
 
   search = () => {
-    search(mobx.domain, this.state.text)
+    search(mobx.domain, this.state.text, {
+      cancelToken: new CancelToken(c => (this.cancel = c))
+    })
       .then(res => {
         this.setState(res)
       })

@@ -17,10 +17,10 @@ import { apps } from '../utils/api'
 import { themeData } from '../utils/color'
 import mobx from '../utils/mobx'
 import { observer } from 'mobx-react'
-import { save } from '../utils/store'
 import { Confirm } from './common/Notice'
 import { Button } from 'native-base'
 import Icon from 'react-native-vector-icons/FontAwesome5'
+import { CancelToken } from 'axios'
 
 let color = {}
 @observer
@@ -30,6 +30,7 @@ export default class Login extends Component {
     this.state = {
       canBack: false
     }
+    this.cancel = null
   }
 
   componentDidMount() {
@@ -50,6 +51,7 @@ export default class Login extends Component {
 
   componentWillUnmount() {
     this.backHandler.remove()
+    this.cancel()
   }
 
   openURL = url => {
@@ -61,12 +63,18 @@ export default class Login extends Component {
     if (!domain) {
       return
     }
-    apps(domain, {
-      website: `https://${domain}`,
-      client_name: 'Gakki',
-      redirect_uris: 'https://linshuirong.cn',
-      scopes: 'read write follow push'
-    }).then(({ client_id, client_secret }) => {
+    apps(
+      domain,
+      {
+        website: `https://${domain}`,
+        client_name: 'Gakki',
+        redirect_uris: 'https://linshuirong.cn',
+        scopes: 'read write follow push'
+      },
+      {
+        cancelToken: new CancelToken(c => (this.cancel = c))
+      }
+    ).then(({ client_id, client_secret }) => {
       this.props.navigation.navigate('Auth', {
         client_id,
         client_secret

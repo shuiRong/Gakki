@@ -10,6 +10,7 @@ import { themeData } from '../utils/color'
 import { save, fetch } from '../utils/store'
 import mobx from '../utils/mobx'
 import { observer } from 'mobx-react'
+import { CancelToken } from 'axios'
 
 /**
  * 主页
@@ -25,6 +26,8 @@ export default class Home extends Component {
       headerTop: new Animated.Value(0),
       emojiObj: {}
     }
+
+    this.cancel = []
   }
   componentWillMount() {
     this.top = this.state.headerTop.interpolate({
@@ -67,7 +70,9 @@ export default class Home extends Component {
     })
 
     if (!mobx.account || !mobx.account.id) {
-      getCurrentUser(mobx.domain).then(res => {
+      getCurrentUser(mobx.domain, {
+        cancelToken: new CancelToken(c => this.cancel.push(c))
+      }).then(res => {
         mobx.updateAccount(res)
       })
     }
@@ -75,6 +80,7 @@ export default class Home extends Component {
 
   componentWillUnmount() {
     this.backHandler.remove()
+    this.cancel.forEach(cancel => cancel())
   }
 
   /**
@@ -99,7 +105,9 @@ export default class Home extends Component {
    * @description 从网络重新获取emojis数据
    */
   getCustomEmojis = () => {
-    getCustomEmojis(mobx.domain).then(res => {
+    getCustomEmojis(mobx.domain, {
+      cancelToken: new CancelToken(c => this.cancel.push(c))
+    }).then(res => {
       save('emojis', res).then(() => {})
 
       this.translateEmoji(res)

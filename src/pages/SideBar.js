@@ -17,6 +17,7 @@ import Divider from './common/Divider'
 import { observer } from 'mobx-react'
 import { remove, save, fetch } from '../utils/store'
 import CodePush from 'react-native-code-push'
+import { CancelToken } from 'axios'
 
 let color = {}
 @observer
@@ -49,13 +50,19 @@ export default class SideBar extends Component {
 
     // 如果没获取到的account数据，重新拉取
     if (!mobx.account || !mobx.account.id) {
-      getCurrentUser(mobx.domain).then(res => {
+      getCurrentUser(mobx.domain, {
+        cancelToken: new CancelToken(c => (this.cancel = c))
+      }).then(res => {
         update(res)
         mobx.updateAccount(res)
       })
     } else {
       update(mobx.account)
     }
+  }
+
+  componentWillUnmount() {
+    this.cancel()
   }
 
   // 删除存储的access_token等信息，进入到登录页面

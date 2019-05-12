@@ -10,6 +10,7 @@ import mobx from '../utils/mobx'
 import Context from './common/Context'
 import ReplyInput from './common/ReplyInput'
 import { observer } from 'mobx-react'
+import { CancelToken } from 'axios'
 
 /**
  * Toot详情页面
@@ -25,6 +26,8 @@ export default class TootDetail extends Component {
       ancestors: [],
       descendants: []
     }
+
+    this.cancel = []
   }
 
   componentDidMount() {
@@ -53,6 +56,10 @@ export default class TootDetail extends Component {
     this.init(navigation.getParam('data'))
   }
 
+  componentWillUnmount() {
+    this.cancel.forEach(cancel => cancel())
+  }
+
   fetchData = () => {
     this.setState({
       toot: null
@@ -61,7 +68,9 @@ export default class TootDetail extends Component {
     const toot = this.props.navigation.getParam('data')
     const id = toot.id
 
-    getStatuses(mobx.domain, id).then(res => {
+    getStatuses(mobx.domain, id, {
+      cancelToken: new CancelToken(c => this.cancel.push(c))
+    }).then(res => {
       this.setState({
         toot: res
       })
@@ -71,7 +80,9 @@ export default class TootDetail extends Component {
   }
 
   getContext = id => {
-    context(mobx.domain, id).then(res => {
+    context(mobx.domain, id, {
+      cancelToken: new CancelToken(c => this.cancel.push(c))
+    }).then(res => {
       this.setState(res)
     })
   }

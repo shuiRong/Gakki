@@ -27,6 +27,7 @@ import { themeData } from '../utils/color'
 import mobx from '../utils/mobx'
 import HTMLView from './common/HTMLView'
 import { observer } from 'mobx-react'
+import { CancelToken } from 'axios'
 
 /**
  * Toot详情页面
@@ -45,6 +46,8 @@ export default class Profile extends Component {
       loading: true,
       tabBarHeight: 500
     }
+
+    this.cancel = []
   }
 
   componentWillMount() {
@@ -82,6 +85,10 @@ export default class Profile extends Component {
     this.fetchData()
   }
 
+  componentWillUnmount() {
+    this.cancel.forEach(cancel => cancel())
+  }
+
   fetchData = data => {
     const id = data || this.props.navigation.getParam('id')
     this.getAccountData(id)
@@ -97,7 +104,9 @@ export default class Profile extends Component {
    * @param {id}: id
    */
   getAccountData = id => {
-    getAccountData(mobx.domain, id)
+    getAccountData(mobx.domain, id, {
+      cancelToken: new CancelToken(c => this.cancel.push(c))
+    })
       .then(res => {
         this.setState({
           profile: res,
@@ -116,7 +125,9 @@ export default class Profile extends Component {
    * @param {id}: id
    */
   getRelationship = id => {
-    getRelationship(mobx.domain, [id]).then(res => {
+    getRelationship(mobx.domain, [id], {
+      cancelToken: new CancelToken(c => this.cancel.push(c))
+    }).then(res => {
       this.setState({
         relationship: res[0]
       })
@@ -127,22 +138,22 @@ export default class Profile extends Component {
    * @description 给toot点赞，如果已经点过赞就取消点赞
    */
   favourite = () => {
-    favourite(mobx.domain, this.state.toot.id, this.state.toot.favourited).then(
-      () => {
-        this.update('favourited', 'favourites_count')
-      }
-    )
+    favourite(mobx.domain, this.state.toot.id, this.state.toot.favourited, {
+      cancelToken: new CancelToken(c => this.cancel.push(c))
+    }).then(() => {
+      this.update('favourited', 'favourites_count')
+    })
   }
 
   /**
    * @description 转发toot
    */
   reblog = () => {
-    reblog(mobx.domain, this.state.toot.id, this.state.toot.reblogged).then(
-      () => {
-        this.update('reblogged', 'reblogs_count')
-      }
-    )
+    reblog(mobx.domain, this.state.toot.id, this.state.toot.reblogged, {
+      cancelToken: new CancelToken(c => this.cancel.push(c))
+    }).then(() => {
+      this.update('reblogged', 'reblogs_count')
+    })
   }
 
   /**
@@ -168,7 +179,9 @@ export default class Profile extends Component {
    * @description 隐藏某人，不看所有动态
    */
   mute = () => {
-    mute(this.state.toot.id, this.state.toot.muted).then(() => {
+    mute(this.state.toot.id, this.state.toot.muted, {
+      cancelToken: new CancelToken(c => this.cancel.push(c))
+    }).then(() => {
       this.goBackWithParam()
     })
   }
@@ -195,7 +208,9 @@ export default class Profile extends Component {
    * @param {following}: 正在关注该用户
    */
   followTheAccount = following => {
-    follow(mobx.domain, this.state.profile.id, !following).then(res => {
+    follow(mobx.domain, this.state.profile.id, !following, {
+      cancelToken: new CancelToken(c => this.cancel.push(c))
+    }).then(res => {
       this.setState({
         relationship: res
       })

@@ -7,6 +7,7 @@ import mobx from '../../utils/mobx'
 import HTMLView from './HTMLView'
 import { observer } from 'mobx-react'
 import PropTypes from 'prop-types'
+import { CancelToken } from 'axios'
 
 let color = {}
 @observer
@@ -30,6 +31,8 @@ export default class UserList extends Component {
       account: {},
       relationship: {}
     }
+
+    this.cancel = []
   }
 
   componentDidMount() {
@@ -56,13 +59,19 @@ export default class UserList extends Component {
     return true
   }
 
+  componentWillUnmount() {
+    this.cancel.forEach(cancel => cancel())
+  }
+
   /**
    * @description 是否隐藏、取消隐藏账号
    */
   blockAccount = block => {
     const state = this.state
     const id = state.account.id
-    blockAccount(mobx.domain, id, block).then(() => {
+    blockAccount(mobx.domain, id, block, {
+      cancelToken: new CancelToken(c => this.cancel.push(c))
+    }).then(() => {
       if (!block) {
         this.props.deleteUser(id)
         return
@@ -76,7 +85,9 @@ export default class UserList extends Component {
   muteAccount = (mute, notification) => {
     const state = this.state
     const id = state.account.id
-    muteAccount(mobx.domain, id, mute, notification).then(() => {
+    muteAccount(mobx.domain, id, mute, notification, {
+      cancelToken: new CancelToken(c => this.cancel.push(c))
+    }).then(() => {
       if (!mute) {
         this.props.deleteUser(id)
         return
@@ -92,7 +103,9 @@ export default class UserList extends Component {
 
   checkRequest = status => {
     const id = this.state.account.id
-    checkRequest(mobx.domain, id, status).then(() => {
+    checkRequest(mobx.domain, id, status, {
+      cancelToken: new CancelToken(c => this.cancel.push(c))
+    }).then(() => {
       this.props.deleteUser(id)
     })
   }
