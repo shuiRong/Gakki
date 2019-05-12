@@ -123,7 +123,7 @@ export default class Notifications extends Component {
             </Button>
           }
         />
-        {state.accounts.length !== 0 && (
+        {state.accounts.length !== 0 ? (
           <View>
             <View
               style={{
@@ -160,8 +160,10 @@ export default class Notifications extends Component {
               )}
             />
           </View>
+        ) : (
+          <View />
         )}
-        {state.hashtags.length !== 0 && (
+        {state.hashtags.length !== 0 ? (
           <View>
             <Divider />
             <View
@@ -208,8 +210,10 @@ export default class Notifications extends Component {
               )}
             />
           </View>
+        ) : (
+          <View />
         )}
-        {state.statuses.length !== 0 && (
+        {state.statuses.length !== 0 ? (
           <View>
             <Divider />
             <View
@@ -253,6 +257,8 @@ export default class Notifications extends Component {
               )}
             />
           </View>
+        ) : (
+          <View />
         )}
       </ScrollView>
     )

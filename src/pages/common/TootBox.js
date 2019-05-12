@@ -764,7 +764,7 @@ export default class TootBox extends Component {
               }}
               source={{ uri: accounts[2].avatar }}
             />
-            {accounts[3] && (
+            {accounts[3] ? (
               <Image
                 style={{
                   width: 19,
@@ -775,6 +775,8 @@ export default class TootBox extends Component {
                 }}
                 source={{ uri: accounts[3].avatar }}
               />
+            ) : (
+              <View />
             )}
           </View>
         </View>
@@ -934,10 +936,12 @@ export default class TootBox extends Component {
 
     return (
       <View style={styles.body}>
-        {!this.props.isMaster && (
+        {!this.props.isMaster ? (
           <TouchableOpacity onPress={() => this.goProfile(data.account.id)}>
             {this.getAvatar(toot)}
           </TouchableOpacity>
+        ) : (
+          <View />
         )}
         <View style={styles.list}>
           <TouchableOpacity
@@ -947,12 +951,14 @@ export default class TootBox extends Component {
             onLongPress={() => this.setClipboard(data)}
           >
             <View style={styles.row}>
-              {this.props.isMaster && (
+              {this.props.isMaster ? (
                 <TouchableOpacity
                   onPress={() => this.goProfile(data.account.id)}
                 >
                   {this.getAvatar(toot)}
                 </TouchableOpacity>
+              ) : (
+                <View />
               )}
               <TouchableOpacity
                 onPress={() => this.goProfile(data.account.id)}

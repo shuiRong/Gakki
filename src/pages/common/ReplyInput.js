@@ -651,11 +651,13 @@ export default class ReplyInput extends Component {
 
     return (
       <View style={boxStyle}>
-        {!this.props.sendMode && (
+        {!this.props.sendMode ? (
           <Text style={{ marginBottom: 5, color: color.subColor }}>
             回复
             {mobx.reply_to_username ? '@' + mobx.reply_to_username : ''}
           </Text>
+        ) : (
+          <Text />
         )}
         {cwElement}
         <View>
@@ -695,7 +697,7 @@ export default class ReplyInput extends Component {
               style={styles.icon}
             />
           </TouchableOpacity>
-          {state.showNSFW && (
+          {state.showNSFW ? (
             <TouchableOpacity onPress={() => mobx.exchangeNSFW()}>
               {mobx.NSFW ? (
                 <Text style={[styles.enableCW, { color: color.contrastColor }]}>
@@ -705,6 +707,8 @@ export default class ReplyInput extends Component {
                 <Text style={styles.disenableCW}>NSFW</Text>
               )}
             </TouchableOpacity>
+          ) : (
+            <View />
           )}
           <TouchableOpacity
             ref={ref => (this.refOption = ref)}
