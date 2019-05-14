@@ -29,7 +29,7 @@ import { CancelToken } from 'axios'
 let color = {}
 const deviceWidth = Dimensions.get('window').width
 @observer
-export default class Notifications extends Component {
+export default class Search extends Component {
   constructor(props) {
     super(props)
     this.state = {
@@ -214,7 +214,9 @@ export default class Notifications extends Component {
                     })
                   }
                 >
-                  <Text>#{item.name}</Text>
+                  <Text style={{ color: color.contrastColor }}>
+                    #{item.name}
+                  </Text>
                 </TouchableOpacity>
               )}
             />

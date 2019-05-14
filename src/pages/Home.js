@@ -70,7 +70,7 @@ export default class Home extends Component {
     })
 
     if (!mobx.account || !mobx.account.id) {
-      getCurrentUser(mobx.domain, {
+      getCurrentUser(mobx.domain, null, {
         cancelToken: new CancelToken(c => this.cancel.push(c))
       }).then(res => {
         mobx.updateAccount(res)

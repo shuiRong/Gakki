@@ -51,6 +51,18 @@ export default class HTMLView extends Component {
     })
   }
 
+  shouldComponentUpdate(nextProps) {
+    const currentProps = this.props
+    if (
+      currentProps.data === nextProps.data ||
+      currentProps.hide === nextProps.hide
+    ) {
+      return false
+    }
+
+    return true
+  }
+
   /**
    * @description 识别几种类型的链接，分别做单独处理
    * 1. https://cmx.im/tags/test 站内Tag

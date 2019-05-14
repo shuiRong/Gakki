@@ -412,13 +412,15 @@ export const checkRequest = (domain, id, status, options) => {
 }
 
 // 搜索
-export const search = (query, domain, options) => {
+export const search = (domain, query, options) => {
   return request({
     baseURL: `https://${domain}`,
     url: `/api/v2/search`,
     method: 'get',
     params: {
-      query
+      q: query,
+      resolve: true,
+      limit: 50
     },
     headers: {
       Authorization: mobx.access_token
@@ -428,7 +430,7 @@ export const search = (query, domain, options) => {
 }
 
 // 获取标签内容
-export const getTag = (tag, params, options) => {
+export const getTag = (domain, tag, params, options) => {
   return request({
     baseURL: `https://${domain}`,
     url: `/api/v1/timelines/tag/${tag}`,

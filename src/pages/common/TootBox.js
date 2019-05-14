@@ -7,8 +7,7 @@ import {
   TouchableOpacity,
   Clipboard,
   StatusBar,
-  Share,
-  Vibration
+  Share
 } from 'react-native'
 import PropTypes from 'prop-types'
 import Icon from 'react-native-vector-icons/FontAwesome5'
@@ -463,7 +462,7 @@ export default class TootBox extends Component {
 
   setClipboard = toot => {
     Clipboard.setString(cheerio.load(toot.content).text())
-    Vibration.vibrate([0, 50])
+    // Vibration.vibrate([0, 50])
   }
 
   /**

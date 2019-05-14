@@ -16,7 +16,7 @@
     "moment-timezone": "^0.5.23",
     "native-base": "^2.8.2",
     "prop-types": "^15.6.2",
-    "react": "16.6.3",
+    "react": "^16.8.6",
     "react-native": "0.57.1",
     "react-native-cheerio": "^1.0.0-rc.4",
     "react-native-content-loader": "git+ssh://git@github.com:shuiRong/react-native-content-loader.git#master",

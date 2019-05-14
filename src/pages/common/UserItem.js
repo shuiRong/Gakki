@@ -15,14 +15,15 @@ export default class UserList extends Component {
   static propTypes = {
     data: PropTypes.object.isRequired,
     relationship: PropTypes.object,
-    deleteUser: PropTypes.func.isRequired,
+    deleteUser: PropTypes.func,
     model: PropTypes.string,
     navigation: PropTypes.object.isRequired
   }
 
   static defaultProps = {
     model: '', // 当前组件使用的模式，模式不同展示的右侧图标不同
-    relationship: {}
+    relationship: {},
+    deleteUser: () => {}
   }
 
   constructor(props) {

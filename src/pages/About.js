@@ -157,31 +157,7 @@ export default class About extends Component {
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => this.props.navigation.navigate('OpenSource')}
-            activeOpacity={0.5}
-            style={{
-              marginTop: 20,
-              borderColor: color.contrastColor,
-              borderRadius: 3,
-              borderWidth: 1,
-              padding: 5,
-              paddingLeft: 10,
-              paddingRight: 10
-            }}
-          >
-            <Text
-              style={{
-                fontSize: 17,
-                color: color.contrastColor
-              }}
-            >
-              开源协议
-            </Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => {
-              // 检查更新
-            }}
+            onPress={() => this.openURL('https://github.com/shuiRong/Gakki')}
             activeOpacity={0.5}
             style={{
               marginTop: 20,
@@ -200,6 +176,25 @@ export default class About extends Component {
               }}
             >
               检查更新
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => this.props.navigation.navigate('OpenSource')}
+            activeOpacity={0.5}
+            style={{
+              marginTop: 20,
+              padding: 5,
+              paddingLeft: 10,
+              paddingRight: 10
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 17,
+                color: color.contrastColor
+              }}
+            >
+              开源协议
             </Text>
           </TouchableOpacity>
         </View>

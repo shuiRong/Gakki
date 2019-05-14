@@ -50,7 +50,7 @@ export default class SideBar extends Component {
 
     // 如果没获取到的account数据，重新拉取
     if (!mobx.account || !mobx.account.id) {
-      getCurrentUser(mobx.domain, {
+      getCurrentUser(mobx.domain, null, {
         cancelToken: new CancelToken(c => (this.cancel = c))
       }).then(res => {
         update(res)
