@@ -193,7 +193,13 @@ export class UserSpruce extends Component {
         }}
       >
         <StatusBar backgroundColor={color.themeColor} barStyle={barStyle} />
-        {Array(7).fill(item)}
+        {item}
+        {item}
+        {item}
+        {item}
+        {item}
+        {item}
+        {item}
       </View>
     )
   }

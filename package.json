@@ -4,9 +4,11 @@
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
+    "postinstall": "sh ./fix.sh",
     "test": "jest"
   },
   "dependencies": {
+    "@react-native-community/async-storage": "^1.4.0",
     "axios": "^0.18.0",
     "code-push-cli": "^2.1.9",
     "d3-interpolate": "^1.3.2",
@@ -17,7 +19,7 @@
     "native-base": "^2.8.2",
     "prop-types": "^15.6.2",
     "react": "^16.8.6",
-    "react-native": "0.57.1",
+    "react-native": "^0.59.8",
     "react-native-cheerio": "^1.0.0-rc.4",
     "react-native-content-loader": "git+ssh://git@github.com:shuiRong/react-native-content-loader.git#master",
     "react-native-gesture-handler": "^1.0.12",
@@ -34,7 +36,7 @@
     "react-native-video": "^4.4.0",
     "react-navigation": "^2.5.0",
     "relative-time-react-native-component": "^4.5.1",
-    "teaset": "^0.5.10"
+    "teaset": "^0.6.3"
   },
   "devDependencies": {
     "@babel/core": "7.0.0-beta.47",

@@ -165,7 +165,7 @@ export default class Search extends Component {
                 />
               }
               renderItem={({ item }) => (
-                <UserItem data={item} navigation={this.props.navigation} />
+                <UserItem account={item} navigation={this.props.navigation} />
               )}
             />
           </View>

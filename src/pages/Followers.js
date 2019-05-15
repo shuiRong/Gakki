@@ -106,7 +106,7 @@ export default class Followers extends Component {
               />
             }
             renderItem={({ item }) => (
-              <UserItem data={item} navigation={this.props.navigation} />
+              <UserItem account={item} navigation={this.props.navigation} />
             )}
           />
         )}

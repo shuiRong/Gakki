@@ -10,7 +10,7 @@ import mobx from '../utils/mobx'
 import { observer } from 'mobx-react'
 import { fetch, save } from '../utils/store'
 import Spinner from 'react-native-spinkit'
-import { deploymentKey, token } from '../utils/config'
+import { token } from '../utils/config'
 import { CancelToken } from 'axios'
 
 let color = {}

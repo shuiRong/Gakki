@@ -107,7 +107,7 @@ export default class FollowRequests extends Component {
             }
             renderItem={({ item }) => (
               <UserItem
-                data={item}
+                account={item}
                 model={'request'}
                 navigation={this.props.navigation}
                 deleteUser={this.deleteUser}

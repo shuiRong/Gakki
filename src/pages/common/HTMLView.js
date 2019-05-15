@@ -52,14 +52,18 @@ export default class HTMLView extends Component {
   }
 
   shouldComponentUpdate(nextProps) {
-    const currentProps = this.props
-    if (
-      currentProps.data === nextProps.data ||
-      currentProps.hide === nextProps.hide
-    ) {
-      return false
-    }
-
+    // const currentProps = this.props
+    // console.log(
+    //   'curr',
+    //   currentProps.data === nextProps.data,
+    //   currentProps.hide === nextProps.hide
+    // )
+    // if (
+    //   currentProps.data === nextProps.data ||
+    //   currentProps.hide === nextProps.hide
+    // ) {
+    //   return false
+    // }
     return true
   }
 

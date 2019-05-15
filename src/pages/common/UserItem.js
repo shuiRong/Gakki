@@ -1,80 +1,43 @@
-import React, { Component } from 'react'
+import React, { useState, useEffect } from 'react'
 import { View, Image, Text, TouchableOpacity } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { muteAccount, blockAccount, checkRequest } from '../../utils/api'
 import { themeData } from '../../utils/color'
 import mobx from '../../utils/mobx'
 import HTMLView from './HTMLView'
-import { observer } from 'mobx-react'
-import PropTypes from 'prop-types'
 import { CancelToken } from 'axios'
 
-let color = {}
-@observer
-export default class UserList extends Component {
-  static propTypes = {
-    data: PropTypes.object.isRequired,
-    relationship: PropTypes.object,
-    deleteUser: PropTypes.func,
-    model: PropTypes.string,
-    navigation: PropTypes.object.isRequired
-  }
+/**
+ * @param {model}: 当前组件使用的模式，模式不同展示的右侧图标不同
+ */
+export default ({
+  account = {},
+  relationshipData = {},
+  deleteUser = () => {},
+  model = '',
+  navigation = () => {}
+}) => {
+  const color = themeData[mobx.theme]
+  let cancel = []
+  const [relationship, setRelationship] = useState(relationshipData)
 
-  static defaultProps = {
-    model: '', // 当前组件使用的模式，模式不同展示的右侧图标不同
-    relationship: {},
-    deleteUser: () => {}
-  }
-
-  constructor(props) {
-    super(props)
-    this.state = {
-      account: {},
-      relationship: {}
+  useEffect(() => {
+    // 没有“副作用”，仅仅为了取消请求
+    return () => {
+      cancel.forEach(item => item && item())
     }
-
-    this.cancel = []
-  }
-
-  componentDidMount() {
-    const props = this.props
-    this.setState({
-      account: props.data,
-      relationship: props.relationship
-    })
-  }
-
-  componentWillReceiveProps({ data, relationship }) {
-    this.setState({
-      account: data,
-      relationship
-    })
-  }
-
-  shouldComponentUpdate(_, { account }) {
-    const currentAccount = this.state.account
-    if (currentAccount && currentAccount.id === account.id) {
-      return false
-    }
-
-    return true
-  }
-
-  componentWillUnmount() {
-    this.cancel.forEach(cancel => cancel && cancel())
-  }
+  })
 
   /**
-   * @description 是否隐藏、取消隐藏账号
+   * @description 是否屏蔽、取消屏蔽账号
    */
-  blockAccount = block => {
-    const state = this.state
-    const id = state.account.id
+  const blockAccountFunc = block => {
+    const id = account.id
     blockAccount(mobx.domain, id, block, {
-      cancelToken: new CancelToken(c => this.cancel.push(c))
+      cancelToken: new CancelToken(c => cancel.push(c))
     }).then(() => {
       if (!block) {
-        this.props.deleteUser(id)
+        deleteUser(id)
         return
       }
     })
@@ -83,47 +46,43 @@ export default class UserList extends Component {
   /**
    * @description 是否隐藏、取消隐藏账号
    */
-  muteAccount = (mute, notification) => {
-    const state = this.state
-    const id = state.account.id
+  const muteAccountFunc = (mute, notification) => {
+    const id = account.id
     muteAccount(mobx.domain, id, mute, notification, {
-      cancelToken: new CancelToken(c => this.cancel.push(c))
+      cancelToken: new CancelToken(c => cancel.push(c))
     }).then(() => {
       if (!mute) {
-        this.props.deleteUser(id)
+        deleteUser(id)
         return
       }
-      this.setState({
-        relationship: {
-          ...state.relationship,
-          muting_notifications: notification
-        }
+
+      setRelationship({
+        ...relationship,
+        muting_notifications: notification
       })
     })
   }
 
-  checkRequest = status => {
-    const id = this.state.account.id
+  const checkRequestFunc = status => {
+    const id = account.id
     checkRequest(mobx.domain, id, status, {
-      cancelToken: new CancelToken(c => this.cancel.push(c))
+      cancelToken: new CancelToken(c => cancel.push(c))
     }).then(() => {
-      this.props.deleteUser(id)
+      deleteUser(id)
     })
   }
 
   /**
    * @description 获取右侧图标
    */
-  getRightIcon = () => {
-    const model = this.props.model
-    const relationship = this.state.relationship
+  const getRightIcon = () => {
     if (!model) {
       return null
     } else if (model === 'request') {
       return (
         <TouchableOpacity
           activeOpacity={0.5}
-          onPress={() => this.checkRequest(false)}
+          onPress={() => checkRequestFunc(false)}
         >
           <Icon
             name={'times'}
@@ -139,7 +98,7 @@ export default class UserList extends Component {
       return (
         <TouchableOpacity
           activeOpacity={0.5}
-          onPress={() => this.blockAccount(false)}
+          onPress={() => blockAccountFunc(false)}
         >
           <Icon
             name={'unlock'}
@@ -153,7 +112,7 @@ export default class UserList extends Component {
     return relationship.muting_notifications ? (
       <TouchableOpacity
         activeOpacity={0.5}
-        onPress={() => this.muteAccount(true, false)}
+        onPress={() => muteAccountFunc(true, false)}
       >
         <Icon
           name={'bell'}
@@ -163,7 +122,7 @@ export default class UserList extends Component {
     ) : (
       <TouchableOpacity
         activeOpacity={0.5}
-        onPress={() => this.muteAccount(true, true)}
+        onPress={() => muteAccountFunc(true, true)}
       >
         <Icon
           name={'bell-slash'}
@@ -173,15 +132,14 @@ export default class UserList extends Component {
     )
   }
 
-  getLeftIcon = () => {
-    const model = this.props.model
+  const getLeftIcon = () => {
     if (!model) {
       return null
     } else if (model === 'request') {
       return (
         <TouchableOpacity
           activeOpacity={0.5}
-          onPress={() => this.checkRequest(true)}
+          onPress={() => checkRequestFunc(true)}
         >
           <Icon
             name={'check'}
@@ -197,7 +155,7 @@ export default class UserList extends Component {
       return (
         <TouchableOpacity
           activeOpacity={0.5}
-          onPress={() => this.muteAccount(false)}
+          onPress={() => muteAccountFunc(false)}
         >
           <Icon
             name={'volume-up'}
@@ -212,73 +170,67 @@ export default class UserList extends Component {
     }
   }
 
-  render() {
-    const state = this.state
-    const account = state.account
-    color = themeData[mobx.theme]
-
-    return (
+  return (
+    <View
+      style={{
+        flexDirection: 'row',
+        padding: 10,
+        paddingLeft: 15,
+        paddingRight: 15,
+        justifyContent: 'space-between',
+        alignItems: 'center'
+      }}
+    >
+      <TouchableOpacity
+        activeOpacity={0.5}
+        onPress={() => {
+          navigation.navigate('Profile', {
+            id: account.id
+          })
+        }}
+      >
+        <Image
+          source={{ uri: account.avatar }}
+          style={{
+            overlayColor: color.themeColor,
+            width: 40,
+            height: 40,
+            borderRadius: 5,
+            marginRight: 5
+          }}
+        />
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={{ width: '65%' }}
+        activeOpacity={0.5}
+        onPress={() =>
+          navigation.navigate('Profile', {
+            id: account.id
+          })
+        }
+      >
+        <HTMLView data={account.display_name || account.username || ''} />
+        <Text style={{ color: color.subColor }}>@{account.username}</Text>
+      </TouchableOpacity>
       <View
         style={{
           flexDirection: 'row',
-          padding: 10,
-          paddingLeft: 15,
-          paddingRight: 15,
-          justifyContent: 'space-between',
-          alignItems: 'center'
+          alignItems: 'center',
+          justifyContent: 'space-around',
+          width: '18%'
         }}
       >
-        <TouchableOpacity
-          activeOpacity={0.5}
-          onPress={() => {
-            this.props.navigation.navigate('Profile', {
-              id: account.id
-            })
-          }}
-        >
-          <Image
-            source={{ uri: account.avatar }}
-            style={{
-              overlayColor: color.themeColor,
-              width: 40,
-              height: 40,
-              borderRadius: 5,
-              marginRight: 5
-            }}
-          />
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={{ width: '65%' }}
-          activeOpacity={0.5}
-          onPress={() =>
-            this.props.navigation.navigate('Profile', {
-              id: account.id
-            })
-          }
-        >
-          <HTMLView data={account.display_name || account.username || ''} />
-          <Text style={{ color: color.subColor }}>@{account.username}</Text>
-        </TouchableOpacity>
+        {getLeftIcon()}
+
         <View
           style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'space-around',
-            width: '18%'
+            width: '60%',
+            alignItems: 'center'
           }}
         >
-          {this.getLeftIcon()}
-
-          <View
-            style={{
-              width: '60%',
-              alignItems: 'center'
-            }}
-          >
-            {this.getRightIcon()}
-          </View>
+          {getRightIcon()}
         </View>
       </View>
-    )
-  }
+    </View>
+  )
 }

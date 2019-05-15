@@ -1,4 +1,4 @@
-import { AsyncStorage } from 'react-native'
+import AsyncStorage from '@react-native-community/async-storage'
 
 export const save = (key, value) => {
   return AsyncStorage.setItem(key, JSON.stringify(value))
