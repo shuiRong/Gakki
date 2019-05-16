@@ -209,7 +209,7 @@ export default ({
           })
         }
       >
-        <HTMLView data={account.display_name || account.username || ''} />
+        <HTMLView content={account.display_name || account.username || ''} />
         <Text style={{ color: color.subColor }}>@{account.username}</Text>
       </TouchableOpacity>
       <View

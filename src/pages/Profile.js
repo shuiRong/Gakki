@@ -322,7 +322,7 @@ export default class Profile extends Component {
               }}
             >
               <HTMLView
-                data={profile.display_name || ''}
+                content={profile.display_name || ''}
                 pTagStyle={{
                   color: color.contrastColor,
                   fontWeight: 'bold',

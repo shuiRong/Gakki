@@ -103,7 +103,7 @@ class TootContent extends Component {
       return (
         <HTMLView
           navigation={props.navigation}
-          data={props.data.content}
+          content={props.data.content}
           mentions={props.data.mentions}
           hide={hide}
           pTagStyle={pTagStyle}
@@ -116,7 +116,7 @@ class TootContent extends Component {
       return (
         <HTMLView
           navigation={this.props.navigation}
-          data={toot.content}
+          content={toot.content}
           mentions={toot.mentions}
           hide={false}
           pTagStyle={pTagStyle}
@@ -129,7 +129,7 @@ class TootContent extends Component {
         <View>
           <HTMLView
             navigation={this.props.navigation}
-            data={toot.spoiler_text}
+            content={toot.spoiler_text}
             mentions={toot.mentions}
             pTagStyle={{
               color: color.contrastColor,
@@ -155,7 +155,7 @@ class TootContent extends Component {
           </TouchableOpacity>
           <HTMLView
             navigation={this.props.navigation}
-            data={toot.content}
+            content={toot.content}
             mentions={toot.mentions}
             hide={hide}
             pTagStyle={pTagStyle}
@@ -906,7 +906,7 @@ export default class TootBox extends Component {
         >
           <HTMLView
             navigation={this.props.navigation}
-            data={account.display_name || account.username}
+            content={account.display_name || account.username}
             mentions={toot ? toot.mentions : []}
             pTagStyle={pTagStyle}
           />
@@ -994,7 +994,7 @@ export default class TootBox extends Component {
               >
                 <HTMLView
                   navigation={this.props.navigation}
-                  data={data.account.display_name || data.account.username}
+                  content={data.account.display_name || data.account.username}
                   mentions={data.mentions}
                   pTagStyle={{
                     color: color.contrastColor,

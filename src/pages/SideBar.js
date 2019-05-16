@@ -181,7 +181,7 @@ export default class SideBar extends Component {
           </View>
           <View>
             <HTMLView
-              data={data.display_name}
+              content={data.display_name}
               pTagStyle={{ color: color.contrastColor, fontWeight: 'bold' }}
             />
             <Text style={{ color: color.contrastColor }}>
@@ -227,7 +227,7 @@ export default class SideBar extends Component {
             </TouchableOpacity>
             <View style={styles.info}>
               <HTMLView
-                data={state.display_name}
+                content={state.display_name}
                 pTagStyle={{ color: color.white, fontWeight: 'bold' }}
               />
               <Text style={{ color: color.white }}>

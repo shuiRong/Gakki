@@ -150,7 +150,7 @@ const DefaultTabBar = createReactClass({
                 {this.props.getRelationship(profile)}
                 <View>
                   <HTMLView
-                    data={profile.display_name}
+                    content={profile.display_name}
                     pTagStyle={{
                       color: color.contrastColor,
                       fontWeight: 'bold'
@@ -164,7 +164,7 @@ const DefaultTabBar = createReactClass({
                 </View>
                 <HTMLView
                   navigation={this.props.navigation}
-                  data={profile.note}
+                  content={profile.note}
                   pTagStyle={{
                     color: color.contrastColor,
                     fontSize: 14,

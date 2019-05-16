@@ -4,7 +4,7 @@ import { Button } from 'native-base'
 import Header from './common/Header'
 import Loading from './common/Loading'
 import Icon from 'react-native-vector-icons/FontAwesome5'
-import { getStatuses, context } from '../utils/api'
+import { context } from '../utils/api'
 import { themeData } from '../utils/color'
 import mobx from '../utils/mobx'
 import Context from './common/Context'
@@ -22,7 +22,6 @@ export default class TootDetail extends Component {
     super(props)
     this.state = {
       toot: null,
-      context: null,
       ancestors: [],
       descendants: []
     }
@@ -45,7 +44,6 @@ export default class TootDetail extends Component {
 
     this.setState({
       toot: toot,
-      context: null,
       ancestors: [],
       descendants: []
     })
@@ -60,30 +58,17 @@ export default class TootDetail extends Component {
     this.cancel.forEach(cancel => cancel && cancel())
   }
 
-  fetchData = () => {
-    this.setState({
-      toot: null
-    })
-
-    const toot = this.props.navigation.getParam('data')
-    const id = toot.id
-
-    getStatuses(mobx.domain, id, {
-      cancelToken: new CancelToken(c => this.cancel.push(c))
-    }).then(res => {
-      this.setState({
-        toot: res
-      })
-    })
-
-    this.getContext(id)
-  }
-
   getContext = id => {
     context(mobx.domain, id, {
       cancelToken: new CancelToken(c => this.cancel.push(c))
     }).then(res => {
-      this.setState(res)
+      if (!res.ancestors.length && !res.descendants.length) {
+        return
+      }
+      this.setState({
+        ancestors: res.ancestors,
+        descendants: res.descendants
+      })
     })
   }
 
