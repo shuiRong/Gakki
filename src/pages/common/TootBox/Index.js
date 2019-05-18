@@ -22,7 +22,6 @@ const TootBoxAreEqual = (prevProps, nextProps) => {
 }
 
 const TootBox = props => {
-  console.log('TootBox/index render')
   const barStyle = mobx.theme === 'black' ? 'light-content' : 'dark-content'
 
   return (

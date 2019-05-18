@@ -211,7 +211,7 @@ export default class Home extends Component {
               <Tab
                 tabLabel={'提及'}
                 params={{
-                  exclude_types: ['follow', 'reblog', 'favourite']
+                  exclude_types: ['follow', 'reblog', 'favourite', 'poll']
                 }}
                 navigation={this.props.navigation}
                 onScroll={this.animatedEvent}
@@ -219,7 +219,7 @@ export default class Home extends Component {
               <Tab
                 tabLabel={'收藏'}
                 params={{
-                  exclude_types: ['follow', 'reblog', 'mention']
+                  exclude_types: ['follow', 'reblog', 'mention', 'poll']
                 }}
                 navigation={this.props.navigation}
                 onScroll={this.animatedEvent}
@@ -227,7 +227,7 @@ export default class Home extends Component {
               <Tab
                 tabLabel={'转嘟'}
                 params={{
-                  exclude_types: ['follow', 'mention', 'favourite']
+                  exclude_types: ['follow', 'mention', 'favourite', 'poll']
                 }}
                 navigation={this.props.navigation}
                 onScroll={this.animatedEvent}
@@ -235,9 +235,17 @@ export default class Home extends Component {
               <Tab
                 tabLabel={'关注'}
                 params={{
-                  exclude_types: ['mention', 'reblog', 'favourite']
+                  exclude_types: ['mention', 'reblog', 'favourite', 'poll']
                 }}
                 spruce={<UserSpruce />}
+                navigation={this.props.navigation}
+                onScroll={this.animatedEvent}
+              />
+              <Tab
+                tabLabel={'投票'}
+                params={{
+                  exclude_types: ['follow', 'mention', 'favourite', 'reblog']
+                }}
                 navigation={this.props.navigation}
                 onScroll={this.animatedEvent}
               />

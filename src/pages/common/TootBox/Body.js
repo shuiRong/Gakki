@@ -453,11 +453,20 @@ const BodyFunc = ({
       )
     }
 
-    if (toot.visibility === 'private' || toot.visibility === 'direct') {
+    if (toot.visibility === 'private') {
       return (
         <Icon
           style={{ fontSize: 15, color: color.lightThemeColor }}
           name="lock"
+        />
+      )
+    }
+
+    if (toot.visibility === 'direct') {
+      return (
+        <Icon
+          style={{ fontSize: 15, color: color.lightThemeColor }}
+          name="envelope"
         />
       )
     }

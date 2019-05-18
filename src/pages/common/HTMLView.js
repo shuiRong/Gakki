@@ -20,7 +20,6 @@ const HTMLView = ({
   aTagStyle = {},
   containerStyle = {}
 }) => {
-  console.log('render hide,', hide)
   const color = themeData[mobx.theme]
 
   /**
