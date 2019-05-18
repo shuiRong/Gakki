@@ -13,7 +13,7 @@ import ListFooterComponent from './common/ListFooterComponent'
 import { themeData } from '../utils/color'
 import mobx from '../utils/mobx'
 import Divider from './common/Divider'
-import TootBox from './common/TootBox'
+import TootBox from './common/TootBox/Index'
 import { observer } from 'mobx-react'
 import { CancelToken } from 'axios'
 

@@ -4,7 +4,14 @@ import { themeData } from '../../utils/color'
 import mobx from '../../utils/mobx'
 import HTML from 'react-native-render-html'
 
-export default ({
+// 如果不需要更新组件，则返回true
+const areEqual = (prevProps, nextProps) => {
+  return (
+    prevProps.hide === nextProps.hide && prevProps.content === nextProps.content
+  )
+}
+
+const HTMLView = ({
   hide = false,
   mentions = [],
   content = '',
@@ -13,7 +20,7 @@ export default ({
   aTagStyle = {},
   containerStyle = {}
 }) => {
-  console.log('htmlview')
+  console.log('render hide,', hide)
   const color = themeData[mobx.theme]
 
   /**
@@ -149,3 +156,5 @@ const tagsStyles = {
     flexWrap: 'wrap'
   }
 }
+
+export default React.memo(HTMLView, areEqual)

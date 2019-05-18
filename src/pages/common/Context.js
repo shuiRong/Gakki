@@ -1,77 +1,51 @@
-import React, { PureComponent } from 'react'
-import { StyleSheet, FlatList, View } from 'react-native'
-import PropTypes from 'prop-types'
-import TootBox from './TootBox'
+import React from 'react'
+import { FlatList, View } from 'react-native'
+import TootBox from './TootBox/Index'
 import Divider from './Divider'
+import Empty from './Empty'
 
 /**
  * 评论组件
  */
-export default class Context extends PureComponent {
-  static propTypes = {
-    data: PropTypes.array.isRequired,
-    navigation: PropTypes.object.isRequired
-  }
 
-  constructor(props) {
-    super(props)
-    this.state = {
-      data: []
-    }
-  }
+// 如果不需要更新组件，则返回true
+const areEqual = (prevProps, nextProps) => {
+  console.log('areEqual', prevProps, nextProps)
+  return prevProps.data.length === nextProps.data.length
+}
 
-  componentDidMount() {
-    this.setState({
-      data: this.props.data
-    })
-  }
-
-  componentWillReceiveProps({ data }) {
-    this.setState({
-      data: data
-    })
-  }
-
-  render() {
-    const data = this.state.data
-    if (!data.length) {
-      return null
-    }
-
-    return (
-      <View style={styles.container}>
-        <FlatList
-          ItemSeparatorComponent={() => <Divider />}
-          data={data}
-          renderItem={({ item }) => {
-            if (item.isMaster) {
-              return (
-                <TootBox
-                  isMaster={true}
-                  data={item}
-                  navigation={this.props.navigation}
-                  sensitive={item.sensitive}
-                  showTread={false}
-                />
-              )
-            }
+const Context = ({ data = [], navigation = () => {} }) => {
+  console.log('Context render')
+  return (
+    <View style={{ flex: 1 }}>
+      <FlatList
+        ItemSeparatorComponent={() => <Divider />}
+        ListEmptyComponent={<Empty />}
+        data={data}
+        renderItem={({ item }) => {
+          if (item.isMaster) {
             return (
               <TootBox
+                isMaster={true}
                 data={item}
-                navigation={this.props.navigation}
+                navigation={navigation}
                 sensitive={item.sensitive}
                 showTread={false}
               />
             )
-          }}
-        />
-      </View>
-    )
-  }
+          }
+          return (
+            <TootBox
+              data={item}
+              navigation={navigation}
+              sensitive={item.sensitive}
+              showTread={false}
+            />
+          )
+        }}
+      />
+    </View>
+  )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1
-  }
-})
+export default React.memo(Context, areEqual)

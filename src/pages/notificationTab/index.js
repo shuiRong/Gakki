@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { View, StyleSheet, FlatList, RefreshControl } from 'react-native'
 import { getNotifications } from '../../utils/api'
-import TootBox from '../common/TootBox'
+import TootBox from '../common/TootBox/Index'
 import { TootListSpruce } from '../common/Spruce'
 import { themeData } from '../../utils/color'
 import mobx from '../../utils/mobx'

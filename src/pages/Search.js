@@ -17,7 +17,7 @@ import {
 import { Button } from 'native-base'
 import { search } from '../utils/api'
 import Icon from 'react-native-vector-icons/FontAwesome5'
-import TootBox from './common/TootBox'
+import TootBox from './common/TootBox/Index'
 import UserItem from './common/UserItem'
 import Header from './common/Header'
 import { themeData } from '../utils/color'
