@@ -29,6 +29,14 @@ allprojects {
     // force libs to use recent buildtools
     // https://github.com/luggit/react-native-config/issues/299
     subprojects {
+        if (project.name.contains('react-native-image-picker')) {
+            buildscript {
+                repositories {
+                    jcenter()
+                    maven { url "https://dl.bintray.com/android/android-tools/"  }
+                }
+            }
+        }
         afterEvaluate {
             project ->
                 if (project.hasProperty("android")) {
