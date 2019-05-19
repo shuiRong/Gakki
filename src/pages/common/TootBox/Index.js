@@ -23,7 +23,6 @@ const TootBoxAreEqual = (prevProps, nextProps) => {
 
 const TootBox = props => {
   const barStyle = mobx.theme === 'black' ? 'light-content' : 'dark-content'
-
   return (
     <View
       style={{

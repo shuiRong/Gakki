@@ -10,12 +10,10 @@ import Empty from './Empty'
 
 // 如果不需要更新组件，则返回true
 const areEqual = (prevProps, nextProps) => {
-  console.log('areEqual', prevProps, nextProps)
   return prevProps.data.length === nextProps.data.length
 }
 
 const Context = ({ data = [], navigation = () => {} }) => {
-  console.log('Context render')
   return (
     <View style={{ flex: 1 }}>
       <FlatList
