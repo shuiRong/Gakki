@@ -5,8 +5,6 @@ import { themeData } from '../../../utils/color'
 import mobx from '../../../utils/mobx'
 
 // 嘟文主体内容
-const color = themeData[mobx.theme]
-
 const TootContentAreEqual = (prevProps, nextProps) => {
   return (
     prevProps.hide === nextProps.hide && prevProps.toot.id === nextProps.toot.id
@@ -19,6 +17,7 @@ const TootContentFunc = ({
   toot = {},
   isNotificationPage = false
 }) => {
+  const color = themeData[mobx.theme]
   const [hide, setHide] = useState(sensitive)
   let pTagStyle = {}
 

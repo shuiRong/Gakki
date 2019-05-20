@@ -22,7 +22,6 @@ import mobx from '../../../utils/mobx'
 import { CancelToken } from 'axios'
 
 const cheerio = require('react-native-cheerio')
-const color = themeData[mobx.theme]
 const areEqual = (prevProps, nextProps) => {
   const prevToot = prevProps.data
   const nextToot = nextProps.data
@@ -49,6 +48,7 @@ const BottomIconsFunc = ({
   navigation
 }) => {
   const [toot, setToot] = useState(data)
+  const color = themeData[mobx.theme]
   let cancel = []
   let theRef = null
   /**

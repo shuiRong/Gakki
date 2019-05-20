@@ -16,8 +16,8 @@ import HTMLView from './common/HTMLView'
 import Divider from './common/Divider'
 import { observer } from 'mobx-react'
 import { remove, save, fetch } from '../utils/store'
-import CodePush from 'react-native-code-push'
 import { CancelToken } from 'axios'
+import RNRestart from 'react-native-restart'
 
 let color = {}
 @observer
@@ -85,7 +85,7 @@ export default class SideBar extends Component {
             save('access_token', keys[0]),
             save('domain', nextAccount.domain)
           ]).then(() => {
-            CodePush.restartApp()
+            RNRestart.Restart()
           })
         })
         .catch(err => {
@@ -199,7 +199,7 @@ export default class SideBar extends Component {
       save('domain', data.domain),
       save('account', data)
     ]).then(() => {
-      CodePush.restartApp()
+      RNRestart.Restart()
     })
   }
 
@@ -476,7 +476,9 @@ export default class SideBar extends Component {
             onPress={() => {
               const theme = mobx.theme === 'white' ? 'black' : 'white'
               mobx.updateTheme(theme)
-              save('theme', theme).then(() => {})
+              save('theme', theme).then(() => {
+                RNRestart.Restart()
+              })
             }}
           >
             {mobx.theme === 'white' ? (

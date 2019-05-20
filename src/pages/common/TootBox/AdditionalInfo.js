@@ -5,37 +5,36 @@ import mobx from '../../../utils/mobx'
 import { themeData } from '../../../utils/color'
 import HTMLView from '../HTMLView'
 
-const color = themeData[mobx.theme]
-const info = {
-  reblog: '转嘟了',
-  pinned: '置顶嘟文',
-  favourite: '收藏了',
-  follow: '开始关注你',
-  mention: '提及了'
-}
-const icon = {
-  reblog: 'retweet',
-  pinned: 'thumbtack',
-  favourite: 'star',
-  follow: 'user-plus'
-}
-const iconColor = {
-  favourite: color.gold,
-  follow: color.lightgreen,
-  reblog: color.lightBlue,
-  pinned: color.lightContrastColor
-}
-
 const areEqual = (prevProps, nextPros) => {
   return prevProps.data.id === nextPros.data.id
 }
 
 // 嘟文上方的附加信息：转嘟、置顶...
 const AdditionalInfoFunc = ({ data = {}, navigation = () => {} }) => {
+  const color = themeData[mobx.theme]
   let type = undefined
   let pTagStyle = { color: color.subColor }
   const toot = data.type ? data.status : data // 有type属性，表示是Notification entity
   const isNotificationPage = Boolean(data.type) // 当前组件是否使用在通知页面，因为通知接口返回的数据格式稍有不同
+  const info = {
+    reblog: '转嘟了',
+    pinned: '置顶嘟文',
+    favourite: '收藏了',
+    follow: '开始关注你',
+    mention: '提及了'
+  }
+  const icon = {
+    reblog: 'retweet',
+    pinned: 'thumbtack',
+    favourite: 'star',
+    follow: 'user-plus'
+  }
+  const iconColor = {
+    favourite: color.gold,
+    follow: color.lightgreen,
+    reblog: color.lightBlue,
+    pinned: color.lightContrastColor
+  }
 
   if (isNotificationPage) {
     // 如果是在通知页面，那么类型的名称可以直接当作变量名

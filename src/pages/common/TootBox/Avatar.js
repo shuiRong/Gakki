@@ -3,8 +3,6 @@ import { View, Image, StyleSheet } from 'react-native'
 import mobx from '../../../utils/mobx'
 import { themeData } from '../../../utils/color'
 
-const color = themeData[mobx.theme]
-
 const areEqual = (prevProps, nextPros) => {
   return prevProps.toot.id === nextPros.toot.id
 }
@@ -13,6 +11,8 @@ const areEqual = (prevProps, nextPros) => {
  * @description 获取用户头像，如果是转发，则同时显示两人头像
  */
 const AvatarFunc = ({ toot }) => {
+  const color = themeData[mobx.theme]
+
   /**
    * @description 私信页面的头像，需要对两个及其以上的 @ 用户头像特殊处理
    */

@@ -5,8 +5,6 @@ import mobx from '../../../utils/mobx'
 import AdditionalInfo from './AdditionalInfo'
 import Body from './Body'
 
-const color = themeData[mobx.theme]
-
 const TootBoxAreEqual = (prevProps, nextProps) => {
   const prevToot = prevProps.data
   const nextToot = nextProps.data
@@ -22,7 +20,9 @@ const TootBoxAreEqual = (prevProps, nextProps) => {
 }
 
 const TootBox = props => {
+  const color = themeData[mobx.theme]
   const barStyle = mobx.theme === 'black' ? 'light-content' : 'dark-content'
+
   return (
     <View
       style={{

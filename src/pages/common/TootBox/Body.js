@@ -13,8 +13,6 @@ import Avatar from './Avatar'
 import BottomIcons from './BottomIcons'
 
 const timezone = jstz.determine().name() // 获得当前用户所在的时区
-const color = themeData[mobx.theme]
-
 const areEqual = (prevProps, nextProps) =>
   prevProps.data.id === nextProps.data.id
 
@@ -25,6 +23,7 @@ const areEqual = (prevProps, nextProps) =>
  */
 const BodyFunc = props => {
   const { isMaster, data, showTread, navigation } = props
+  const color = themeData[mobx.theme]
 
   let toot = null // 有type属性，表示是Notification entity. 如果数据为空，说明情况是：Notification Entity 中的follow类型
   if (data.type) {

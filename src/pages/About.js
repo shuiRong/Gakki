@@ -157,7 +157,7 @@ export default class About extends Component {
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            onPress={() => this.openURL('https://github.com/shuiRong/Gakki')}
+            onPress={() => this.openURL('https://github.com/shuiRong/Gakki/releases')}
             activeOpacity={0.5}
             style={{
               marginTop: 20,
