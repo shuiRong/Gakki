@@ -194,6 +194,7 @@ configurations.all {
 }
 
 dependencies {
+    implementation project(':react-native-splash-screen')
     implementation project(':@react-native-community_async-storage')
     compile project(':react-native-image-crop-picker')
     compile project(':react-native-video')

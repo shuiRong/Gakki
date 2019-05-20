@@ -12,6 +12,7 @@ import { fetch, save } from '../utils/store'
 import Spinner from 'react-native-spinkit'
 import { token } from '../utils/config'
 import { CancelToken } from 'axios'
+import SplashScreen from 'react-native-splash-screen'
 
 let color = {}
 @observer
@@ -23,6 +24,7 @@ export default class Login extends Component {
   }
 
   componentDidMount() {
+    SplashScreen.hide()
     if (__DEV__) {
       mobx.updateDomain('cmx.im')
       save('access_token', token).then(() => {

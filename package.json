@@ -1,6 +1,6 @@
 {
   "name": "gakki",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "private": true,
   "scripts": {
     "start": "node node_modules/react-native/local-cli/cli.js start",
@@ -30,6 +30,7 @@
     "react-native-render-html": "^3.10.0",
     "react-native-scrollable-tab-view": "git+ssh://git@github.com:shuiRong/react-native-scrollable-tab-view.git#master",
     "react-native-spinkit": "^1.2.0",
+    "react-native-splash-screen": "^3.2.0",
     "react-native-svg": "^9.2.3",
     "react-native-textinput-effects": "^0.4.2",
     "react-native-vector-icons": "^6.1.0",

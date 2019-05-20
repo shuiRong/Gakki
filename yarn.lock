@@ -7167,6 +7167,11 @@ react-native-spinkit@^1.2.0:
   dependencies:
     prop-types "^15.5.8"
 
+react-native-splash-screen@^3.2.0:
+  version "3.2.0"
+  resolved "https://registry.npm.taobao.org/react-native-splash-screen/download/react-native-splash-screen-3.2.0.tgz#d47ec8557b1ba988ee3ea98d01463081b60fff45"
+  integrity sha1-1H7IVXsbqYjuPqmNAUYwgbYP/0U=
+
 react-native-stream@^0.1.0:
   version "0.1.9"
   resolved "http://registry.npm.taobao.org/react-native-stream/download/react-native-stream-0.1.9.tgz#13680cce893ca7d34a86664d9d5b4ee1a772c97c"

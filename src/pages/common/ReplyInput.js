@@ -686,9 +686,7 @@ export default class ReplyInput extends Component {
             回复
             {mobx.reply_to_username ? '@' + mobx.reply_to_username : ''}
           </Text>
-        ) : (
-          <Text />
-        )}
+        ) : null}
         {cwElement}
         <View>
           <TextInput
@@ -737,9 +735,7 @@ export default class ReplyInput extends Component {
                 <Text style={styles.disenableCW}>NSFW</Text>
               )}
             </TouchableOpacity>
-          ) : (
-            <View />
-          )}
+          ) : null}
           <TouchableOpacity
             ref={ref => (this.refOption = ref)}
             onPress={() => mobx.exchangeCW()}

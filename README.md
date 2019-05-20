@@ -98,8 +98,7 @@ P.S. You can find me [here](https://cmx.im/web/accounts/81232) if you have a pro
 |-|-|-|
 |  ![gakki](./preview/4.png)   |   ![gakki](./preview/5.png)   |   ![gakki](./preview/6.png)   |
 |   ![gakki](./preview/7.png)   | ![gakki](./preview/8.png)     |   ![gakki](./preview/9.png)    |
-|  ![gakki](./preview/10.png)    |  ![gakki](./preview/11.png)    |  ![gakki](./preview/12.png)    |
-|![gakki](./preview/13.png) | ![gakki](./preview/14.png)| |
+|  ![gakki](./preview/10.png)    |  ![gakki](./preview/11.png)    |      |
 
 
 
