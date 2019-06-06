@@ -2,7 +2,6 @@
 
 > 这是一个用`React Native`写的 [Mastodon](https://joinmastodon.org/) 客户端（近期只考虑 Android）
 >
-> 这是 [开发测试账号](https://cmx.im/web/accounts/81232) ，我会在上面更新最新的项目开发动态
 
 [English](./README.md)
 
@@ -55,7 +54,7 @@ export const version = '1.0' // 当前应用的版本，会用在About页面，�
 其中`xxxxxxxxx`为你申请的实例`token`，申请方法如下：
 
 1. 打开你所在实例的**设置页面**，比如草莓县的：https://cmx.im/settings/applications
-2. 在 开发-你的应用 中**创建新应用**：应用名称随便填写，应用网站任意网站，比如：https://google.com，重定向 URI 不必修改，权限范围根据需要选择（建议全部勾选），最后**提交**
+2. 在 开发-你的应用 中**创建新应用**：应用名称随便填写，应用网站任意网站，比如：`https://google.com`， 重定向 URI 不必修改，权限范围根据需要选择（建议全部勾选），最后**提交**
 3. 点击查看你刚创建的应用详情，上方**你的访问令牌**即为你需要添加到`config.js`中的值（注意`Bearer` 后面有个空格哦～）
 
 
@@ -86,7 +85,7 @@ MYAPP_RELEASE_KEY_PASSWORD=*****
 react-native run-android
 ```
 
-P.S. 如果遇到任何项目上的问题都可以在[issue](https://github.com/shuiRong/Gakki/issues)区提出，或者来Mastodon[找我](https://cmx.im/web/accounts/81232)
+P.S. 如果遇到任何项目上的问题都可以在[issue](https://github.com/shuiRong/Gakki/issues)区提出。
 
 
 

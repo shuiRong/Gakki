@@ -2,7 +2,6 @@
 
 > This is a third-part client of [Mastodon](https://joinmastodon.org/) written by `React Native`（only Android is considered recently）.
 >
-> That's my  [Mastodon Account](https://cmx.im/web/accounts/81232), welcome to feedback. 
 
 [中文](./README.ZH.md)
 
@@ -89,7 +88,7 @@ MYAPP_RELEASE_KEY_PASSWORD=*****
 react-native run-android
 ```
 
-P.S. You can find me [here](https://cmx.im/web/accounts/81232) if you have a problem with Gakki or submit an [issue](https://github.com/shuiRong/Gakki/issues). 
+P.S. Submit an [issue](https://github.com/shuiRong/Gakki/issues) if you have a problem with Gakki.
 
 #### Page Preview
 
