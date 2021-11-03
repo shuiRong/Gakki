@@ -9,6 +9,18 @@
 
 [<img src="https://i.imgur.com/fTum3oy.png" alt="Get it on F-Droid" height="80" />](https://apt.izzysoft.de/fdroid/index/apk/com.gakki)
 
+
+#### Page Preview
+
+---
+| ![gakki](./preview/1.png) | ![gakki](./preview/2.png) |![gakki](./preview/3.png)  |
+|-|-|-|
+|  ![gakki](./preview/4.png)   |   ![gakki](./preview/5.png)   |   ![gakki](./preview/6.png)   |
+|   ![gakki](./preview/7.png)   | ![gakki](./preview/8.png)     |   ![gakki](./preview/9.png)    |
+|  ![gakki](./preview/10.png)    |  ![gakki](./preview/11.png)    |      |
+
+
+
 > a series of development tutorials are being prepared.
 
 
@@ -89,16 +101,6 @@ react-native run-android
 ```
 
 P.S. Submit an [issue](https://github.com/shuiRong/Gakki/issues) if you have a problem with Gakki.
-
-#### Page Preview
-
----
-| ![gakki](./preview/1.png) | ![gakki](./preview/2.png) |![gakki](./preview/3.png)  |
-|-|-|-|
-|  ![gakki](./preview/4.png)   |   ![gakki](./preview/5.png)   |   ![gakki](./preview/6.png)   |
-|   ![gakki](./preview/7.png)   | ![gakki](./preview/8.png)     |   ![gakki](./preview/9.png)    |
-|  ![gakki](./preview/10.png)    |  ![gakki](./preview/11.png)    |      |
-
 
 
 
